@@ -1,0 +1,20 @@
+version: '3'
+services:
+  mysql:
+    container_name: stockanalyzer-mysql
+    restart: always
+    image: mysql:8
+    # no problem with login by user nad password (plain text)
+    command: --default-authentication-plugin=mysql_native_password
+    env_file:
+      - ./config/secure/docker.env
+    ports:
+      - "3309:3306"
+    networks:
+      - stockanalyzer-network
+    volumes:
+      - ./.docker-volumes/mysql:/var/lib/mysql
+
+networks:
+  stockanalyzer-network:
+    external: true
