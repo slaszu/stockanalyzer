@@ -8,7 +8,7 @@ import pl.slaszu.stockanalyzer.dataprovider.application.StockProvider
 import java.net.URI
 
 @Service
-class StockProviderRestTemplateImpl(var restTmp: RestTemplate, var params: DataproviderParameters) : StockProvider {
+class StockProviderRestTemplate(var restTmp: RestTemplate, var params: DataproviderParameters) : StockProvider {
     override fun getStockCodeList(): Array<StockDto> {
 
         val value = this.restTmp.getForEntity(

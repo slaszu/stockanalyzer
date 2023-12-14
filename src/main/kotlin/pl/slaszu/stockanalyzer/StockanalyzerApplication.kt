@@ -27,7 +27,13 @@ class SomeBeans {
     @Bean
     fun appRunner(rest: StockProvider): ApplicationRunner {
         return ApplicationRunner {
-            rest.getStockCodeList().forEach { println(it) }
+            rest.getStockCodeList().forEach {
+                println(it)
+                if (it.code != null) {
+                    rest.getStockPriceList(it.code).forEach { it1 -> println(it1) }
+                    return@ApplicationRunner
+                }
+            }
         }
     }
 }
