@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import pl.slaszu.stockanalyzer.analizer.application.SignalProvider
 import pl.slaszu.stockanalyzer.dataprovider.application.StockProvider
 import pl.slaszu.stockanalyzer.dataprovider.infrastructure.DataproviderParameters as DataproviderParameters
 
@@ -25,13 +26,19 @@ fun main(args: Array<String>) {
 @Configuration
 class SomeBeans {
     @Bean
-    fun appRunner(rest: StockProvider): ApplicationRunner {
+    fun appRunner(stockProvider: StockProvider, signalProvider: SignalProvider): ApplicationRunner {
         return ApplicationRunner {
-            rest.getStockCodeList().forEach {
-                println(it)
-                if (it.code != null) {
-                    rest.getStockPriceList(it.code).forEach { it1 -> println(it1) }
-                    return@ApplicationRunner
+            stockProvider.getStockCodeList().forEach {
+                if (it.code != null) { // && listOf("ALE","PLW","PCO").contains(it.code)) {
+                    println(it)
+                    val stockPriceList = stockProvider.getStockPriceList(it.code);
+                    val signals = signalProvider.getSignals(stockPriceList);
+                    if (signals.isNotEmpty()) {
+                        signals.forEach { signal -> println("+$signal") }
+                        return@forEach
+                    } else {
+                        println("no signals")
+                    }
                 }
             }
         }
