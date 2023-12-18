@@ -29,7 +29,7 @@ class SomeBeans {
     fun appRunner(stockProvider: StockProvider, signalProvider: SignalProvider): ApplicationRunner {
         return ApplicationRunner {
             stockProvider.getStockCodeList().forEach {
-                if (it.code != null) { // && listOf("ALE","PLW","PCO").contains(it.code)) {
+                if (it.code != null && listOf("ALE","PLW","PCO").contains(it.code)) {
                     println(it)
                     val stockPriceList = stockProvider.getStockPriceList(it.code);
                     val signals = signalProvider.getSignals(stockPriceList);
