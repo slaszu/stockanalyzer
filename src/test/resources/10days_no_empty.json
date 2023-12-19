@@ -1,0 +1,102 @@
+[
+  {
+    "priceOpen": 344.5,
+    "priceHigh": 354.5,
+    "priceLow": 344,
+    "price": 360,
+    "volume": 2916,
+    "amount": 1019050,
+    "date": "2023-12-19",
+    "updatedAt": "2023-12-19 10:45:04 +0100"
+  },
+  {
+    "priceOpen": 379.5,
+    "priceHigh": 379.5,
+    "priceLow": 342,
+    "price": 300,
+    "volume": 25295,
+    "amount": 8977200,
+    "date": "2023-12-18",
+    "updatedAt": "2023-12-18 17:30:05 +0100"
+  },
+  {
+    "priceOpen": 370,
+    "priceHigh": 397.5,
+    "priceLow": 370,
+    "price": 330,
+    "volume": 21418,
+    "amount": 8219650,
+    "date": "2023-12-15",
+    "updatedAt": "2023-12-15 17:30:05 +0100"
+  },
+  {
+    "priceOpen": 350,
+    "priceHigh": 368,
+    "priceLow": 348,
+    "price": 300,
+    "volume": 16854,
+    "amount": 5996570,
+    "date": "2023-12-14",
+    "updatedAt": "2023-12-14 17:30:06 +0100"
+  },
+  {
+    "priceOpen": 332,
+    "priceHigh": 351.5,
+    "priceLow": 332,
+    "price": 330,
+    "volume": 12312,
+    "amount": 4220530,
+    "date": "2023-12-13",
+    "updatedAt": "2023-12-13 17:30:05 +0100"
+  },
+  {
+    "priceOpen": 329.5,
+    "priceHigh": 329.5,
+    "priceLow": 319,
+    "price": 300,
+    "volume": 6393,
+    "amount": 2063510,
+    "date": "2023-12-12",
+    "updatedAt": "2023-12-12 17:30:05 +0100"
+  },
+  {
+    "priceOpen": 334,
+    "priceHigh": 337,
+    "priceLow": 324,
+    "price": 270,
+    "volume": 6573,
+    "amount": 2167560,
+    "date": "2023-12-11",
+    "updatedAt": "2023-12-11 17:30:06 +0100"
+  },
+  {
+    "priceOpen": 334,
+    "priceHigh": 337,
+    "priceLow": 327.5,
+    "price": 300,
+    "volume": 7027,
+    "amount": 2332600,
+    "date": "2023-12-08",
+    "updatedAt": "2023-12-08 17:30:05 +0100"
+  },
+  {
+    "priceOpen": 338,
+    "priceHigh": 338,
+    "priceLow": 332,
+    "price": 330,
+    "volume": 2518,
+    "amount": 842480,
+    "date": "2023-12-07",
+    "updatedAt": "2023-12-07 17:30:05 +0100"
+  },
+  {
+    "priceOpen": 348,
+    "priceHigh": 348,
+    "priceLow": 336,
+    "price": 300,
+    "volume": 2826,
+    "amount": 960000,
+    "date": "2023-12-06",
+    "updatedAt": "2023-12-06 17:30:05 +0100"
+  }
+]

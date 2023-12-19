@@ -1,0 +1,222 @@
+[
+  {
+    "priceOpen": 344.5,
+    "priceHigh": 354.5,
+    "priceLow": 344,
+    "price": 354.5,
+    "volume": 2916,
+    "amount": 1019050,
+    "date": "2023-12-19",
+    "updatedAt": "2023-12-19 10:45:04 +0100"
+  },
+  {
+    "priceOpen": 379.5,
+    "priceHigh": 379.5,
+    "priceLow": 342,
+    "price": 343,
+    "volume": 25295,
+    "amount": 8977200,
+    "date": "2023-12-18",
+    "updatedAt": "2023-12-18 17:30:05 +0100"
+  },
+  {
+    "priceOpen": 370,
+    "priceHigh": 397.5,
+    "priceLow": 370,
+    "price": 382,
+    "volume": 21418,
+    "amount": 8219650,
+    "date": "2023-12-15",
+    "updatedAt": "2023-12-15 17:30:05 +0100"
+  },
+  {
+    "priceOpen": 350,
+    "priceHigh": 368,
+    "priceLow": 348,
+    "price": 356.5,
+    "volume": 16854,
+    "amount": 5996570,
+    "date": "2023-12-14",
+    "updatedAt": "2023-12-14 17:30:06 +0100"
+  },
+  {
+    "priceOpen": 332,
+    "priceHigh": 351.5,
+    "priceLow": 332,
+    "price": 344.5,
+    "volume": 12312,
+    "amount": 4220530,
+    "date": "2023-12-13",
+    "updatedAt": "2023-12-13 17:30:05 +0100"
+  },
+  {
+    "priceOpen": 329.5,
+    "priceHigh": 329.5,
+    "priceLow": 319,
+    "price": 325,
+    "volume": 6393,
+    "amount": 2063510,
+    "date": "2023-12-12",
+    "updatedAt": "2023-12-12 17:30:05 +0100"
+  },
+  {
+    "priceOpen": 334,
+    "priceHigh": 337,
+    "priceLow": 324,
+    "price": 330,
+    "volume": 6573,
+    "amount": 2167560,
+    "date": "2023-12-11",
+    "updatedAt": "2023-12-11 17:30:06 +0100"
+  },
+  {
+    "priceOpen": 334,
+    "priceHigh": 337,
+    "priceLow": 327.5,
+    "price": 334,
+    "volume": 7027,
+    "amount": 2332600,
+    "date": "2023-12-08",
+    "updatedAt": "2023-12-08 17:30:05 +0100"
+  },
+  {
+    "priceOpen": 338,
+    "priceHigh": 338,
+    "priceLow": 332,
+    "price": 333.5,
+    "volume": 2518,
+    "amount": 842480,
+    "date": "2023-12-07",
+    "updatedAt": "2023-12-07 17:30:05 +0100"
+  },
+  {
+    "priceOpen": 348,
+    "priceHigh": 348,
+    "priceLow": 336,
+    "price": 339.5,
+    "volume": 2826,
+    "amount": 960000,
+    "date": "2023-12-06",
+    "updatedAt": "2023-12-06 17:30:05 +0100"
+  },
+  {
+    "priceOpen": 347.5,
+    "priceHigh": 350,
+    "priceLow": 344,
+    "price": 346,
+    "volume": 4777,
+    "amount": 1654450,
+    "date": "2023-12-05",
+    "updatedAt": "2023-12-05 17:30:07 +0100"
+  },
+  {
+    "priceOpen": 337,
+    "priceHigh": 347.5,
+    "priceLow": 336,
+    "price": 347,
+    "volume": 4343,
+    "amount": 1484810,
+    "date": "2023-12-04",
+    "updatedAt": "2023-12-04 17:30:06 +0100"
+  },
+  {
+    "priceOpen": 337.5,
+    "priceHigh": 341,
+    "priceLow": 332.5,
+    "price": 338.5,
+    "volume": 4876,
+    "amount": 1639840,
+    "date": "2023-12-01",
+    "updatedAt": "2023-12-01 17:30:06 +0100"
+  },
+  {
+    "priceOpen": 340,
+    "priceHigh": 344.5,
+    "priceLow": 330,
+    "price": 336,
+    "volume": 5951,
+    "amount": 1992440,
+    "date": "2023-11-30",
+    "updatedAt": "2023-11-30 17:30:05 +0100"
+  },
+  {
+    "priceOpen": 351,
+    "priceHigh": 355,
+    "priceLow": 342.5,
+    "price": 346.5,
+    "volume": 2872,
+    "amount": 997670,
+    "date": "2023-11-29",
+    "updatedAt": "2023-11-29 17:30:06 +0100"
+  },
+  {
+    "priceOpen": 348,
+    "priceHigh": 350,
+    "priceLow": 344,
+    "price": 348.5,
+    "volume": 1989,
+    "amount": 689020,
+    "date": "2023-11-28",
+    "updatedAt": "2023-11-28 17:30:17 +0100"
+  },
+  {
+    "priceOpen": 350,
+    "priceHigh": 350,
+    "priceLow": 341,
+    "price": 348,
+    "volume": 4280,
+    "amount": 1479620,
+    "date": "2023-11-27",
+    "updatedAt": "2023-11-28 21:48:33 +0100"
+  },
+  {
+    "priceOpen": 347.5,
+    "priceHigh": 351,
+    "priceLow": 346,
+    "price": 350.5,
+    "volume": 954,
+    "amount": 332840,
+    "date": "2023-11-24",
+    "updatedAt": "2023-11-28 21:48:25 +0100"
+  },
+  {
+    "priceOpen": 354,
+    "priceHigh": 354,
+    "priceLow": 346.5,
+    "price": 350,
+    "volume": 2012,
+    "amount": 703320,
+    "date": "2023-11-23",
+    "updatedAt": "2023-11-28 21:48:17 +0100"
+  },
+  {
+    "priceOpen": 354,
+    "priceHigh": 358,
+    "priceLow": 350.5,
+    "price": 354,
+    "volume": 1638,
+    "amount": 579210,
+    "date": "2023-11-22",
+    "updatedAt": "2023-11-28 21:48:08 +0100"
+  },
+  {
+    "priceOpen": 352,
+    "priceHigh": 360,
+    "priceLow": 350.5,
+    "price": 354,
+    "volume": 1792,
+    "amount": 637210,
+    "date": "2023-11-21",
+    "updatedAt": "2023-11-28 21:47:57 +0100"
+  },
+  {
+    "priceOpen": 353,
+    "priceHigh": 361,
+    "priceLow": 350.5,
+    "price": 352,
+    "volume": 1332,
+    "amount": 472720,
+    "date": "2023-11-20",
+    "updatedAt": "2023-11-28 21:47:44 +0100"
+  }
+]

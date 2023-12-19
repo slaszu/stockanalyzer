@@ -3,6 +3,7 @@ package pl.slaszu.stockanalyzer.analizer.application.signal
 import pl.slaszu.stockanalyzer.analizer.application.Signal
 import pl.slaszu.stockanalyzer.analizer.application.SignalLogic
 import pl.slaszu.stockanalyzer.dataprovider.application.StockPriceDto
+import pl.slaszu.stockanalyzer.shared.roundTo
 import kotlin.math.abs
 
 // TODO: very often today change is 100, check this case
@@ -32,35 +33,43 @@ class PriceChangeMoreThenAvg(private val moreThenPercent: Int, private val avgFr
 
             vNext = sliceArray[iNext]
 
+            if (vNext.price.equals(0f) || vPrev.price.equals(0f)) {
+                continue
+            }
+
             // calc percent
             sumPercent += percent(vPrev, vNext)
             qty++
         }
 
-        if (vNext == null) {
+        if (vNext == null || qty == 0) {
             return null
         }
 
-        val avgPercent = sumPercent / qty
+        val avgPercent = (sumPercent / qty).roundTo(2)
 
         // calc latest price
-        val percent = percent(vNext, sliceArray.last())
+        val percent = percent(vNext, sliceArray.last()).roundTo(2)
 
         // check condition
-        if (percent > avgPercent + moreThenPercent) {
+        if (percent >= avgPercent + moreThenPercent) {
             return createSignal(avgPercent, percent)
         }
         return null;
     }
 
     private fun percent(v: StockPriceDto, v2: StockPriceDto): Float {
+        if (v.price.equals(0f)) {
+            return 0f
+        }
         return abs((v.price - v2.price) / v.price * 100)
     }
 
     private fun createSignal(avgPercent: Float, calculatedPercent: Float): Signal {
         return Signal(
             "Signal price change",
-            "Avg change from last $avgFromLastDays days is $avgPercent. Change from today is $calculatedPercent !"
+            "Avg change from last $avgFromLastDays days is $avgPercent. Change from today is $calculatedPercent !",
+            mapOf("avgPercent" to avgPercent, "calculatedPercent" to calculatedPercent)
         )
     }
 }

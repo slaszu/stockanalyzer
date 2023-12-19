@@ -19,6 +19,6 @@ class SignalProvider(private val signalLogicList: List<SignalLogic>) {
     }
 }
 
-data class Signal(val name: String, val desc: String) {
+data class Signal(val name: String, val desc: String, val data: Map<String, Float> = emptyMap()) {
 
 }

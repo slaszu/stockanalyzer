@@ -1,0 +1,102 @@
+[
+  {
+    "priceOpen": 5.75,
+    "priceHigh": 5.75,
+    "priceLow": 5.75,
+    "price": 6.75,
+    "volume": 40,
+    "amount": 230,
+    "date": "2023-12-19",
+    "updatedAt": "2023-12-19 13:00:02 +0100"
+  },
+  {
+    "priceOpen": 5.75,
+    "priceHigh": 5.75,
+    "priceLow": 5.75,
+    "price": 5.75,
+    "volume": 605,
+    "amount": 3480,
+    "date": "2023-12-18",
+    "updatedAt": "2023-12-18 14:15:02 +0100"
+  },
+  {
+    "priceOpen": 5.75,
+    "priceHigh": 5.75,
+    "priceLow": 5.75,
+    "price": 5.75,
+    "volume": 1171,
+    "amount": 6730,
+    "date": "2023-12-15",
+    "updatedAt": "2023-12-15 12:30:02 +0100"
+  },
+  {
+    "priceOpen": 0,
+    "priceHigh": 0,
+    "priceLow": 0,
+    "price": 0,
+    "volume": 0,
+    "amount": 0,
+    "date": "2023-12-14",
+    "updatedAt": "2023-12-14 09:00:06 +0100"
+  },
+  {
+    "priceOpen": 0,
+    "priceHigh": 0,
+    "priceLow": 0,
+    "price": 0,
+    "volume": 0,
+    "amount": 0,
+    "date": "2023-12-13",
+    "updatedAt": "2023-12-13 09:00:05 +0100"
+  },
+  {
+    "priceOpen": 5.75,
+    "priceHigh": 5.75,
+    "priceLow": 5.35,
+    "price": 5.75,
+    "volume": 2099,
+    "amount": 11720,
+    "date": "2023-12-12",
+    "updatedAt": "2023-12-12 17:30:03 +0100"
+  },
+  {
+    "priceOpen": 0,
+    "priceHigh": 0,
+    "priceLow": 0,
+    "price": 0,
+    "volume": 0,
+    "amount": 0,
+    "date": "2023-12-11",
+    "updatedAt": "2023-12-11 09:00:08 +0100"
+  },
+  {
+    "priceOpen": 5.9,
+    "priceHigh": 5.95,
+    "priceLow": 5.9,
+    "price": 5.95,
+    "volume": 907,
+    "amount": 5400,
+    "date": "2023-12-08",
+    "updatedAt": "2023-12-08 11:30:02 +0100"
+  },
+  {
+    "priceOpen": 5.85,
+    "priceHigh": 5.95,
+    "priceLow": 5.85,
+    "price": 5.9,
+    "volume": 160,
+    "amount": 940,
+    "date": "2023-12-07",
+    "updatedAt": "2023-12-07 12:15:02 +0100"
+  },
+  {
+    "priceOpen": 5.85,
+    "priceHigh": 5.85,
+    "priceLow": 5.8,
+    "price": 5.8,
+    "volume": 50,
+    "amount": 290,
+    "date": "2023-12-06",
+    "updatedAt": "2023-12-06 16:15:02 +0100"
+  }
+]
