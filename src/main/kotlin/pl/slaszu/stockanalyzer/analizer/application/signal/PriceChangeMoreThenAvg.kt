@@ -6,7 +6,6 @@ import pl.slaszu.stockanalyzer.dataprovider.application.StockPriceDto
 import pl.slaszu.stockanalyzer.shared.roundTo
 import kotlin.math.abs
 
-// TODO: very often today change is 100, check this case
 class PriceChangeMoreThenAvg(private val moreThenPercent: Int, private val avgFromLastDays: Int) : SignalLogic {
     override fun getSignal(priceList: Array<StockPriceDto>): Signal? {
         // sort by date desc
