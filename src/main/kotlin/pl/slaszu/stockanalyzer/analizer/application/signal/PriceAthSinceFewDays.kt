@@ -15,6 +15,7 @@ class PriceAthSinceFewDays(private val days: Int, private val higherThenPercent:
         3. get max price from x days without last day
         4. if last day price i higher than y percent then signal
          */
+
         if (priceList.size < 2 || days < 2) {
             // min 2 elements are required to work
             return null;
@@ -29,19 +30,19 @@ class PriceAthSinceFewDays(private val days: Int, private val higherThenPercent:
         }
 
         // 2
-        val sliceArray = priceList.sliceArray(1..<end) // from 1, first is the latest day
+        val sliceArray = priceList.sliceArray(1..end) // from 1, first is the latest day
         val latest = priceList.first()
 
         // 3
         val maxPriceHigh = sliceArray.maxOf { it.priceHigh }.roundTo(2)
 
-        val percent = calcPercent(maxPriceHigh, latest.priceHigh).roundTo(2)
+        val percent = calcPercent(maxPriceHigh, latest.price).roundTo(2)
 
-        if (percent > higherThenPercent && maxPriceHigh < latest.priceHigh) {
+        if (percent > higherThenPercent && maxPriceHigh < latest.price) {
             return createSignal(
                 latest.priceHigh, days, mapOf(
                     "maxPrice" to maxPriceHigh,
-                    "lastPrice" to latest.priceHigh,
+                    "lastPrice" to latest.price,
                     "higherThenPercent" to percent
                 )
             )

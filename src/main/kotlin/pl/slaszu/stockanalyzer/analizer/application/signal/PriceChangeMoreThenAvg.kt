@@ -3,20 +3,43 @@ package pl.slaszu.stockanalyzer.analizer.application.signal
 import pl.slaszu.stockanalyzer.analizer.application.Signal
 import pl.slaszu.stockanalyzer.analizer.application.SignalLogic
 import pl.slaszu.stockanalyzer.dataprovider.application.StockPriceDto
+import pl.slaszu.stockanalyzer.shared.calcPercent
 import pl.slaszu.stockanalyzer.shared.roundTo
 import kotlin.math.abs
 
-class PriceChangeMoreThenAvg(private val moreThenPercent: Int, private val avgFromLastDays: Int) : SignalLogic {
+class PriceChangeMoreThenAvg(private val moreThenPercent: Int, private val days: Int) : SignalLogic {
     override fun getSignal(priceList: Array<StockPriceDto>): Signal? {
-        // sort by date desc
+
+        /*
+        1. sort and get last x days
+        2. remove last day and remember it
+        3. get max price from x days without last day
+        4. if last day price i higher than y percent then signal
+         */
+
+        /*
+        1. sort and get last x days
+        2. remove last day and remember it
+        3. get max price from x days without last day
+        4. if last day price i higher than y percent then signal
+         */
+
+        if (priceList.size < 2 || days < 2) {
+            // min 2 elements are required to work
+            return null;
+        }
+
+        // 1
         priceList.sortByDescending { it.date }
 
-        var end = avgFromLastDays
-        if (avgFromLastDays > priceList.lastIndex) {
+        var end = days
+        if (days > priceList.lastIndex) {
             end = priceList.lastIndex
         }
-        // get first elements
-        val sliceArray = priceList.sliceArray(0..<end)
+
+        // 2
+        val sliceArray = priceList.sliceArray(1..end) // from 1, first is the latest day
+        val latest = priceList.first()
 
         // sort slice by date asc
         sliceArray.reverse()
@@ -27,7 +50,7 @@ class PriceChangeMoreThenAvg(private val moreThenPercent: Int, private val avgFr
         var vNext: StockPriceDto? = null
         for ((i, vPrev) in sliceArray.withIndex()) {
             val iNext = i + 1
-            if (iNext >= sliceArray.lastIndex)
+            if (iNext > sliceArray.lastIndex)
                 break
 
             vNext = sliceArray[iNext]
@@ -37,7 +60,7 @@ class PriceChangeMoreThenAvg(private val moreThenPercent: Int, private val avgFr
             }
 
             // calc percent
-            sumPercent += percent(vPrev, vNext)
+            sumPercent += calcPercent(vPrev.price, vNext.price).roundTo(2)
             qty++
         }
 
@@ -48,7 +71,7 @@ class PriceChangeMoreThenAvg(private val moreThenPercent: Int, private val avgFr
         val avgPercent = (sumPercent / qty).roundTo(2)
 
         // calc latest price
-        val percent = percent(vNext, sliceArray.last()).roundTo(2)
+        val percent = calcPercent(vNext.price, latest.price).roundTo(2)
 
         // check condition
         if (percent >= avgPercent + moreThenPercent) {
@@ -57,17 +80,10 @@ class PriceChangeMoreThenAvg(private val moreThenPercent: Int, private val avgFr
         return null;
     }
 
-    private fun percent(v: StockPriceDto, v2: StockPriceDto): Float {
-        if (v.price.equals(0f)) {
-            return 0f
-        }
-        return abs((v.price - v2.price) / v.price * 100)
-    }
-
     private fun createSignal(avgPercent: Float, calculatedPercent: Float): Signal {
         return Signal(
             "Signal price change",
-            "Avg change from last $avgFromLastDays days is $avgPercent. Change from today is $calculatedPercent !",
+            "Avg change from last $days days is $avgPercent. Change from today is $calculatedPercent !",
             mapOf("avgPercent" to avgPercent, "calculatedPercent" to calculatedPercent)
         )
     }
