@@ -1,4 +1,4 @@
-package pl.slaszu.stockanalyzer.analizer.application
+package pl.slaszu.stockanalyzer.analizer.application.signal
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

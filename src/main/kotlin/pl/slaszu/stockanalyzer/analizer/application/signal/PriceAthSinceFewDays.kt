@@ -2,7 +2,6 @@ package pl.slaszu.stockanalyzer.analizer.application.signal
 
 import pl.slaszu.stockanalyzer.analizer.application.Signal
 import pl.slaszu.stockanalyzer.analizer.application.SignalEnum
-import pl.slaszu.stockanalyzer.analizer.application.SignalLogic
 import pl.slaszu.stockanalyzer.dataprovider.application.StockPriceDto
 import pl.slaszu.stockanalyzer.shared.calcPercent
 import pl.slaszu.stockanalyzer.shared.roundTo

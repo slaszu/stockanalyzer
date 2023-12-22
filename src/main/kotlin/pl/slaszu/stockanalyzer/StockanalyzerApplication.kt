@@ -7,6 +7,7 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import pl.slaszu.stockanalyzer.analizer.application.SignalProvider
+import pl.slaszu.stockanalyzer.chart.application.ChartProvider
 import pl.slaszu.stockanalyzer.dataprovider.application.StockProvider
 import pl.slaszu.stockanalyzer.dataprovider.infrastructure.DataproviderParameters as DataproviderParameters
 
@@ -25,20 +26,31 @@ fun main(args: Array<String>) {
 
 @Configuration
 class SomeBeans {
+//    @Bean
+//    fun appRunner(stockProvider: StockProvider, signalProvider: SignalProvider): ApplicationRunner {
+//        return ApplicationRunner {
+//            stockProvider.getStockCodeList().forEach {
+//                if (it.code != null ) { //&& listOf("CPL","PLW","PCO","CMR").contains(it.code)) {
+//                    val stockPriceList = stockProvider.getStockPriceList(it.code);
+//                    val signals = signalProvider.getSignals(stockPriceList);
+//                    if (signals.isNotEmpty()) {
+//                        println(it.code)
+//                        signals.forEach { signal -> println("+$signal") }
+//                        return@forEach
+//                    }
+//                }
+//            }
+//        }
+//    }
+
     @Bean
-    fun appRunner(stockProvider: StockProvider, signalProvider: SignalProvider): ApplicationRunner {
+    fun getChart(stockProvider: StockProvider, chartProvider: ChartProvider): ApplicationRunner {
+
         return ApplicationRunner {
-            stockProvider.getStockCodeList().forEach {
-                if (it.code != null ) { //&& listOf("CPL","PLW","PCO","CMR").contains(it.code)) {
-                    val stockPriceList = stockProvider.getStockPriceList(it.code);
-                    val signals = signalProvider.getSignals(stockPriceList);
-                    if (signals.isNotEmpty()) {
-                        println(it.code)
-                        signals.forEach { signal -> println("+$signal") }
-                        return@forEach
-                    }
-                }
-            }
+            val stockPriceList = stockProvider.getStockPriceList("PLW")
+            val chartAsBase64 = chartProvider.getChartAsBase64("PLW", stockPriceList)
+
+            println(chartAsBase64)
         }
     }
 }

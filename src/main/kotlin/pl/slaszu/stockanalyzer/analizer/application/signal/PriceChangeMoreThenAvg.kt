@@ -2,11 +2,9 @@ package pl.slaszu.stockanalyzer.analizer.application.signal
 
 import pl.slaszu.stockanalyzer.analizer.application.Signal
 import pl.slaszu.stockanalyzer.analizer.application.SignalEnum
-import pl.slaszu.stockanalyzer.analizer.application.SignalLogic
 import pl.slaszu.stockanalyzer.dataprovider.application.StockPriceDto
 import pl.slaszu.stockanalyzer.shared.calcPercent
 import pl.slaszu.stockanalyzer.shared.roundTo
-import kotlin.math.abs
 
 class PriceChangeMoreThenAvg(private val days: Int, private val moreThenPercent: Int) : SignalLogic {
     override fun getSignal(priceList: Array<StockPriceDto>): Signal? {

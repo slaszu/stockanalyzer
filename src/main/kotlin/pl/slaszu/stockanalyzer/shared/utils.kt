@@ -1,6 +1,9 @@
 package pl.slaszu.stockanalyzer.shared
 
 import pl.slaszu.stockanalyzer.dataprovider.application.StockPriceDto
+import java.time.LocalDate
+import java.time.ZoneId
+import java.util.Date
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -18,4 +21,14 @@ fun calcPercent(price: Float, price2: Float): Float {
         return 0f
     }
     return abs((price - price2) / price * 100)
+}
+
+fun Date.toLocalDate(): LocalDate {
+    return this.toInstant()
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate();
+}
+
+fun LocalDate.toDate(): Date {
+    return Date.from(this.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())
 }

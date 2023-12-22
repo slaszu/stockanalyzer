@@ -1,6 +1,7 @@
 package pl.slaszu.stockanalyzer.analizer.application
 
 import org.springframework.stereotype.Service
+import pl.slaszu.stockanalyzer.analizer.application.signal.SignalLogic
 import pl.slaszu.stockanalyzer.dataprovider.application.StockPriceDto
 
 @Service
