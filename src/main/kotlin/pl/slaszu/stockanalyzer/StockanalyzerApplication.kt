@@ -29,15 +29,13 @@ class SomeBeans {
     fun appRunner(stockProvider: StockProvider, signalProvider: SignalProvider): ApplicationRunner {
         return ApplicationRunner {
             stockProvider.getStockCodeList().forEach {
-                if (it.code != null && listOf("ALE","PLW","PCO","CMR").contains(it.code)) {
-                    println(it)
+                if (it.code != null ) { //&& listOf("CPL","PLW","PCO","CMR").contains(it.code)) {
                     val stockPriceList = stockProvider.getStockPriceList(it.code);
                     val signals = signalProvider.getSignals(stockPriceList);
                     if (signals.isNotEmpty()) {
+                        println(it.code)
                         signals.forEach { signal -> println("+$signal") }
                         return@forEach
-                    } else {
-                        println("no signals")
                     }
                 }
             }

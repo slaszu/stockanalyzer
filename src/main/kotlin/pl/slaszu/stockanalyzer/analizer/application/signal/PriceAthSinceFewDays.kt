@@ -1,6 +1,7 @@
 package pl.slaszu.stockanalyzer.analizer.application.signal
 
 import pl.slaszu.stockanalyzer.analizer.application.Signal
+import pl.slaszu.stockanalyzer.analizer.application.SignalEnum
 import pl.slaszu.stockanalyzer.analizer.application.SignalLogic
 import pl.slaszu.stockanalyzer.dataprovider.application.StockPriceDto
 import pl.slaszu.stockanalyzer.shared.calcPercent
@@ -52,8 +53,8 @@ class PriceAthSinceFewDays(private val days: Int, private val higherThenPercent:
 
     private fun createSignal(maxPrice: Float, days: Int, data: Map<String, Float>): Signal {
         return Signal(
-            "Signal price ath",
-            "ATH price $maxPrice is the highest from last $days days!",
+            SignalEnum.PRICE_HIGHEST,
+            "Price $maxPrice is the highest since $days days!",
             data
         )
     }

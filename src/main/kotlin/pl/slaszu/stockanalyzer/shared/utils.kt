@@ -14,7 +14,7 @@ fun Float.roundTo(numFractionDigits: Int): Float {
 }
 
 fun calcPercent(price: Float, price2: Float): Float {
-    if (price.equals(0f)) {
+    if (price.equals(0f) || price2.equals(0f)) {
         return 0f
     }
     return abs((price - price2) / price * 100)

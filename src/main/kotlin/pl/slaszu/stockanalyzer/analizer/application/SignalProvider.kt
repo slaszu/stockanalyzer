@@ -19,6 +19,12 @@ class SignalProvider(private val signalLogicList: List<SignalLogic>) {
     }
 }
 
-data class Signal(val name: String, val desc: String, val data: Map<String, Float> = emptyMap()) {
+enum class SignalEnum {
+    PRICE_CHANGE_MORE_THEN_AVG_PERCENT,
+    PRICE_CHANGE_MORE_THEN_HIGHEST_PERCENT,
+    PRICE_HIGHEST
+}
+
+data class Signal(val type:SignalEnum, val desc: String, val data: Map<String, Float> = emptyMap()) {
 
 }

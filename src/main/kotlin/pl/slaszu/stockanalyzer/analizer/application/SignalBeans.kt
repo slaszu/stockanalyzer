@@ -10,23 +10,13 @@ import java.util.prefs.PreferenceChangeEvent
 class SignalBeans {
 
     @Bean
-    fun get2fromLast5(): PriceChangeMoreThenAvg {
-        return PriceChangeMoreThenAvg(2,5)
-    }
-
-    @Bean
-    fun get2fromLast10(): PriceChangeMoreThenAvg {
-        return PriceChangeMoreThenAvg(2,10)
-    }
-
-    @Bean
     fun get2fromLast30(): PriceChangeMoreThenAvg {
-        return PriceChangeMoreThenAvg(2,30)
+        return PriceChangeMoreThenAvg(30,3)
     }
 
     @Bean
-    fun getAthFromLast10(): PriceAthSinceFewDays {
-        return PriceAthSinceFewDays(10, 1)
+    fun getAthFromLast30(): PriceAthSinceFewDays {
+        return PriceAthSinceFewDays(30, 2)
     }
 
 }

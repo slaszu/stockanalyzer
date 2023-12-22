@@ -12,12 +12,12 @@ class PriceChangeMoreThenAvgTest {
     fun `price change more then x percent works`() {
         val priceList = this.getPriceList("10days_no_empty.json")
 
-        var logic = PriceChangeMoreThenAvg(10,30)
+        var logic = PriceChangeMoreThenAvg(30,10)
         var signal = logic.getSignal(priceList)
 
         Assertions.assertEquals(20, signal?.data?.get("calculatedPercent")?.toInt())
 
-        logic = PriceChangeMoreThenAvg(11,30)
+        logic = PriceChangeMoreThenAvg(30,11)
         signal = logic.getSignal(priceList)
 
         Assertions.assertEquals(null, signal)
@@ -27,7 +27,7 @@ class PriceChangeMoreThenAvgTest {
     fun `price change more then y percent works with empty days`() {
         val priceList = this.getPriceList("10days_some_empty.json")
 
-        var logic = PriceChangeMoreThenAvg(2,30)
+        var logic = PriceChangeMoreThenAvg(30,2)
         var signal = logic.getSignal(priceList)
 
         Assertions.assertEquals(17.39f, signal?.data?.get("calculatedPercent")?.toFloat())
