@@ -2,6 +2,7 @@ package pl.slaszu.stockanalyzer.shared
 
 import pl.slaszu.stockanalyzer.dataprovider.application.StockPriceDto
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.Date
 import kotlin.math.abs
