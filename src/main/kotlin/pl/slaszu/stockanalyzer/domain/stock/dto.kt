@@ -1,8 +1,11 @@
-package pl.slaszu.stockanalyzer.dataprovider.application
+package pl.slaszu.stockanalyzer.domain.stock
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
+
+data class StockDto(val name:String, val code:String?) {
+}
 
 data class StockPriceDto(
     val priceOpen: Float,

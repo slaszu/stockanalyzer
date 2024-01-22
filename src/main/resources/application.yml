@@ -2,5 +2,12 @@ analyzer:
   title: Hello
   limit: 10
 
-dataprovider:
-  stockApiUrl: https://gpw.g-sitemap-generator.com
+stock-api:
+  url: https://gpw.g-sitemap-generator.com
+
+
+spring:
+  data:
+    mongodb:
+      uri: "mongodb://root:example@localhost:27017/"
+      database: "test"

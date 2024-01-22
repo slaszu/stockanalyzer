@@ -1,27 +1,21 @@
-package pl.slaszu.stockanalyzer.chart.application
+package pl.slaszu.stockanalyzer.domain.chart
 
-import org.jfree.chart.ChartFactory
-import org.jfree.chart.ChartPanel
 import org.jfree.chart.ChartUtils
 import org.jfree.chart.JFreeChart
 import org.jfree.chart.annotations.XYPointerAnnotation
 import org.jfree.chart.axis.DateAxis
 import org.jfree.chart.axis.NumberAxis
-import org.jfree.chart.plot.PlotOrientation
 import org.jfree.chart.plot.XYPlot
 import org.jfree.chart.renderer.xy.CandlestickRenderer
 import org.jfree.chart.ui.TextAnchor
 import org.jfree.data.xy.DefaultHighLowDataset
-import org.jfree.data.xy.DefaultIntervalXYDataset
 import org.springframework.stereotype.Service
-import pl.slaszu.stockanalyzer.dataprovider.application.StockPriceDto
+import pl.slaszu.stockanalyzer.domain.stock.StockPriceDto
 import pl.slaszu.stockanalyzer.shared.toDate
 import java.awt.Color
-import java.awt.FlowLayout
 import java.awt.Font
 import java.io.File
 import java.util.*
-import javax.swing.JFrame
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 

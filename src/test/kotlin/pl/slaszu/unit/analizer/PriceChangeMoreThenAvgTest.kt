@@ -3,7 +3,6 @@ package pl.slaszu.unit.analizer
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import pl.slaszu.stockanalyzer.analizer.application.signal.PriceChangeMoreThenAvg
 import pl.slaszu.stockanalyzer.dataprovider.application.StockPriceDto
 import pl.slaszu.stockanalyzer.shared.getResourceAsText
 

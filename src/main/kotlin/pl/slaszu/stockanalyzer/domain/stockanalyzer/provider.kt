@@ -1,8 +1,8 @@
-package pl.slaszu.stockanalyzer.analizer.application
+package pl.slaszu.stockanalyzer.domain.stockanalyzer
 
 import org.springframework.stereotype.Service
-import pl.slaszu.stockanalyzer.analizer.application.signal.SignalLogic
-import pl.slaszu.stockanalyzer.dataprovider.application.StockPriceDto
+import pl.slaszu.stockanalyzer.domain.stock.StockPriceDto
+
 
 @Service
 class SignalProvider(private val signalLogicList: List<SignalLogic>) {
@@ -18,14 +18,4 @@ class SignalProvider(private val signalLogicList: List<SignalLogic>) {
 
         return signalResultList.toTypedArray()
     }
-}
-
-enum class SignalEnum {
-    PRICE_CHANGE_MORE_THEN_AVG_PERCENT,
-    PRICE_CHANGE_MORE_THEN_HIGHEST_PERCENT,
-    PRICE_HIGHEST
-}
-
-data class Signal(val type:SignalEnum, val desc: String, val data: Map<String, Float> = emptyMap()) {
-
 }

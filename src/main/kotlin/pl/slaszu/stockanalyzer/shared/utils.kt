@@ -1,10 +1,9 @@
 package pl.slaszu.stockanalyzer.shared
 
-import pl.slaszu.stockanalyzer.dataprovider.application.StockPriceDto
+import java.net.URI
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.ZoneId
-import java.util.Date
+import java.util.*
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -32,4 +31,8 @@ fun Date.toLocalDate(): LocalDate {
 
 fun LocalDate.toDate(): Date {
     return Date.from(this.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())
+}
+
+fun String.toUri(path: String): URI {
+    return URI.create(this.plus(path))
 }

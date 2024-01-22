@@ -1,10 +1,7 @@
-package pl.slaszu.stockanalyzer.analizer.application.signal
+package pl.slaszu.stockanalyzer.domain.stockanalyzer
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import pl.slaszu.stockanalyzer.analizer.application.signal.PriceAthSinceFewDays
-import pl.slaszu.stockanalyzer.analizer.application.signal.PriceChangeMoreThenAvg
-import java.util.prefs.PreferenceChangeEvent
 
 @Configuration
 class SignalBeans {
