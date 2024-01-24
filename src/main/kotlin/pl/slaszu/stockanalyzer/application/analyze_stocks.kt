@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service
 import pl.slaszu.stockanalyzer.domain.stock.StockProvider
 import pl.slaszu.stockanalyzer.domain.stockanalyzer.Signal
 import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalProvider
+import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalsChecker
 
 @Service
 class GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts(
@@ -17,11 +18,12 @@ class GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts(
         }.forEach {
             val stockPriceList = this.stockProvider.getStockPriceList(it.code!!)
             val signals = this.signalProvider.getSignals(stockPriceList)
-            if (signals.isNotEmpty()) {
-                println(it)
-                signals.forEach { signal: Signal ->
-                    println(signal)
-                }
+
+            val signalsChecker = SignalsChecker(signals)
+
+            if (signalsChecker.hasAll()) {
+                println(it.code)
+                signals.forEach { signal: Signal -> println(signal) }
             }
         }
     }

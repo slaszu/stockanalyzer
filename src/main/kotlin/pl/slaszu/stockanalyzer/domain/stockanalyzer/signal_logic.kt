@@ -9,7 +9,7 @@ interface SignalLogic {
     fun getSignal(priceList: Array<StockPriceDto>): Signal?
 }
 
-class PriceChangeMoreThenAvg(private val days: Int, private val moreThenPercent: Int) : SignalLogic {
+class HighestPriceFluctuationsSinceFewDays(private val days: Int, private val moreThenPercent: Int) : SignalLogic {
     override fun getSignal(priceList: Array<StockPriceDto>): Signal? {
 
         /*
@@ -84,15 +84,18 @@ class PriceChangeMoreThenAvg(private val days: Int, private val moreThenPercent:
 
     private fun createSignal(avgPercent: Float, calculatedPercent: Float): Signal {
         return Signal(
-            SignalEnum.PRICE_CHANGE_MORE_THEN_AVG_PERCENT,
-            "Price change $calculatedPercent%",
-            mapOf("avgPercent" to avgPercent, "calculatedPercent" to calculatedPercent)
+            SignalEnum.HIGHEST_PRICE_FLUCTUATIONS_SINCE_FEW_DAYS,
+            "Price fluctuation $calculatedPercent% is highest since $days days!",
+            mapOf(
+                "avgPercent" to avgPercent,
+                "calculatedPercent" to calculatedPercent
+            )
         )
     }
 }
 
 
-class PriceAthSinceFewDays(private val days: Int, private val higherThenPercent: Int) : SignalLogic {
+class HighestPriceSinceFewDays(private val days: Int, private val higherThenPercent: Int) : SignalLogic {
     override fun getSignal(priceList: Array<StockPriceDto>): Signal? {
 
         /*
@@ -138,7 +141,7 @@ class PriceAthSinceFewDays(private val days: Int, private val higherThenPercent:
 
     private fun createSignal(maxPrice: Float, days: Int, data: Map<String, Float>): Signal {
         return Signal(
-            SignalEnum.PRICE_HIGHEST,
+            SignalEnum.HIGHEST_PRICE_SINCE_FEW_DAYS,
             "Price $maxPrice is the highest since $days days!",
             data
         )
