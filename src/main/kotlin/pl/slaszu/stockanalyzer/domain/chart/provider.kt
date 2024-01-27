@@ -10,6 +10,7 @@ import org.jfree.chart.renderer.xy.CandlestickRenderer
 import org.jfree.chart.ui.TextAnchor
 import org.jfree.data.xy.DefaultHighLowDataset
 import org.springframework.stereotype.Service
+import pl.slaszu.stockanalyzer.domain.model.AlertModel
 import pl.slaszu.stockanalyzer.domain.stock.StockPriceDto
 import pl.slaszu.stockanalyzer.shared.toDate
 import java.awt.Color
@@ -22,6 +23,12 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 
 @Service
 class ChartProvider {
+
+    fun getChartFileForAlert(alert:AlertModel, priceList: Array<StockPriceDto>): File
+    {
+        return File("todo")
+    }
+
     @OptIn(ExperimentalEncodingApi::class)
     fun getChartAsBase64(code: String, priceList: Array<StockPriceDto>): String {
 
