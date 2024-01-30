@@ -1,0 +1,5 @@
+spring:
+  data:
+    mongodb:
+      uri: "mongodb://localhost:${mongodb.container.port}/"
+      database: "stockanalyzer"

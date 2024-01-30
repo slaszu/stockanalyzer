@@ -9,5 +9,5 @@ stock-api:
 spring:
   data:
     mongodb:
-      uri: "mongodb://root:example@localhost:27017/"
+      uri: "mongodb://root:example@localhost:27018/"
       database: "stockanalyzer"

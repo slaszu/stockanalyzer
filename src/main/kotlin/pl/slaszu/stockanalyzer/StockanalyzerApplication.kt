@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import pl.slaszu.stockanalyzer.application.GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts
 import pl.slaszu.stockanalyzer.infrastructure.stock.StockApiParams
@@ -24,6 +25,7 @@ fun main(args: Array<String>) {
 }
 
 @Configuration
+@Profile("dev")
 class SomeBeans {
 //    @Bean
 //    fun appRunner(stockProvider: StockProvider, signalProvider: SignalProvider): ApplicationRunner {
