@@ -25,7 +25,7 @@ fun main(args: Array<String>) {
 }
 
 @Configuration
-@Profile("dev")
+@Profile("default")
 class SomeBeans {
 //    @Bean
 //    fun appRunner(stockProvider: StockProvider, signalProvider: SignalProvider): ApplicationRunner {

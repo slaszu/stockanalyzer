@@ -28,6 +28,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
 	implementation("org.jfree:jfreechart:1.5.3")
+	implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("com.mysql:mysql-connector-j")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

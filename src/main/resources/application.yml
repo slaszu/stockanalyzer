@@ -11,3 +11,7 @@ spring:
     mongodb:
       uri: "mongodb://root:example@localhost:27018/"
       database: "stockanalyzer"
+
+logging:
+  level.root: WARN
+  level.pl.slaszu: DEBUG
