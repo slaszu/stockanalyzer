@@ -5,6 +5,8 @@ analyzer:
 stock-api:
   url: https://gpw.g-sitemap-generator.com
 
+twitter-config:
+  credentialsFile: '/config_credentials/twitter.json'
 
 spring:
   data:

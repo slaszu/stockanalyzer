@@ -4,17 +4,18 @@ import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
+import org.springframework.context.annotation.*
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import pl.slaszu.stockanalyzer.application.GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts
+import pl.slaszu.stockanalyzer.domain.publisher.Publisher
 import pl.slaszu.stockanalyzer.infrastructure.stock.StockApiParams
+import pl.slaszu.stockanalyzer.infrastructure.twitter.TwitterConfig
+import java.io.File
 
 @SpringBootApplication
 @EnableMongoRepositories
 @EnableConfigurationProperties(
-    StockApiParams::class
+    StockApiParams::class, TwitterConfig::class
 )
 class StockanalyzerApplication
 
@@ -109,11 +110,19 @@ class SomeBeans {
 //        }
 //    }
 
+//
+//    @Bean
+//    fun test(action: GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts): ApplicationRunner {
+//        return ApplicationRunner {
+//            action.run()
+//        }
+//    }
 
     @Bean
-    fun test(action: GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts): ApplicationRunner {
+    fun test(testPublisher: Publisher): ApplicationRunner {
         return ApplicationRunner {
-            action.run()
+            val res = testPublisher.publish(File(""), "","")
+            println(res)
         }
     }
 }

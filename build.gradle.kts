@@ -29,6 +29,7 @@ dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
 	implementation("org.jfree:jfreechart:1.5.3")
 	implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
+	implementation("io.github.redouane59.twitter:twittered:2.23")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("com.mysql:mysql-connector-j")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -46,4 +47,12 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.register<Copy>("copyConfigCredentials") {
+	from(layout.projectDirectory.dir("config_credentials"))
+	into(layout.buildDirectory.dir("resources/main/config_credentials"))
+}
+tasks.named("processResources") {
+	dependsOn(tasks.named("copyConfigCredentials"))
 }

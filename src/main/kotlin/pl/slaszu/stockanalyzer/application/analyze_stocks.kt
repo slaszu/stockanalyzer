@@ -2,24 +2,21 @@ package pl.slaszu.stockanalyzer.application
 
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
-import kotlinx.datetime.LocalDate
 import org.springframework.stereotype.Service
 import pl.slaszu.stockanalyzer.domain.model.AlertModel
 import pl.slaszu.stockanalyzer.domain.model.AlertRepository
 import pl.slaszu.stockanalyzer.domain.stock.StockProvider
-import pl.slaszu.stockanalyzer.domain.stockanalyzer.Signal
 import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalProvider
 import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalsChecker
 import pl.slaszu.stockanalyzer.shared.toDate
-import java.time.LocalDate.*
-
-private val logger = KotlinLogging.logger {  }
+import java.time.LocalDate.now
 
 @Service
 class GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts(
     private val stockProvider: StockProvider,
     private val signalProvider: SignalProvider,
-    private val alertRepo: AlertRepository
+    private val alertRepo: AlertRepository,
+    private val logger: KLogger = KotlinLogging.logger { }
 ) {
     fun run() {
         val stockCodeList = this.stockProvider.getStockCodeList().also {
@@ -27,7 +24,6 @@ class GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts(
         }
         val date = now().toDate()
         val activeAlerts = this.alertRepo.findByDateAfterAndCloseIsFalse(date)
-
 
 
         stockCodeList.filter {
@@ -46,8 +42,10 @@ class GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts(
             val signalsChecker = SignalsChecker(signals)
 
             if (signalsChecker.hasAll()) {
-                println(it.code)
-                signals.forEach { signal: Signal -> println(signal) }
+
+                logger.info {
+                    "Code ${it.code} has all signals \n ${signals.contentToString() }}"
+                }
 
                 val alertModel = AlertModel(
                     it.code,
@@ -57,7 +55,7 @@ class GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts(
                     }
                 )
                 alertRepo.save(alertModel)
-                println("Saved alert: $alertModel")
+                logger.info { "Saved alert: $alertModel" }
             }
         }
     }

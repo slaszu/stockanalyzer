@@ -28,7 +28,7 @@ class HighestPriceSinceFewDaysTest {
     }
 
     private fun getPriceList(file: String): Array<StockPriceDto> {
-        val resourceAsText = getResourceAsText("/$file")
+        val resourceAsText = getResourceAsText("/fixtures/$file")
 
         val objectMapper = jacksonObjectMapper().findAndRegisterModules()
         return objectMapper.readValue(resourceAsText, Array<StockPriceDto>::class.java)
