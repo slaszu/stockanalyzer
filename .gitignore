@@ -1,4 +1,4 @@
-config/secure/
+config_credentials/
 
 HELP.md
 .gradle
