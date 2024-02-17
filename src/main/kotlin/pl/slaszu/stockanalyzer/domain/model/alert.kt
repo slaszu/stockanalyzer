@@ -14,6 +14,7 @@ data class AlertModel(
     val stockCode: String,
     val price: Float,
     val signals: List<SignalEnum>,
+    val tweetId: String,
     val date: LocalDateTime = LocalDateTime.now(),
     val close: Boolean = false,
     val checkedProfit: Float? = null,

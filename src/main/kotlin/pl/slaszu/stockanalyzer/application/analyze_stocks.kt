@@ -3,8 +3,11 @@ package pl.slaszu.stockanalyzer.application
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
+import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
 import pl.slaszu.stockanalyzer.domain.model.AlertModel
 import pl.slaszu.stockanalyzer.domain.model.AlertRepository
+import pl.slaszu.stockanalyzer.domain.publisher.Publisher
+import pl.slaszu.stockanalyzer.domain.stock.StockPriceDto
 import pl.slaszu.stockanalyzer.domain.stock.StockProvider
 import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalProvider
 import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalsChecker
@@ -16,6 +19,8 @@ class GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts(
     private val stockProvider: StockProvider,
     private val signalProvider: SignalProvider,
     private val alertRepo: AlertRepository,
+    private val chartProvider: ChartProvider,
+    private val publisher: Publisher,
     private val logger: KLogger = KotlinLogging.logger { }
 ) {
     fun run() {
@@ -44,19 +49,40 @@ class GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts(
             if (signalsChecker.hasAll()) {
 
                 logger.info {
-                    "Code ${it.code} has all signals \n ${signals.contentToString() }}"
+                    "Code ${it.code} has all signals \n ${signals.contentToString()}}"
                 }
+
+                val publishedId = this.publishAlertAndGetId(it.code, stockPriceList)
 
                 val alertModel = AlertModel(
                     it.code,
                     stockPriceList.first().price,
                     signals.map {
                         it.type
-                    }
+                    },
+                    publishedId
                 )
+
                 alertRepo.save(alertModel)
                 logger.info { "Saved alert: $alertModel" }
             }
         }
+    }
+
+    private fun publishAlertAndGetId(stockCode: String, priceList: Array<StockPriceDto>): String {
+
+        // get chart png
+        val pngByteArray = this.chartProvider.getPngByteArray(
+            stockCode,
+            priceList
+        )
+
+
+        // tweet alert
+        return this.publisher.publish(
+            pngByteArray,
+            "Alert for $stockCode",
+            "test"
+        )
     }
 }

@@ -110,19 +110,19 @@ class SomeBeans {
 //        }
 //    }
 
-//
-//    @Bean
-//    fun test(action: GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts): ApplicationRunner {
-//        return ApplicationRunner {
-//            action.run()
-//        }
-//    }
-
+    //
     @Bean
-    fun test(testPublisher: Publisher): ApplicationRunner {
+    fun test(action: GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts): ApplicationRunner {
         return ApplicationRunner {
-            val res = testPublisher.publish(File(""), "","")
-            println(res)
+            action.run()
         }
     }
+
+//    @Bean
+//    fun test(testPublisher: Publisher): ApplicationRunner {
+//        return ApplicationRunner {
+//            val res = testPublisher.publish(File(""), "Title","Description for this tweet")
+//            println(res)
+//        }
+//    }
 }
