@@ -6,11 +6,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.*
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
-import pl.slaszu.stockanalyzer.application.GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts
-import pl.slaszu.stockanalyzer.domain.publisher.Publisher
+import pl.slaszu.stockanalyzer.application.CreateAlerts
 import pl.slaszu.stockanalyzer.infrastructure.stock.StockApiParams
 import pl.slaszu.stockanalyzer.infrastructure.twitter.TwitterConfig
-import java.io.File
 
 @SpringBootApplication
 @EnableMongoRepositories
@@ -112,7 +110,7 @@ class SomeBeans {
 
     //
     @Bean
-    fun test(action: GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts): ApplicationRunner {
+    fun test(action: CreateAlerts): ApplicationRunner {
         return ApplicationRunner {
             action.run()
         }

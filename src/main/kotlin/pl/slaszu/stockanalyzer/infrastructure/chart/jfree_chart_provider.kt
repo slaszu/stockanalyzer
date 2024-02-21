@@ -10,6 +10,7 @@ import org.jfree.chart.renderer.xy.CandlestickRenderer
 import org.jfree.chart.ui.TextAnchor
 import org.jfree.data.xy.DefaultHighLowDataset
 import org.springframework.stereotype.Service
+import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
 import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
 import pl.slaszu.stockanalyzer.domain.stock.StockPriceDto
 import pl.slaszu.stockanalyzer.shared.toDate
@@ -21,7 +22,13 @@ import java.util.*
 @Service
 class JFreeChartProvider : ChartProvider {
 
-    override fun getPngByteArray(code: String, priceList: Array<StockPriceDto>): ByteArray {
+    override fun getPngByteArray(
+        code: String,
+        priceList: Array<StockPriceDto>,
+        buyPoint: ChartPoint?,
+        closePoint: ChartPoint?
+    ): ByteArray {
+
 
         val size: Int = priceList.size
 
@@ -32,6 +39,8 @@ class JFreeChartProvider : ChartProvider {
         val closeArray = DoubleArray(size)
         val volumeArray = DoubleArray(size)
 
+        val pointMap = mutableMapOf<ChartPoint, Int>()
+
         for (i in 0 until size) {
             val s = priceList[i]
             dateArray[i] = s.date.toDate()
@@ -40,6 +49,12 @@ class JFreeChartProvider : ChartProvider {
             openArray[i] = s.priceOpen.toDouble()
             closeArray[i] = s.price.toDouble()
             volumeArray[i] = s.volume.toDouble()
+            if (s == buyPoint?.point) {
+                pointMap[buyPoint] = i
+            }
+            if (s == closePoint?.point) {
+                pointMap[closePoint] = i
+            }
         }
 
         val defaultHighLowDataset = DefaultHighLowDataset(
@@ -53,7 +68,33 @@ class JFreeChartProvider : ChartProvider {
         )
 
 
-        val chart: JFreeChart = this.getJFreeChart(defaultHighLowDataset, code)
+        val plot = this.getJFreeChartPlot(defaultHighLowDataset)
+
+        if (buyPoint != null && pointMap[buyPoint] != null) {
+
+            plot.addAnnotation(
+                getAnnotationPointer(
+                    buyPoint.label,
+                    defaultHighLowDataset.getXValue(0, pointMap[buyPoint]!!),
+                    defaultHighLowDataset.getYValue(0, pointMap[buyPoint]!!)
+                )
+            )
+        }
+
+        if (closePoint != null && pointMap[closePoint] != null) {
+
+            plot.addAnnotation(
+                getAnnotationPointer(
+                    closePoint.label,
+                    defaultHighLowDataset.getXValue(0, pointMap[closePoint]!!),
+                    defaultHighLowDataset.getYValue(0, pointMap[closePoint]!!)
+                )
+            )
+        }
+
+
+        val chart = JFreeChart(code, JFreeChart.DEFAULT_TITLE_FONT, plot, false);
+
 
         val bufferedImage = chart.createBufferedImage(800, 600)
 
@@ -66,12 +107,9 @@ class JFreeChartProvider : ChartProvider {
 //        )
 
         return ChartUtils.encodeAsPNG(bufferedImage)
-//        val encode: ByteArray = Base64.encodeToByteArray(bytes)
-//
-//        return encode.decodeToString()
     }
 
-    private fun getJFreeChart(dataset: DefaultHighLowDataset, code: String): JFreeChart {
+    private fun getJFreeChartPlot(dataset: DefaultHighLowDataset): XYPlot {
 
         val timeAxis = DateAxis("date");
 
@@ -81,11 +119,14 @@ class JFreeChartProvider : ChartProvider {
         val plot = XYPlot(dataset, timeAxis, valueAxis, null);
         plot.renderer = CandlestickRenderer();
 
+        return plot
+    }
 
+    private fun getAnnotationPointer(label: String, chartX: Double, chartY: Double): XYPointerAnnotation {
         val pointer = XYPointerAnnotation(
-            "BUY ${dataset.getYValue(0, 3)}",
-            dataset.getXValue(0, 7),
-            dataset.getYValue(0, 7),
+            label,
+            chartX,
+            chartY,
             Math.PI
         )
         pointer.setBaseRadius(90.0)
@@ -93,9 +134,6 @@ class JFreeChartProvider : ChartProvider {
         pointer.setFont(Font("SansSerif", Font.BOLD, 14))
         pointer.setPaint(Color.BLACK)
         pointer.setTextAnchor(TextAnchor.HALF_ASCENT_RIGHT)
-        plot.addAnnotation(pointer)
-
-
-        return JFreeChart(code, JFreeChart.DEFAULT_TITLE_FONT, plot, false);
+        return pointer;
     }
 }

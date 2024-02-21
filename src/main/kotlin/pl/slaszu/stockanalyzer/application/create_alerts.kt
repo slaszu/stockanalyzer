@@ -3,19 +3,22 @@ package pl.slaszu.stockanalyzer.application
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
+import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
 import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
 import pl.slaszu.stockanalyzer.domain.model.AlertModel
 import pl.slaszu.stockanalyzer.domain.model.AlertRepository
 import pl.slaszu.stockanalyzer.domain.publisher.Publisher
+import pl.slaszu.stockanalyzer.domain.stock.StockDto
 import pl.slaszu.stockanalyzer.domain.stock.StockPriceDto
 import pl.slaszu.stockanalyzer.domain.stock.StockProvider
 import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalProvider
 import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalsChecker
+import pl.slaszu.stockanalyzer.shared.roundTo
 import pl.slaszu.stockanalyzer.shared.toDate
 import java.time.LocalDate.now
 
 @Service
-class GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts(
+class CreateAlerts(
     private val stockProvider: StockProvider,
     private val signalProvider: SignalProvider,
     private val alertRepo: AlertRepository,
@@ -39,7 +42,7 @@ class GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts(
             }
             find == null// remove if active alert for code exists
         }.also {
-            logger.debug { "StockCodeLost has ${it.size} qty after filter" }
+            logger.debug { "StockCodeList has ${it.size} qty after filter" }
         }.forEach {
             val stockPriceList = this.stockProvider.getStockPriceList(it.code!!)
             val signals = this.signalProvider.getSignals(stockPriceList)
@@ -52,7 +55,7 @@ class GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts(
                     "Code ${it.code} has all signals \n ${signals.contentToString()}}"
                 }
 
-                val publishedId = this.publishAlertAndGetId(it.code, stockPriceList)
+                val publishedId = this.publishAlertAndGetId(it, stockPriceList)
 
                 val alertModel = AlertModel(
                     it.code,
@@ -69,20 +72,23 @@ class GetStocksFromApiAnalyzeSignalLogicAndCreateAlerts(
         }
     }
 
-    private fun publishAlertAndGetId(stockCode: String, priceList: Array<StockPriceDto>): String {
+    private fun publishAlertAndGetId(stock: StockDto, priceList: Array<StockPriceDto>): String {
+
+        val alertLabel = "BUY ${stock.code} ${priceList.first().price.roundTo(2)} PLN"
 
         // get chart png
         val pngByteArray = this.chartProvider.getPngByteArray(
-            stockCode,
-            priceList
+            "${stock.code}",
+            priceList,
+            ChartPoint(priceList.first(), alertLabel)
         )
 
 
         // tweet alert
         return this.publisher.publish(
             pngByteArray,
-            "Alert for $stockCode",
-            "test"
+            alertLabel,
+            "#${stock.code} #${stock.name} #gpwApiSignals\nhttps://pl.tradingview.com/symbols/GPW-${stock.code}/"
         )
     }
 }

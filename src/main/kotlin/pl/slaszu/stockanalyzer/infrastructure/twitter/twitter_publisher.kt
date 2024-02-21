@@ -37,7 +37,6 @@ class TwitterPublisher(
         if (quotedPublishedId != null)
             tweetParametersBuilder.quoteTweetId(quotedPublishedId)
 
-
         try {
             val postTweet = twitterClient.postTweet(tweetParametersBuilder.build())
             println(postTweet)
