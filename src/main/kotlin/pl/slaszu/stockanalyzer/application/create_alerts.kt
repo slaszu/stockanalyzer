@@ -14,8 +14,7 @@ import pl.slaszu.stockanalyzer.domain.stock.StockProvider
 import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalProvider
 import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalsChecker
 import pl.slaszu.stockanalyzer.shared.roundTo
-import pl.slaszu.stockanalyzer.shared.toDate
-import java.time.LocalDate.now
+import java.time.LocalDateTime
 
 @Service
 class CreateAlerts(
@@ -30,7 +29,7 @@ class CreateAlerts(
         val stockCodeList = this.stockProvider.getStockCodeList().also {
             logger.debug { "StockCodeList has ${it.size} qty" }
         }
-        val date = now().toDate()
+        val date = LocalDateTime.now()
         val activeAlerts = this.alertRepo.findByDateAfterAndCloseIsFalse(date)
 
 
@@ -55,7 +54,10 @@ class CreateAlerts(
                     "Code ${it.code} has all signals \n ${signals.contentToString()}}"
                 }
 
-                val publishedId = this.publishAlertAndGetId(it, stockPriceList)
+                // todo uncomment
+                //val publishedId = this.publishAlertAndGetId(it, stockPriceList)
+                val publishedId = "test"
+
 
                 val alertModel = AlertModel(
                     it.code,

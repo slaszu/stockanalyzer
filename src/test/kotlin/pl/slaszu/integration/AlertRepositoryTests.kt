@@ -27,36 +27,50 @@ class AlertRepositoryTests(@Autowired val alertRepo: AlertRepository) {
     fun insert_fixtures() {
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.3f, emptyList(),
+                "XYZ", 5.3f, emptyList(),"",
                 LocalDateTime.parse("2023-01-01T12:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.0f, emptyList(),
+                "XYZ", 5.0f, emptyList(),"",
                 LocalDateTime.parse("2023-01-02T12:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.1f, emptyList(),
+                "XYZ", 5.1f, emptyList(),"",
                 LocalDateTime.parse("2023-01-03T12:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.2f, emptyList(),
-                LocalDateTime.parse("2023-01-04T12:00:00").toJavaLocalDateTime()
+                "XYZ", 5.2f, emptyList(),"",
+                LocalDateTime.parse("2023-01-03T13:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.3f, emptyList(),
-                LocalDateTime.parse("2023-01-05T12:00:00").toJavaLocalDateTime()
+                "XYZ", 5.3f, emptyList(),"",
+                LocalDateTime.parse("2023-01-03T14:00:00").toJavaLocalDateTime()
+            )
+        )
+
+        this.alertRepo.save(
+            AlertModel(
+                "XYZ", 5.3f, emptyList(),"",
+                LocalDateTime.parse("2023-01-06T12:00:00").toJavaLocalDateTime()
+            )
+        )
+
+        this.alertRepo.save(
+            AlertModel(
+                "XYZ", 5.3f, emptyList(),"",
+                LocalDateTime.parse("2023-01-07T12:00:00").toJavaLocalDateTime()
             )
         )
     }
@@ -66,13 +80,31 @@ class AlertRepositoryTests(@Autowired val alertRepo: AlertRepository) {
 
         // check all
         val findAll = alertRepo.findAll()
-        Assertions.assertEquals(5, findAll.size)
+        Assertions.assertEquals(7, findAll.size)
 
-        val date = LocalDate.of(2023, 1, 3).toDate()
+        var date = java.time.LocalDateTime.of(2023, 1, 3,11,59,0)
 
         // get not close after date
-        val alertModels = alertRepo.findByDateAfterAndCloseIsFalse(date)
-        Assertions.assertEquals(3, alertModels.size)
+        var alertModels = alertRepo.findByDateAfterAndCloseIsFalse(date)
+        Assertions.assertEquals(5, alertModels.size)
+
+
+
+        date = java.time.LocalDateTime.of(2023, 1, 3,12,0,0)
+
+        // get not close after date
+        alertModels = alertRepo.findByDateAfterAndCloseIsFalse(date)
+        Assertions.assertEquals(4, alertModels.size)
+
+
+
+        date = java.time.LocalDateTime.of(2023, 1, 3,12,59,0)
+
+        // get not close after date
+        alertModels = alertRepo.findByDateAfterAndCloseIsFalse(date)
+        Assertions.assertEquals(4, alertModels.size)
+
+
 
         // close all found
         alertModels.forEach {
@@ -83,7 +115,5 @@ class AlertRepositoryTests(@Autowired val alertRepo: AlertRepository) {
         // get again not close after date
         val alertModelsAfter = alertRepo.findByDateAfterAndCloseIsFalse(date)
         Assertions.assertEquals(0, alertModelsAfter.size)
-
-
     }
 }

@@ -3,7 +3,6 @@ package pl.slaszu.stockanalyzer.domain.model
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.repository.MongoRepository
-import org.springframework.data.mongodb.repository.Query
 import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalEnum
 import java.time.LocalDateTime
 import java.util.*
@@ -23,7 +22,9 @@ data class AlertModel(
 }
 
 interface AlertRepository : MongoRepository<AlertModel, String> {
-    fun findByStockCodeAndDateAfter(stock: String, date: Date): List<AlertModel>
+    fun findByDateAfterAndCloseIsFalse(date: LocalDateTime): List<AlertModel>
 
-    fun findByDateAfterAndCloseIsFalse(date: Date): List<AlertModel>
+    fun findByDateBeforeAndCloseIsFalse(date: LocalDateTime): List<AlertModel>
+
+
 }
