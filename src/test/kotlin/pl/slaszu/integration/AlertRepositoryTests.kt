@@ -2,9 +2,13 @@ package pl.slaszu.integration
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toJavaLocalDateTime
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
 import org.springframework.test.context.ActiveProfiles
@@ -14,8 +18,8 @@ import pl.slaszu.integration.config.MongoDBTestContainerConfig
 import pl.slaszu.stockanalyzer.StockanalyzerApplication
 import pl.slaszu.stockanalyzer.domain.model.AlertModel
 import pl.slaszu.stockanalyzer.domain.model.AlertRepository
-import pl.slaszu.stockanalyzer.shared.toDate
-import java.time.LocalDate
+import java.util.stream.Stream
+import java.time.LocalDateTime as LocalDateTimeJava
 
 @DataMongoTest
 @Testcontainers
@@ -23,87 +27,77 @@ import java.time.LocalDate
 @ActiveProfiles("test")
 class AlertRepositoryTests(@Autowired val alertRepo: AlertRepository) {
 
+    @AfterEach
+    fun del_fixtures() {
+        this.alertRepo.deleteAll()
+    }
+
     @BeforeEach
     fun insert_fixtures() {
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.3f, emptyList(),"",
+                "XYZ", 5.3f, emptyList(), "",
                 LocalDateTime.parse("2023-01-01T12:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.0f, emptyList(),"",
+                "XYZ", 5.0f, emptyList(), "",
                 LocalDateTime.parse("2023-01-02T12:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.1f, emptyList(),"",
+                "XYZ", 5.1f, emptyList(), "",
                 LocalDateTime.parse("2023-01-03T12:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.2f, emptyList(),"",
+                "XYZ", 5.2f, emptyList(), "",
                 LocalDateTime.parse("2023-01-03T13:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.3f, emptyList(),"",
+                "XYZ", 5.3f, emptyList(), "",
                 LocalDateTime.parse("2023-01-03T14:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.3f, emptyList(),"",
+                "XYZ", 5.3f, emptyList(), "",
                 LocalDateTime.parse("2023-01-06T12:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.3f, emptyList(),"",
+                "XYZ", 5.3f, emptyList(), "",
                 LocalDateTime.parse("2023-01-07T12:00:00").toJavaLocalDateTime()
             )
         )
     }
 
     @Test
-    fun test() {
-
-        // check all
+    fun testGetAll() {
         val findAll = alertRepo.findAll()
         Assertions.assertEquals(7, findAll.size)
+    }
 
-        var date = java.time.LocalDateTime.of(2023, 1, 3,11,59,0)
 
-        // get not close after date
+    @ParameterizedTest
+    @MethodSource("getDates")
+    fun testDates(date: LocalDateTimeJava, expect: Int) {
+
+        // check all
         var alertModels = alertRepo.findByDateAfterAndCloseIsFalse(date)
-        Assertions.assertEquals(5, alertModels.size)
-
-
-
-        date = java.time.LocalDateTime.of(2023, 1, 3,12,0,0)
-
-        // get not close after date
-        alertModels = alertRepo.findByDateAfterAndCloseIsFalse(date)
-        Assertions.assertEquals(4, alertModels.size)
-
-
-
-        date = java.time.LocalDateTime.of(2023, 1, 3,12,59,0)
-
-        // get not close after date
-        alertModels = alertRepo.findByDateAfterAndCloseIsFalse(date)
-        Assertions.assertEquals(4, alertModels.size)
-
+        Assertions.assertEquals(expect, alertModels.size)
 
 
         // close all found
@@ -116,4 +110,42 @@ class AlertRepositoryTests(@Autowired val alertRepo: AlertRepository) {
         val alertModelsAfter = alertRepo.findByDateAfterAndCloseIsFalse(date)
         Assertions.assertEquals(0, alertModelsAfter.size)
     }
+
+    fun testCloseAll() {
+        val date = LocalDateTimeJava.of(2023, 1, 3, 11, 59, 0)
+
+        var alertModels = alertRepo.findByDateAfterAndCloseIsFalse(date)
+
+        // close all found
+        alertModels.forEach {
+            val copy = it.copy(close = true)
+            alertRepo.save(copy)
+        }
+
+        // get again not close after date
+        val alertModelsAfter = alertRepo.findByDateAfterAndCloseIsFalse(date)
+        Assertions.assertEquals(0, alertModelsAfter.size)
+
+    }
+
+    companion object {
+        @JvmStatic
+        fun getDates(): Stream<Arguments> {
+            return listOf(
+                Arguments.of(
+                    LocalDateTimeJava.of(2023, 1, 3, 11, 59, 0),
+                    5
+                ),
+                Arguments.of(
+                    LocalDateTimeJava.of(2023, 1, 3, 12, 0, 0),
+                    4
+                ),
+                Arguments.of(
+                    LocalDateTimeJava.of(2023, 1, 3, 12, 59, 0),
+                    4
+                )
+            ).stream()
+        }
+    }
+
 }
