@@ -92,25 +92,24 @@ class AlertRepositoryTests(@Autowired val alertRepo: AlertRepository) {
 
 
     @ParameterizedTest
-    @MethodSource("getDates")
-    fun testDates(date: LocalDateTimeJava, expect: Int) {
+    @MethodSource("getDatesAfter")
+    fun testDatesAfter(date: LocalDateTimeJava, expect: Int) {
 
         // check all
         var alertModels = alertRepo.findByDateAfterAndCloseIsFalse(date)
         Assertions.assertEquals(expect, alertModels.size)
-
-
-        // close all found
-        alertModels.forEach {
-            val copy = it.copy(close = true)
-            alertRepo.save(copy)
-        }
-
-        // get again not close after date
-        val alertModelsAfter = alertRepo.findByDateAfterAndCloseIsFalse(date)
-        Assertions.assertEquals(0, alertModelsAfter.size)
     }
 
+    @ParameterizedTest
+    @MethodSource("getDatesBefore")
+    fun testDatesBefore(date: LocalDateTimeJava, expect: Int) {
+
+        // check all
+        var alertModels = alertRepo.findByDateBeforeAndCloseIsFalse(date)
+        Assertions.assertEquals(expect, alertModels.size)
+    }
+
+    @Test
     fun testCloseAll() {
         val date = LocalDateTimeJava.of(2023, 1, 3, 11, 59, 0)
 
@@ -130,7 +129,25 @@ class AlertRepositoryTests(@Autowired val alertRepo: AlertRepository) {
 
     companion object {
         @JvmStatic
-        fun getDates(): Stream<Arguments> {
+        fun getDatesBefore(): Stream<Arguments> {
+            return listOf(
+                Arguments.of(
+                    LocalDateTimeJava.of(2023, 1, 3, 11, 59, 0),
+                    2
+                ),
+                Arguments.of(
+                    LocalDateTimeJava.of(2023, 1, 3, 12, 0, 0),
+                    2
+                ),
+                Arguments.of(
+                    LocalDateTimeJava.of(2023, 1, 3, 12, 59, 0),
+                    3
+                )
+            ).stream()
+        }
+
+        @JvmStatic
+        fun getDatesAfter(): Stream<Arguments> {
             return listOf(
                 Arguments.of(
                     LocalDateTimeJava.of(2023, 1, 3, 11, 59, 0),
