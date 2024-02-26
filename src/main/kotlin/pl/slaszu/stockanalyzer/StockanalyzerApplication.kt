@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.*
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
+import pl.slaszu.stockanalyzer.application.CloseAlerts
 import pl.slaszu.stockanalyzer.application.CreateAlerts
 import pl.slaszu.stockanalyzer.infrastructure.stock.StockApiParams
 import pl.slaszu.stockanalyzer.infrastructure.twitter.TwitterConfig
@@ -110,9 +111,16 @@ class SomeBeans {
 
     //
     @Bean
-    fun test(action: CreateAlerts): ApplicationRunner {
+    fun testCreate(action: CreateAlerts): ApplicationRunner {
         return ApplicationRunner {
-            action.run()
+            //action.run()
+        }
+    }
+
+    @Bean
+    fun testClose(action: CloseAlerts): ApplicationRunner {
+        return ApplicationRunner {
+            action.runForDaysBefore(1)
         }
     }
 

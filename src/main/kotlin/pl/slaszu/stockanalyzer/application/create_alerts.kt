@@ -30,7 +30,7 @@ class CreateAlerts(
             logger.debug { "StockCodeList has ${it.size} qty" }
         }
         val date = LocalDateTime.now()
-        val activeAlerts = this.alertRepo.findByDateAfterAndCloseIsFalse(date)
+        val activeAlerts = this.alertRepo.findByDateBeforeAndCloseIsFalse(date)
 
 
         stockCodeList.filter {
@@ -55,12 +55,13 @@ class CreateAlerts(
                 }
 
                 // todo uncomment
-                //val publishedId = this.publishAlertAndGetId(it, stockPriceList)
-                val publishedId = "test"
+                val publishedId = this.publishAlertAndGetId(it, stockPriceList)
+                //val publishedId = "test"
 
 
                 val alertModel = AlertModel(
                     it.code,
+                    it.name,
                     stockPriceList.first().price,
                     signals.map {
                         it.type
@@ -70,6 +71,7 @@ class CreateAlerts(
 
                 alertRepo.save(alertModel)
                 logger.info { "Saved alert: $alertModel" }
+                return
             }
         }
     }

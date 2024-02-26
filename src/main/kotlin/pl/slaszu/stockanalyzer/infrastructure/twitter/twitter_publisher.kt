@@ -39,7 +39,6 @@ class TwitterPublisher(
 
         try {
             val postTweet = twitterClient.postTweet(tweetParametersBuilder.build())
-            println(postTweet)
             return postTweet.id
         } catch (e: Throwable) {
             this.logger.error(e) { "Twitter problem for tweet : $tweetParametersBuilder" }

@@ -5,12 +5,12 @@ import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.repository.MongoRepository
 import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalEnum
 import java.time.LocalDateTime
-import java.util.*
 
 @Document("alert")
 @TypeAlias("alert")
 data class AlertModel(
     val stockCode: String,
+    val stockName: String,
     val price: Float,
     val signals: List<SignalEnum>,
     val tweetId: String,
