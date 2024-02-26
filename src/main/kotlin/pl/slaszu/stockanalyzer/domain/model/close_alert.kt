@@ -3,6 +3,7 @@ package pl.slaszu.stockanalyzer.domain.model
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.repository.MongoRepository
+import org.springframework.data.mongodb.repository.Query
 import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalEnum
 import java.time.LocalDateTime
 
@@ -12,11 +13,13 @@ data class CloseAlertModel(
     val alert: AlertModel,
     val tweetId: String,
     val resultPercent: Float,
+    val daysAfter: Int,
     val date: LocalDateTime = LocalDateTime.now(),
     val id: String? = null
 ) {
 }
 
 interface CloseAlertRepository : MongoRepository<CloseAlertModel, String> {
-
+    @Query("{\$and: [{'alert.stockCode': ?0}, {'daysAfter': ?1}]}")
+    fun findByStockCodeAndDaysAfter(stockCode: String, daysAfter: Int): List<CloseAlertModel>
 }

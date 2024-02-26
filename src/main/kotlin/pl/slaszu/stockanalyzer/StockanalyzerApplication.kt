@@ -120,7 +120,7 @@ class SomeBeans {
     @Bean
     fun testClose(action: CloseAlerts): ApplicationRunner {
         return ApplicationRunner {
-            action.runForDaysBefore(1)
+            action.runForDaysAfter(1)
         }
     }
 

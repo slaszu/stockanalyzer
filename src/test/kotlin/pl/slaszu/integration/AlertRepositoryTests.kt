@@ -36,49 +36,49 @@ class AlertRepositoryTests(@Autowired val alertRepo: AlertRepository) {
     fun insert_fixtures() {
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.3f, emptyList(), "",
+                "XYZ", "Some Name", 5.3f, emptyList(), "",
                 LocalDateTime.parse("2023-01-01T12:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.0f, emptyList(), "",
+                "XYZ", "Some Name", 5.0f, emptyList(), "",
                 LocalDateTime.parse("2023-01-02T12:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.1f, emptyList(), "",
+                "XYZ", "Some Name", 5.1f, emptyList(), "",
                 LocalDateTime.parse("2023-01-03T12:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.2f, emptyList(), "",
+                "XYZ", "Some Name", 5.2f, emptyList(), "",
                 LocalDateTime.parse("2023-01-03T13:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.3f, emptyList(), "",
+                "XYZ", "Some Name", 5.3f, emptyList(), "",
                 LocalDateTime.parse("2023-01-03T14:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.3f, emptyList(), "",
+                "XYZ", "Some Name", 5.3f, emptyList(), "",
                 LocalDateTime.parse("2023-01-06T12:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
-                "XYZ", 5.3f, emptyList(), "",
+                "XYZ", "Some Name", 5.3f, emptyList(), "",
                 LocalDateTime.parse("2023-01-07T12:00:00").toJavaLocalDateTime()
             )
         )

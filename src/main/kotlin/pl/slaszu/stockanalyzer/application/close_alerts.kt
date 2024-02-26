@@ -24,11 +24,11 @@ class CloseAlerts(
     private val publisher: Publisher,
     private val logger: KLogger = KotlinLogging.logger { }
 ) {
-    fun runForDaysBefore(daysBefore: Int) {
+    fun runForDaysAfter(daysAfter: Int) {
 
-        val date = LocalDateTime.now().minusDays(daysBefore.toLong())
+        val date = LocalDateTime.now().minusDays(daysAfter.toLong())
 
-        this.logger.info { "Get alert before $daysBefore days [date : ${date.toString()}]" }
+        this.logger.info { "Get alert before $daysAfter days [date : ${date.toString()}]" }
 
         val alerts = this.alertRepo.findByDateBeforeAndCloseIsFalse(date)
 
@@ -44,33 +44,33 @@ class CloseAlerts(
                         "and now has price ${first.price} [${first.updatedAt.toString()}]"
             }
 
-            val priceChangeInPercent = (((100 * first.price) / alert.price) - 100).roundTo(2)
+            val priceChangeInPercent = this.getPriceChangePercent(alert.price, first.price)
 
 
-            //val tweetId = this.publishCloseAndGetId(alert, stockPriceList)
+            //val tweetId = this.publishCloseAndGetId(alert, stockPriceList, daysAfter)
             val tweetId = "test"
 
             // add CloseAlertModel
-            this.closeAlertRepo.save(CloseAlertModel(
-                alert,
-                tweetId,
-                priceChangeInPercent
-            ))
+            this.closeAlertRepo.save(
+                CloseAlertModel(
+                    alert,
+                    tweetId,
+                    priceChangeInPercent,
+                    daysAfter
+                )
+            )
             return;
         }
-
-        // close this alerts by:
-        // - get stock prices
-        // - get change between open alerts and now
-        // - publish tweet with change and png and buy/colse signals
-        // - save alert on mongo
     }
 
-    private fun publishCloseAndGetId(alert: AlertModel, priceList: Array<StockPriceDto>): String {
+    private fun getPriceChangePercent(buy: Float, sell: Float): Float {
+        return (((100 * sell) / buy) - 100).roundTo(2)
+    }
+
+    private fun publishCloseAndGetId(alert: AlertModel, priceList: Array<StockPriceDto>, daysAfter: Int): String {
         val first = priceList.first()
 
-        val priceChangeInPercent = (((100 * first.price) / alert.price) - 100).roundTo(2)
-
+        val priceChangeInPercent = this.getPriceChangePercent(alert.price, first.price)
 
         val alertLabel = "SELL ${alert.stockCode} ${first.price} PLN"
 
@@ -90,7 +90,6 @@ class CloseAlerts(
             buyPoint, // buy point
             ChartPoint(priceList.first(), alertLabel) // close point
         )
-
 
         // tweet alert
         return this.publisher.publish(
