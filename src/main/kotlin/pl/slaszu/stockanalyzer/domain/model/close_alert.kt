@@ -4,7 +4,6 @@ import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.data.mongodb.repository.Query
-import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalEnum
 import java.time.LocalDateTime
 
 @Document("close_alert")
@@ -22,4 +21,7 @@ data class CloseAlertModel(
 interface CloseAlertRepository : MongoRepository<CloseAlertModel, String> {
     @Query("{\$and: [{'alert.stockCode': ?0}, {'daysAfter': ?1}]}")
     fun findByStockCodeAndDaysAfter(stockCode: String, daysAfter: Int): List<CloseAlertModel>
+
+    @Query("{'daysAfter': ?0}")
+    fun findByDaysAfter(daysAfter: Int): List<CloseAlertModel>
 }

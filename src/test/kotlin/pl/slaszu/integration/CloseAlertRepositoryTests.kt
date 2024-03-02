@@ -94,6 +94,13 @@ class CloseAlertRepositoryTests(@Autowired val closeAlertRepo: CloseAlertReposit
         Assertions.assertEquals(expect, closeAlertModels.size)
     }
 
+    @Test
+    fun testDaysAfter() {
+        val findByDaysAfter = closeAlertRepo.findByDaysAfter(7)
+        Assertions.assertEquals(3, findByDaysAfter.size)
+
+    }
+
     companion object {
         @JvmStatic
         fun getData(): Stream<Arguments> {

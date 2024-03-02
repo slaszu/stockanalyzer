@@ -55,8 +55,8 @@ class CreateAlerts(
                 }
 
                 // todo uncomment
-                val publishedId = this.publishAlertAndGetId(it, stockPriceList)
-                //val publishedId = "test"
+                //val publishedId = this.publishAlertAndGetId(it, stockPriceList)
+                val publishedId = "test"
 
 
                 val alertModel = AlertModel(
@@ -71,7 +71,6 @@ class CreateAlerts(
 
                 alertRepo.save(alertModel)
                 logger.info { "Saved alert: $alertModel" }
-                return
             }
         }
     }

@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.*
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
+import org.springframework.scheduling.annotation.EnableScheduling
 import pl.slaszu.stockanalyzer.application.CloseAlerts
 import pl.slaszu.stockanalyzer.application.CreateAlerts
 import pl.slaszu.stockanalyzer.infrastructure.stock.StockApiParams
@@ -16,6 +17,7 @@ import pl.slaszu.stockanalyzer.infrastructure.twitter.TwitterConfig
 @EnableConfigurationProperties(
     StockApiParams::class, TwitterConfig::class
 )
+@EnableScheduling
 class StockanalyzerApplication
 
 fun main(args: Array<String>) {
@@ -110,19 +112,26 @@ class SomeBeans {
 //    }
 
     //
-    @Bean
-    fun testCreate(action: CreateAlerts): ApplicationRunner {
-        return ApplicationRunner {
-            //action.run()
-        }
-    }
-
-    @Bean
-    fun testClose(action: CloseAlerts): ApplicationRunner {
-        return ApplicationRunner {
-            action.runForDaysAfter(1)
-        }
-    }
+//    @Bean
+//    fun testCreate(action: CreateAlerts): ApplicationRunner {
+//        return ApplicationRunner {
+//            action.run()
+//        }
+//    }
+//
+//    @Bean
+//    fun testClose1(action: CloseAlerts): ApplicationRunner {
+//        return ApplicationRunner {
+//            action.runForDaysAfter(7)
+//        }
+//    }
+//
+//    @Bean
+//    fun testClose2(action: CloseAlerts): ApplicationRunner {
+//        return ApplicationRunner {
+//            action.runForDaysAfter(14, true)
+//        }
+//    }
 
 //    @Bean
 //    fun test(testPublisher: Publisher): ApplicationRunner {

@@ -24,7 +24,7 @@ class CloseAlerts(
     private val publisher: Publisher,
     private val logger: KLogger = KotlinLogging.logger { }
 ) {
-    fun runForDaysAfter(daysAfter: Int) {
+    fun runForDaysAfter(daysAfter: Int, andClose: Boolean = false) {
 
         val date = LocalDateTime.now().minusDays(daysAfter.toLong())
 
@@ -34,8 +34,14 @@ class CloseAlerts(
 
         this.logger.info { "Alerts found qty : ${alerts.size}" }
 
-        // for each alert do
-        alerts.forEach { alert ->
+        val findByDaysAfter = this.closeAlertRepo.findByDaysAfter(daysAfter)
+
+        alerts.filter {
+            val find = findByDaysAfter.find { closeAlertModel -> closeAlertModel.alert.stockCode == it.stockCode }
+            find == null
+        }.also {
+            this.logger.info { "Alerts to check qty : ${it.size}" }
+        }.forEach { alert ->
             // get stock price now
             val stockPriceList = this.stockProvider.getStockPriceList(alert.stockCode)
             val first = stockPriceList.first()
@@ -59,7 +65,11 @@ class CloseAlerts(
                     daysAfter
                 )
             )
-            return;
+
+            if (andClose) {
+                alert.close = true
+                alertRepo.save(alert)
+            }
         }
     }
 

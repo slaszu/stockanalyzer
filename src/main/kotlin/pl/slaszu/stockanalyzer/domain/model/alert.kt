@@ -15,7 +15,7 @@ data class AlertModel(
     val signals: List<SignalEnum>,
     val tweetId: String,
     val date: LocalDateTime = LocalDateTime.now(),
-    val close: Boolean = false,
+    var close: Boolean = false,
     val checkedProfit: Float? = null,
     val id: String? = null
 ) {
