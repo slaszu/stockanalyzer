@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "pl.slaszu"
-version = "0.0.1-SNAPSHOT"
+version = "prod"
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_17

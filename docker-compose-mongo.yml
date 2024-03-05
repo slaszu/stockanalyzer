@@ -1,7 +1,6 @@
 version: '3.1'
 
 services:
-
   mongo:
     container_name: stockanalyzer-mongodb
     image: mongo
@@ -11,5 +10,11 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+    networks:
+      - stockanalyzer-network
     volumes:
-      - ./.docker-volumes/mongodb:/data/dbŌ
+      - ./.docker-volumes/mongodb:/data/db
+
+networks:
+  stockanalyzer-network:
+    external: true

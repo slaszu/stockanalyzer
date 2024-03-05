@@ -1,0 +1,16 @@
+version: '3.1'
+services:
+  app:
+    container_name: stockanalyzer-app
+    build:
+      context: .
+      dockerfile: ./.docker/Dockerfile
+    environment:
+      spring_profiles_active: prod
+    networks:
+      - stockanalyzer-network
+    entrypoint: java -jar /app-build/build/libs/stockanalyzer-prod.jar
+
+networks:
+  stockanalyzer-network:
+    external: true

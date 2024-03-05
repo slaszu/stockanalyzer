@@ -1,23 +1,21 @@
-FROM amazoncorretto:17
+FROM amazoncorretto:17-alpine
 
 RUN echo "Copy files..."
 
-COPY admin/ /app-build/admin
-COPY datacenter/ /app-build/datacenter
-COPY dataprovider/ /app-build/dataprovider
-COPY restapi/ /app-build/restapi
-COPY .mvn/ /app-build/.mvn
-COPY pom.xml /app-build/
-COPY mvnw* /app-build/
-COPY config/ /app-build/config
+COPY settings.gradle.kts /app-build/
+COPY build.gradle.kts /app-build/
+COPY gradle/ /app-build/gradle
+COPY gradlew /app-build/
+COPY src/ /app-build/src
+COPY config_credentials/ /app-build/config_credentials
 
 RUN echo "Display /app-build/ folder ..."
 RUN cd /app-build/ \
     && echo $(pwd) && echo $(ls -la)
 
-RUN echo "Maven build..."
+RUN echo "Gradle build..."
 RUN cd /app-build/ \
-    && ./mvnw clean install
+    && ./gradlew clean bootJar --no-deamon
 
 RUN echo "Display /app-build/ folder ..."
 RUN cd /app-build/ \

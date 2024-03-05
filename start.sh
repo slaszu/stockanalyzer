@@ -4,7 +4,7 @@ echo "Use --build option to rebuild containers"
 options=('--build')
 optionsArgs=()
 
-dockerComposeTypes=('mysql' 'app')
+dockerComposeTypes=('mongo' 'app')
 dockerComposeTypesArgs=()
 
 #prepare composer types
