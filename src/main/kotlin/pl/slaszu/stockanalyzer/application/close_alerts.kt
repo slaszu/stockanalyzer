@@ -53,8 +53,8 @@ class CloseAlerts(
             val priceChangeInPercent = this.getPriceChangePercent(alert.price, first.price)
 
 
-            //val tweetId = this.publishCloseAndGetId(alert, stockPriceList, daysAfter)
-            val tweetId = "test"
+            val tweetId = this.publishCloseAndGetId(alert, stockPriceList, daysAfter)
+            //val tweetId = "test"
 
             // add CloseAlertModel
             this.closeAlertRepo.save(

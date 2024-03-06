@@ -5,7 +5,11 @@ services:
     build:
       context: .
       dockerfile: ./.docker/Dockerfile
+    env_file:
+      - ./config_credentials/docker.env
     environment:
+      MONGODB_HOST: mongo
+      MONGODB_PORT: 27017
       spring_profiles_active: prod
     networks:
       - stockanalyzer-network

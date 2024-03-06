@@ -11,7 +11,7 @@ twitter-config:
 spring:
   data:
     mongodb:
-      uri: "mongodb://root:example@localhost:27018/"
+      uri: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27018}/"
       database: "stockanalyzer"
 
 logging:

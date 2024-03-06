@@ -1,5 +1,8 @@
 FROM amazoncorretto:17-alpine
 
+# https://stackoverflow.com/a/68515645
+RUN apk add --no-cache fontconfig ttf-dejavu
+
 RUN echo "Copy files..."
 
 COPY settings.gradle.kts /app-build/
@@ -15,7 +18,7 @@ RUN cd /app-build/ \
 
 RUN echo "Gradle build..."
 RUN cd /app-build/ \
-    && ./gradlew clean bootJar --no-deamon
+    && ./gradlew clean bootJar --no-daemon
 
 RUN echo "Display /app-build/ folder ..."
 RUN cd /app-build/ \

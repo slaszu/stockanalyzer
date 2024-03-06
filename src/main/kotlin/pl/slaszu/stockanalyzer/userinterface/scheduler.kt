@@ -12,7 +12,7 @@ val logger = KotlinLogging.logger { }
 @Service
 class Scheduler(val createAlerts: CreateAlerts, val closeAlerts: CloseAlerts) {
 
-    @Scheduled(cron = "*/5 * * * * *")
+    @Scheduled(cron = "0 * * * * *")
     @Profile("default")
     fun runTest() {
         logger.info { "Scheduler:runTest do nothing" }

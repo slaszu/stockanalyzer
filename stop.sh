@@ -1,7 +1,7 @@
 #!/bin/bash
 
-echo "todo: add all option !!!!!!!!!!!!!!!!!!!!1"
-
+options=('--all')
+optionsArgs=()
 dockerComposeTypes=('mongo' 'app')
 
 dockerComposeTypesArgs=()
@@ -15,13 +15,30 @@ do
             dockerComposeTypesArgs+=( $dockerType )
         fi
     fi
+
+    if [[ " ${options[@]} " =~ " ${name} " ]]; then
+        optionsArgs+=( $name )
+    fi
+done
+
+#check options
+for name in "${optionsArgs[@]}"
+do
+  if [[ " ${name} " =~ "all" ]]; then
+      echo "Stop all services ..."
+      for name in "${dockerComposeTypes[@]}"
+      do
+          dockerComposeTypesArgs+=( $name )
+      done
+  fi
 done
 
 #default, without arg
 if [ ${#dockerComposeTypesArgs[@]} -eq 0 ]; then
-    echo "Stop only app ..."
+    echo "Use only app ..."
     dockerComposeTypesArgs+=( 'app' )
 fi
+
 
 #prepare cmd
 cmd="docker-compose";
