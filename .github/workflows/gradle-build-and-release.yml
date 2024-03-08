@@ -35,17 +35,7 @@ jobs:
       run: ./gradlew bootJar
 
     - name: Release
-      uses: actions/create-release@v1
-      id: create_release
-      with:
-        draft: false
-        prerelease: false
-        release_name: Release ${{ github.ref_name }}
-        tag_name: ${{ github.ref_name }}
-        body: auto release
-        #body_path: CHANGELOG.md
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+      uses: softprops/action-gh-release@v2
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
