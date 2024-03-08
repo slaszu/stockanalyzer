@@ -36,7 +36,7 @@ jobs:
     - name: Build with Gradle Wrapper
       run: ./gradlew bootJar
 
-    - name: release
+    - name: Release
       uses: actions/create-release@v1
       id: create_release
       with:
