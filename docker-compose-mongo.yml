@@ -3,8 +3,10 @@ version: '3.1'
 services:
   mongo:
     container_name: stockanalyzer-mongodb
-    image: mongo
+    image: mongo:7
     restart: always
+    security_opt:
+      - seccomp:unconfined
     ports:
       - 27018:27017
     env_file:
