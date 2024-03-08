@@ -7,6 +7,7 @@ RUN echo "Copy files..."
 
 COPY settings.gradle.kts /app-build/
 COPY build.gradle.kts /app-build/
+COPY gradle.properties /app-build/
 COPY gradle/ /app-build/gradle
 COPY gradlew /app-build/
 COPY src/ /app-build/src
