@@ -6,11 +6,34 @@ import io.github.redouane59.twitter.TwitterClient
 import io.github.redouane59.twitter.dto.tweet.MediaCategory
 import io.github.redouane59.twitter.dto.tweet.TweetParameters
 import io.github.redouane59.twitter.dto.tweet.TweetParameters.TweetParametersBuilder
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 import pl.slaszu.stockanalyzer.domain.publisher.Publisher
 import java.io.File
+import kotlin.random.Random
+
 
 @Service
+@Profile(value = ["test","default"])
+class TestPublisher(
+    val logger: KLogger = KotlinLogging.logger { }
+): Publisher
+{
+    override fun publish(
+        pngChartByteArray: ByteArray,
+        title: String,
+        desc: String,
+        quotedPublishedId: String?
+    ): String {
+        this.logger.warn { "Fake publisher !!! \n$title\n$desc" }
+        val randomInt = Random.nextInt(10000, 99999)
+        return "fake_publisher_$randomInt"
+    }
+
+}
+
+@Service
+@Profile("prod")
 class TwitterPublisher(
     val twitterClient: TwitterClient,
     val logger: KLogger = KotlinLogging.logger { }
