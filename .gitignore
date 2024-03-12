@@ -1,6 +1,3 @@
-config_credentials/
-.DS_Store
-
 HELP.md
 .gradle
 build/
@@ -38,3 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### other ##
+config_credentials/
+.DS_Store
+/stockanalyzer-prod-github-release.jar

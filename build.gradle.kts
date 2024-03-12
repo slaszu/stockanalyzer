@@ -49,10 +49,10 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
-tasks.register<Copy>("copyConfigCredentials") {
-	from(layout.projectDirectory.dir("config_credentials"))
-	into(layout.buildDirectory.dir("resources/main/config_credentials"))
-}
-tasks.named("processResources") {
-	dependsOn(tasks.named("copyConfigCredentials"))
-}
+//tasks.register<Copy>("copyConfigCredentials") {
+//	from(layout.projectDirectory.dir("config_credentials"))
+//	into(layout.buildDirectory.dir("resources/main/config_credentials"))
+//}
+//tasks.named("processResources") {
+//	dependsOn(tasks.named("copyConfigCredentials"))
+//}

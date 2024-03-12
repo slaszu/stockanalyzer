@@ -8,13 +8,15 @@ services:
     env_file:
       - ./config_credentials/docker.env
     environment:
-      TZ: Europe/Warsaw      
+      TZ: Europe/Warsaw
       MONGODB_HOST: mongo
       MONGODB_PORT: 27017
       spring_profiles_active: prod
+    volumes:
+      - ./stockanalyzer-prod-github-release.jar:/app-build/stockanalyzer-prod.jar
     networks:
       - stockanalyzer-network
-    entrypoint: java -jar /app-build/build/libs/stockanalyzer-prod.jar
+    entrypoint: java -jar /app-build/stockanalyzer-prod.jar
 
 networks:
   stockanalyzer-network:

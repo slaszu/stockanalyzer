@@ -6,7 +6,10 @@ stock-api:
   url: https://gpw.g-sitemap-generator.com
 
 twitter-config:
-  credentialsFile: '/config_credentials/twitter.json'
+  apiKey: ${TWITTER_apiKey}
+  apiSecretKey: ${TWITTER_apiSecretKey}
+  accessToken: ${TWITTER_accessToken}
+  accessTokenSecret: ${TWITTER_accessTokenSecret}
 
 spring:
   data:
