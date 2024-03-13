@@ -9,11 +9,10 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.*
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import org.springframework.scheduling.annotation.EnableScheduling
-import pl.slaszu.stockanalyzer.application.CloseAlerts
 import pl.slaszu.stockanalyzer.application.CreateAlerts
 import pl.slaszu.stockanalyzer.domain.model.AlertRepository
 import pl.slaszu.stockanalyzer.infrastructure.stock.StockApiParams
-import pl.slaszu.stockanalyzer.infrastructure.twitter.TwitterConfig
+import pl.slaszu.stockanalyzer.infrastructure.publisher.TwitterConfig
 
 @SpringBootApplication
 @EnableMongoRepositories
@@ -54,12 +53,11 @@ class ProdBeans {
 @Profile("default")
 class SomeBeans {
 
-
-//    @Bean
-//    fun testCreate(action: CreateAlerts): ApplicationRunner {
-//        return ApplicationRunner {
-//            action.run()
-//        }
-//    }
+    @Bean
+    fun testCreate(action: CreateAlerts): ApplicationRunner {
+        return ApplicationRunner {
+            action.run()
+        }
+    }
 
 }

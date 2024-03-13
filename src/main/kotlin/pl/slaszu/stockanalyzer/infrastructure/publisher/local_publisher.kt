@@ -3,12 +3,10 @@ package pl.slaszu.stockanalyzer.infrastructure.publisher
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.jfree.chart.ChartUtils
-import org.jfree.chart.JFreeChart
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 import pl.slaszu.stockanalyzer.domain.publisher.Publisher
 import java.io.ByteArrayInputStream
-import java.io.File
 import javax.imageio.ImageIO
 import kotlin.io.path.Path
 import kotlin.io.path.outputStream
@@ -29,7 +27,6 @@ class TestPublisher(
 
         val randomInt = Random.nextInt(10000, 99999)
         val publisherId = "fake_publisher_$randomInt"
-
 
         val file = Path("chart_$publisherId.png")
 

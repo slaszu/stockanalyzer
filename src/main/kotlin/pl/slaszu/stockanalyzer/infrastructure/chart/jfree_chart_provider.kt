@@ -3,12 +3,14 @@ package pl.slaszu.stockanalyzer.infrastructure.chart
 import org.jfree.chart.ChartUtils
 import org.jfree.chart.JFreeChart
 import org.jfree.chart.annotations.XYPointerAnnotation
+import org.jfree.chart.axis.AxisLabelLocation
 import org.jfree.chart.axis.DateAxis
 import org.jfree.chart.axis.NumberAxis
 import org.jfree.chart.plot.XYPlot
 import org.jfree.chart.renderer.xy.CandlestickRenderer
 import org.jfree.chart.ui.TextAnchor
 import org.jfree.data.xy.DefaultHighLowDataset
+import org.springframework.boot.info.BuildProperties
 import org.springframework.stereotype.Service
 import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
 import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
@@ -20,7 +22,7 @@ import java.util.*
 
 
 @Service
-class JFreeChartProvider : ChartProvider {
+class JFreeChartProvider(val buildProperty: BuildProperties) : ChartProvider {
 
     override fun getPngByteArray(
         code: String,
@@ -103,7 +105,8 @@ class JFreeChartProvider : ChartProvider {
 
     private fun getJFreeChartPlot(dataset: DefaultHighLowDataset): XYPlot {
 
-        val timeAxis = DateAxis("date");
+        val timeAxis = DateAxis("#gpwApiSignals ver.${this.buildProperty.version}")
+        timeAxis.labelLocation = AxisLabelLocation.HIGH_END
 
         val valueAxis = NumberAxis("price");
         valueAxis.autoRangeIncludesZero = false;
