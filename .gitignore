@@ -39,4 +39,4 @@ out/
 ### other ##
 config_credentials/
 .DS_Store
-/stockanalyzer-prod-github-release.jar
+/stockanalyzer-github-release.jar

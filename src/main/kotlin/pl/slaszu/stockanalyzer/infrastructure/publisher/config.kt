@@ -1,4 +1,4 @@
-package pl.slaszu.stockanalyzer.infrastructure.twitter
+package pl.slaszu.stockanalyzer.infrastructure.publisher
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.oshai.kotlinlogging.KotlinLogging

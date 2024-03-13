@@ -98,14 +98,6 @@ class JFreeChartProvider : ChartProvider {
 
         val bufferedImage = chart.createBufferedImage(800, 600)
 
-//        val file = File.createTempFile("img_$code","png")
-//        ChartUtils.saveChartAsPNG(
-//            file,
-//            chart,
-//            800,
-//            600
-//        )
-
         return ChartUtils.encodeAsPNG(bufferedImage)
     }
 
