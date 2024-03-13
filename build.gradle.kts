@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -9,10 +10,17 @@ plugins {
 }
 
 group = "pl.slaszu"
-version = "prod"
+version = "1.1"
+tasks.bootJar {
+	this.archiveFileName.set("${project.name}.jar")
+}
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_17
+}
+
+springBoot{
+	buildInfo()
 }
 
 repositories {

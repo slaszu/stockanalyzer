@@ -13,7 +13,7 @@ services:
       MONGODB_PORT: 27017
       spring_profiles_active: prod
     volumes:
-      - ./stockanalyzer-prod-github-release.jar:/app-build/stockanalyzer-prod.jar
+      - ./stockanalyzer-github-release.jar:/app-build/stockanalyzer-prod.jar
     networks:
       - stockanalyzer-network
     entrypoint: java -jar /app-build/stockanalyzer-prod.jar
