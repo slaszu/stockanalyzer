@@ -10,6 +10,7 @@ import pl.slaszu.stockanalyzer.application.CreateAlerts
 val logger = KotlinLogging.logger { }
 
 @Service
+@Profile("prod")
 class Scheduler(val createAlerts: CreateAlerts, val closeAlerts: CloseAlerts) {
 
     @Scheduled(cron = "0 * * * * *")

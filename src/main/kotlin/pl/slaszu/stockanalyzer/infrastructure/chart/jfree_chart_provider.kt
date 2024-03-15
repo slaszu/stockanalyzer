@@ -78,7 +78,7 @@ class JFreeChartProvider(val buildProperty: BuildProperties) : ChartProvider {
                 getAnnotationPointer(
                     buyPoint.label,
                     defaultHighLowDataset.getXValue(0, pointMap[buyPoint]!!),
-                    defaultHighLowDataset.getYValue(0, pointMap[buyPoint]!!)
+                    buyPoint.pointValue.toDouble()
                 )
             )
         }
@@ -89,7 +89,7 @@ class JFreeChartProvider(val buildProperty: BuildProperties) : ChartProvider {
                 getAnnotationPointer(
                     closePoint.label,
                     defaultHighLowDataset.getXValue(0, pointMap[closePoint]!!),
-                    defaultHighLowDataset.getYValue(0, pointMap[closePoint]!!)
+                    closePoint.pointValue.toDouble()
                 )
             )
         }

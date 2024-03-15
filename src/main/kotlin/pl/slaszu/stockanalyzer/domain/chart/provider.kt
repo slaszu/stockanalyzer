@@ -13,4 +13,4 @@ interface ChartProvider {
     ): ByteArray
 }
 
-data class ChartPoint(val point: StockPriceDto, val label: String)
+data class ChartPoint(val point: StockPriceDto, val pointValue: Float, val label: String)

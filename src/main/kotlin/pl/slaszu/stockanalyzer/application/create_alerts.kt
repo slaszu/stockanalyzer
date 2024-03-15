@@ -78,13 +78,15 @@ class CreateAlerts(
 
     private fun publishAlertAndGetId(stock: StockDto, priceList: Array<StockPriceDto>): String {
 
-        val alertLabel = "BUY ${stock.code} ${priceList.first().price.roundTo(2)} PLN"
+        val buyPrice = priceList.first().price.roundTo(2)
+
+        val alertLabel = "BUY ${stock.code} $buyPrice PLN"
 
         // get chart png
         val pngByteArray = this.chartProvider.getPngByteArray(
             "${stock.code}",
             priceList,
-            ChartPoint(priceList.first(), alertLabel)
+            ChartPoint(priceList.first(), buyPrice, alertLabel)
         )
 
 

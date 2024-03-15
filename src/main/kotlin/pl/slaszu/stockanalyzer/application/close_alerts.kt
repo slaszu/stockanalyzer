@@ -80,9 +80,11 @@ class CloseAlerts(
     private fun publishCloseAndGetId(alert: AlertModel, priceList: Array<StockPriceDto>, daysAfter: Int): String {
         val first = priceList.first()
 
+        val closePrice = first.price
+
         val priceChangeInPercent = this.getPriceChangePercent(alert.price, first.price)
 
-        val alertLabel = "SELL ${alert.stockCode} ${first.price} PLN"
+        val alertLabel = "SELL ${alert.stockCode} $closePrice PLN (after $daysAfter days)"
 
         // find priceListElement for alert by date
         val priceListForAlert = priceList.find {
@@ -90,15 +92,15 @@ class CloseAlerts(
         }
         var buyPoint: ChartPoint? = null;
         if (priceListForAlert != null) {
-            buyPoint = ChartPoint(priceListForAlert, "BUY ${alert.stockCode} ${alert.price} PLN")
+            buyPoint = ChartPoint(priceListForAlert, alert.price, "BUY ${alert.stockCode} ${alert.price} PLN")
         }
 
         // get chart png
         val pngByteArray = this.chartProvider.getPngByteArray(
-            "${alert.stockCode}",
+            alert.stockCode,
             priceList,
             buyPoint, // buy point
-            ChartPoint(priceList.first(), alertLabel) // close point
+            ChartPoint(priceList.first(), closePrice, alertLabel) // close point
         )
 
         // tweet alert
