@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "pl.slaszu"
-version = "1.0.3"
+version = "1.0.4"
 tasks.bootJar {
 	this.archiveFileName.set("${project.name}.jar")
 }
