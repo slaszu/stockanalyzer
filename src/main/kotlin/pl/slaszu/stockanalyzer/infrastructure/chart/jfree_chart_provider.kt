@@ -78,7 +78,8 @@ class JFreeChartProvider(val buildProperty: BuildProperties) : ChartProvider {
                 getAnnotationPointer(
                     buyPoint.label,
                     defaultHighLowDataset.getXValue(0, pointMap[buyPoint]!!),
-                    buyPoint.pointValue.toDouble()
+                    buyPoint.pointValue.toDouble(),
+                    buyPoint.pointerAngle
                 )
             )
         }
@@ -89,7 +90,8 @@ class JFreeChartProvider(val buildProperty: BuildProperties) : ChartProvider {
                 getAnnotationPointer(
                     closePoint.label,
                     defaultHighLowDataset.getXValue(0, pointMap[closePoint]!!),
-                    closePoint.pointValue.toDouble()
+                    closePoint.pointValue.toDouble(),
+                    closePoint.pointerAngle
                 )
             )
         }
@@ -117,12 +119,12 @@ class JFreeChartProvider(val buildProperty: BuildProperties) : ChartProvider {
         return plot
     }
 
-    private fun getAnnotationPointer(label: String, chartX: Double, chartY: Double): XYPointerAnnotation {
+    private fun getAnnotationPointer(label: String, chartX: Double, chartY: Double, pointerAngle: Int): XYPointerAnnotation {
         val pointer = XYPointerAnnotation(
             label,
             chartX,
             chartY,
-            Math.PI
+            pointerAngle*Math.PI/180
         )
         pointer.setBaseRadius(90.0)
         pointer.setTipRadius(10.0)

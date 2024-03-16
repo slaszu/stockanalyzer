@@ -84,7 +84,7 @@ class CloseAlerts(
 
         val priceChangeInPercent = this.getPriceChangePercent(alert.price, first.price)
 
-        val alertLabel = "SELL ${alert.stockCode} $closePrice PLN (after $daysAfter days)"
+        val alertLabel = "SELL ${alert.stockCode} $closePrice PLN"
 
         // find priceListElement for alert by date
         val priceListForAlert = priceList.find {
@@ -100,13 +100,13 @@ class CloseAlerts(
             alert.stockCode,
             priceList,
             buyPoint, // buy point
-            ChartPoint(priceList.first(), closePrice, alertLabel) // close point
+            ChartPoint(priceList.first(), closePrice, alertLabel, 180 - 45) // close point
         )
 
         // tweet alert
         return this.publisher.publish(
             pngByteArray,
-            "$alertLabel | result: $priceChangeInPercent %",
+            "$alertLabel (after $daysAfter days) | result: $priceChangeInPercent %",
             "#${alert.stockCode} #${alert.stockName} " +
                     "#gpwApiSignals\nhttps://pl.tradingview.com/symbols/GPW-${alert.stockCode}/",
             alert.tweetId
