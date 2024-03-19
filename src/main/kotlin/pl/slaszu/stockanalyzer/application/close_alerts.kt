@@ -100,7 +100,7 @@ class CloseAlerts(
             alert.stockCode,
             priceList,
             buyPoint, // buy point
-            ChartPoint(priceList.first(), closePrice, alertLabel, 180 - 45) // close point
+            ChartPoint(priceList.first(), closePrice, alertLabel) // close point
         )
 
         // tweet alert

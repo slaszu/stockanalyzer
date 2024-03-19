@@ -19,6 +19,7 @@ import pl.slaszu.stockanalyzer.shared.toDate
 import java.awt.Color
 import java.awt.Font
 import java.util.*
+import kotlin.math.absoluteValue
 
 
 @Service
@@ -78,22 +79,19 @@ class JFreeChartProvider(val buildProperty: BuildProperties) : ChartProvider {
                 getAnnotationPointer(
                     buyPoint.label,
                     defaultHighLowDataset.getXValue(0, pointMap[buyPoint]!!),
-                    buyPoint.pointValue.toDouble(),
-                    buyPoint.pointerAngle
+                    buyPoint.pointValue.toDouble()
                 )
             )
         }
 
         if (closePoint != null && pointMap[closePoint] != null) {
-
-            plot.addAnnotation(
-                getAnnotationPointer(
-                    closePoint.label,
-                    defaultHighLowDataset.getXValue(0, pointMap[closePoint]!!),
-                    closePoint.pointValue.toDouble(),
-                    closePoint.pointerAngle
-                )
+            val pointer = getAnnotationPointer(
+                closePoint.label,
+                defaultHighLowDataset.getXValue(0, pointMap[closePoint]!!),
+                closePoint.pointValue.toDouble()
             )
+            this.setPointerAngle(pointer, highArray.max(), lowArray.min(), buyPoint?.pointValue?.toDouble())
+            plot.addAnnotation(pointer)
         }
 
 
@@ -103,6 +101,43 @@ class JFreeChartProvider(val buildProperty: BuildProperties) : ChartProvider {
         val bufferedImage = chart.createBufferedImage(800, 600)
 
         return ChartUtils.encodeAsPNG(bufferedImage)
+    }
+
+    private fun setPointerAngle(pointer: XYPointerAnnotation, max: Double, min: Double, reservedValue: Double?) {
+        if (reservedValue == null) {
+            return; // do nothing
+        }
+
+        val xScale = max - min
+        val pointScale = (reservedValue - pointer.y).absoluteValue
+        val scalePercentDifferent = (100 * pointScale) / xScale
+        val xStep = xScale / 10
+
+        if (scalePercentDifferent < 5) {
+            // reserved point is higher than point, and point - xStep (about 10% of chart) is higher then min
+            if (reservedValue >= pointer.y && (pointer.y - xStep) > min) {
+                pointer.angle = (180 - 30) * Math.PI / 180 // 180-30 = 150 degrees
+                pointer.text += " a"
+            }
+
+            // reserved point is higher than point, and point - xStep (about 10% of chart) is lower then min
+            if (reservedValue >= pointer.y && (pointer.y - xStep) <= min) {
+                pointer.angle = (180 + 60) * Math.PI / 180 // 180 + 60 = 240 degrees
+                pointer.text += " b"
+            }
+
+            // reserved point is lower than point, and point + xStep (about 10% of chart) is higher then max
+            if (reservedValue < pointer.y && (pointer.y + xStep) > max) {
+                pointer.angle = (180 - 60) * Math.PI / 180 // 180-60 = 120 degrees
+                pointer.text += " c"
+            }
+
+            // reserved point is lower than point, and point + xStep (about 10% of chart) is higher then max
+            if (reservedValue < pointer.y && (pointer.y + xStep) <= max) {
+                pointer.angle = (180 + 30) * Math.PI / 180 // 180+30 = 210 degrees
+                pointer.text += " d"
+            }
+        }
     }
 
     private fun getJFreeChartPlot(dataset: DefaultHighLowDataset): XYPlot {
@@ -119,12 +154,16 @@ class JFreeChartProvider(val buildProperty: BuildProperties) : ChartProvider {
         return plot
     }
 
-    private fun getAnnotationPointer(label: String, chartX: Double, chartY: Double, pointerAngle: Int): XYPointerAnnotation {
+    private fun getAnnotationPointer(
+        label: String,
+        chartX: Double,
+        chartY: Double
+    ): XYPointerAnnotation {
         val pointer = XYPointerAnnotation(
             label,
             chartX,
             chartY,
-            pointerAngle*Math.PI/180
+            Math.PI
         )
         pointer.setBaseRadius(90.0)
         pointer.setTipRadius(10.0)
