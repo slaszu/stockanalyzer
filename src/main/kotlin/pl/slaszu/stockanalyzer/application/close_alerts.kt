@@ -45,13 +45,18 @@ class CloseAlerts(
             // get stock price now
             val stockPriceList = this.stockProvider.getStockPriceList(alert.stockCode)
             val first = stockPriceList.first()
+
             this.logger.info {
                 "Stock ${alert.stockCode} had price ${alert.price} " +
                         "and now has price ${first.price} [${first.updatedAt.toString()}]"
             }
 
-            val priceChangeInPercent = this.getPriceChangePercent(alert.price, first.price)
+            if (first.volume == 0) {
+                this.logger.debug { "Skip this stock" }
+                return@forEach // continue
+            }
 
+            val priceChangeInPercent = this.getPriceChangePercent(alert.price, first.price)
 
             val tweetId = this.publishCloseAndGetId(alert, stockPriceList, daysAfter)
             //val tweetId = "test"
