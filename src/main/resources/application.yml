@@ -3,7 +3,7 @@ analyzer:
   limit: 10
 
 stock-api:
-  url: https://gpw.g-sitemap-generator.com
+  url: ${GPW_API_URL}
 
 twitter-config:
   apiKey: ${TWITTER_apiKey}
