@@ -28,13 +28,12 @@ class CloseAlerts(
 
         val date = LocalDateTime.now().minusDays(daysAfter.toLong())
 
-        this.logger.info { "Get alert before $daysAfter days [date : ${date.toString()}]" }
-
         val alerts = this.alertRepo.findByDateBeforeAndCloseIsFalse(date)
 
+        this.logger.info { "Get alert before $daysAfter days [date : ${date.toString()}]" }
         this.logger.info { "Alerts found qty : ${alerts.size}" }
 
-        val findByDaysAfter = this.closeAlertRepo.findByDaysAfter(daysAfter)
+        val findByDaysAfter = this.closeAlertRepo.findByDaysAfterAndAlertClose(daysAfter)
 
         alerts.filter {
             val find = findByDaysAfter.find { closeAlertModel -> closeAlertModel.alert.stockCode == it.stockCode }
@@ -72,10 +71,18 @@ class CloseAlerts(
             )
 
             if (andClose) {
-                alert.close = true
-                alertRepo.save(alert)
+                this.closeAlert(alert)
             }
         }
+    }
+
+    fun closeAlert(alert:AlertModel) {
+        // close alert
+        alert.close = true
+        alertRepo.save(alert)
+
+        // update all close_alert's for this alert
+        this.closeAlertRepo
     }
 
     private fun getPriceChangePercent(buy: Float, sell: Float): Float {

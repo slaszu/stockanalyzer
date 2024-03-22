@@ -19,9 +19,12 @@ data class CloseAlertModel(
 }
 
 interface CloseAlertRepository : MongoRepository<CloseAlertModel, String> {
-    @Query("{\$and: [{'alert.stockCode': ?0}, {'daysAfter': ?1}]}")
+    @Query("{\$and: [{'alert.stockCode': ?0}, {'daysAfter': ?1}, {'alert.close': false}]}")
     fun findByStockCodeAndDaysAfter(stockCode: String, daysAfter: Int): List<CloseAlertModel>
 
-    @Query("{'daysAfter': ?0}")
-    fun findByDaysAfter(daysAfter: Int): List<CloseAlertModel>
+    @Query("{\$and: [{'daysAfter': ?0}, {'alert.close': ?1}]}")
+    fun findByDaysAfterAndAlertClose(daysAfter: Int, alertClose:Boolean = false): List<CloseAlertModel>
+
+    @Query("{ 'alert._id': ObjectId(?0) }")
+    fun findByAlertId(alertId: String): List<CloseAlertModel>
 }

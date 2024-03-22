@@ -117,25 +117,21 @@ class JFreeChartProvider(val buildProperty: BuildProperties) : ChartProvider {
             // reserved point is higher than point, and point - xStep (about 10% of chart) is higher then min
             if (reservedValue >= pointer.y && (pointer.y - xStep) > min) {
                 pointer.angle = (180 - 30) * Math.PI / 180 // 180-30 = 150 degrees
-                pointer.text += " a"
             }
 
             // reserved point is higher than point, and point - xStep (about 10% of chart) is lower then min
             if (reservedValue >= pointer.y && (pointer.y - xStep) <= min) {
                 pointer.angle = (180 + 60) * Math.PI / 180 // 180 + 60 = 240 degrees
-                pointer.text += " b"
             }
 
             // reserved point is lower than point, and point + xStep (about 10% of chart) is higher then max
             if (reservedValue < pointer.y && (pointer.y + xStep) > max) {
                 pointer.angle = (180 - 60) * Math.PI / 180 // 180-60 = 120 degrees
-                pointer.text += " c"
             }
 
             // reserved point is lower than point, and point + xStep (about 10% of chart) is higher then max
             if (reservedValue < pointer.y && (pointer.y + xStep) <= max) {
                 pointer.angle = (180 + 30) * Math.PI / 180 // 180+30 = 210 degrees
-                pointer.text += " d"
             }
         }
     }

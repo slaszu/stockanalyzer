@@ -17,6 +17,7 @@ import pl.slaszu.stockanalyzer.StockanalyzerApplication
 import pl.slaszu.stockanalyzer.domain.model.AlertModel
 import pl.slaszu.stockanalyzer.domain.model.CloseAlertModel
 import pl.slaszu.stockanalyzer.domain.model.CloseAlertRepository
+import java.time.LocalDateTime
 import java.util.stream.Stream
 
 
@@ -31,8 +32,72 @@ class CloseAlertRepositoryTests(@Autowired val closeAlertRepo: CloseAlertReposit
         this.closeAlertRepo.deleteAll()
     }
 
+    fun getAlertId(): String {
+        return "65eb0befc864193a40a3d007"
+    }
+
     @BeforeEach
     fun insert_fixtures() {
+
+
+        this.closeAlertRepo.save(
+            CloseAlertModel(
+                AlertModel(
+                    "X", "name", 5f, emptyList(), "tweetId",
+                    LocalDateTime.now(), true, null, getAlertId()
+                ),
+                "tweetIdx33",
+                5f,
+                2
+            )
+        )
+
+        this.closeAlertRepo.save(
+            CloseAlertModel(
+                AlertModel(
+                    "Y", "name y", 3.5f, emptyList(), "tweetId",
+                    LocalDateTime.now(), true, null, getAlertId()
+                ),
+                "tweetIdx22",
+                -3f,
+                2
+            )
+        )
+
+        this.closeAlertRepo.save(
+            CloseAlertModel(
+                AlertModel(
+                    "Y", "name y", 3.5f, emptyList(), "tweetId",
+                    LocalDateTime.now(), true, null, getAlertId()
+                ),
+                "tweetIdx11",
+                -3f,
+                2
+            )
+        )
+
+        this.closeAlertRepo.save(
+            CloseAlertModel(
+                AlertModel(
+                    "X", "name", 5f, emptyList(), "tweetId", LocalDateTime.now(), true
+                ),
+                "tweetIdx",
+                5f,
+                7
+            )
+        )
+
+        this.closeAlertRepo.save(
+            CloseAlertModel(
+                AlertModel(
+                    "Y", "name y", 3.5f, emptyList(), "tweetId", LocalDateTime.now(), true
+                ),
+                "tweetIdx",
+                -3f,
+                7
+            )
+        )
+
         this.closeAlertRepo.save(
             CloseAlertModel(
                 AlertModel(
@@ -81,7 +146,7 @@ class CloseAlertRepositoryTests(@Autowired val closeAlertRepo: CloseAlertReposit
     @Test
     fun testGetAll() {
         val findAll = closeAlertRepo.findAll()
-        Assertions.assertEquals(4, findAll.size)
+        Assertions.assertEquals(9, findAll.size)
     }
 
 
@@ -90,15 +155,26 @@ class CloseAlertRepositoryTests(@Autowired val closeAlertRepo: CloseAlertReposit
     fun testData(stockCode: String, daysAfter: Int, expect: Int) {
 
         // check all
-        var closeAlertModels = closeAlertRepo.findByStockCodeAndDaysAfter(stockCode, daysAfter)
+        val closeAlertModels = closeAlertRepo.findByStockCodeAndDaysAfter(stockCode, daysAfter)
         Assertions.assertEquals(expect, closeAlertModels.size)
     }
 
     @Test
-    fun testDaysAfter() {
-        val findByDaysAfter = closeAlertRepo.findByDaysAfter(7)
+    fun testDaysAfterAndAlertCloseIsFalse() {
+        val findByDaysAfter = closeAlertRepo.findByDaysAfterAndAlertClose(7)
         Assertions.assertEquals(3, findByDaysAfter.size)
+    }
 
+    @Test
+    fun testDaysAfterAndAlertCloseIsTrue() {
+        val findByDaysAfter = closeAlertRepo.findByDaysAfterAndAlertClose(7, true)
+        Assertions.assertEquals(2, findByDaysAfter.size)
+    }
+
+    @Test
+    fun testFindByAlertId() {
+        val findByDaysAfter = closeAlertRepo.findByAlertId(getAlertId())
+        Assertions.assertEquals(3, findByDaysAfter.size)
     }
 
     companion object {
