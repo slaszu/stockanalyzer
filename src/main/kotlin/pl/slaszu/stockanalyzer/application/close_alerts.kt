@@ -3,12 +3,13 @@ package pl.slaszu.stockanalyzer.application
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
+import pl.slaszu.stockanalyzer.domain.alert.CloseAlertService
 import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
 import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
-import pl.slaszu.stockanalyzer.domain.model.AlertModel
-import pl.slaszu.stockanalyzer.domain.model.AlertRepository
-import pl.slaszu.stockanalyzer.domain.model.CloseAlertModel
-import pl.slaszu.stockanalyzer.domain.model.CloseAlertRepository
+import pl.slaszu.stockanalyzer.domain.alert.model.AlertModel
+import pl.slaszu.stockanalyzer.domain.alert.model.AlertRepository
+import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertModel
+import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertRepository
 import pl.slaszu.stockanalyzer.domain.publisher.Publisher
 import pl.slaszu.stockanalyzer.domain.stock.StockPriceDto
 import pl.slaszu.stockanalyzer.domain.stock.StockProvider
@@ -22,6 +23,7 @@ class CloseAlerts(
     private val closeAlertRepo: CloseAlertRepository,
     private val chartProvider: ChartProvider,
     private val publisher: Publisher,
+    private val closeAlertService: CloseAlertService,
     private val logger: KLogger = KotlinLogging.logger { }
 ) {
     fun runForDaysAfter(daysAfter: Int, andClose: Boolean = false) {
@@ -58,7 +60,6 @@ class CloseAlerts(
             val priceChangeInPercent = this.getPriceChangePercent(alert.price, first.price)
 
             val tweetId = this.publishCloseAndGetId(alert, stockPriceList, daysAfter)
-            //val tweetId = "test"
 
             // add CloseAlertModel
             this.closeAlertRepo.save(
@@ -71,18 +72,9 @@ class CloseAlerts(
             )
 
             if (andClose) {
-                this.closeAlert(alert)
+                this.closeAlertService.closeAlert(alert)
             }
         }
-    }
-
-    fun closeAlert(alert:AlertModel) {
-        // close alert
-        alert.close = true
-        alertRepo.save(alert)
-
-        // update all close_alert's for this alert
-        this.closeAlertRepo
     }
 
     private fun getPriceChangePercent(buy: Float, sell: Float): Float {

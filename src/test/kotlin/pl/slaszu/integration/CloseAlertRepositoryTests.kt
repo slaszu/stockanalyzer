@@ -14,9 +14,10 @@ import org.springframework.test.context.ContextConfiguration
 import org.testcontainers.junit.jupiter.Testcontainers
 import pl.slaszu.integration.config.MongoDBTestContainerConfig
 import pl.slaszu.stockanalyzer.StockanalyzerApplication
-import pl.slaszu.stockanalyzer.domain.model.AlertModel
-import pl.slaszu.stockanalyzer.domain.model.CloseAlertModel
-import pl.slaszu.stockanalyzer.domain.model.CloseAlertRepository
+import pl.slaszu.stockanalyzer.domain.alert.CloseAlertService
+import pl.slaszu.stockanalyzer.domain.alert.model.AlertModel
+import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertModel
+import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertRepository
 import java.time.LocalDateTime
 import java.util.stream.Stream
 
@@ -25,7 +26,9 @@ import java.util.stream.Stream
 @Testcontainers
 @ContextConfiguration(classes = [MongoDBTestContainerConfig::class, StockanalyzerApplication::class])
 @ActiveProfiles("test")
-class CloseAlertRepositoryTests(@Autowired val closeAlertRepo: CloseAlertRepository) {
+class CloseAlertRepositoryTests(
+    @Autowired val closeAlertRepo: CloseAlertRepository
+) {
 
     @AfterEach
     fun del_fixtures() {
@@ -176,6 +179,8 @@ class CloseAlertRepositoryTests(@Autowired val closeAlertRepo: CloseAlertReposit
         val findByDaysAfter = closeAlertRepo.findByAlertId(getAlertId())
         Assertions.assertEquals(3, findByDaysAfter.size)
     }
+
+
 
     companion object {
         @JvmStatic

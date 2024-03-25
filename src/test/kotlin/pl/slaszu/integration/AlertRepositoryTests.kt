@@ -16,8 +16,8 @@ import org.springframework.test.context.ContextConfiguration
 import org.testcontainers.junit.jupiter.Testcontainers
 import pl.slaszu.integration.config.MongoDBTestContainerConfig
 import pl.slaszu.stockanalyzer.StockanalyzerApplication
-import pl.slaszu.stockanalyzer.domain.model.AlertModel
-import pl.slaszu.stockanalyzer.domain.model.AlertRepository
+import pl.slaszu.stockanalyzer.domain.alert.model.AlertModel
+import pl.slaszu.stockanalyzer.domain.alert.model.AlertRepository
 import java.util.stream.Stream
 import java.time.LocalDateTime as LocalDateTimeJava
 

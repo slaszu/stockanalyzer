@@ -1,4 +1,4 @@
-package pl.slaszu.stockanalyzer.domain.model
+package pl.slaszu.stockanalyzer.domain.alert.model
 
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.mapping.Document

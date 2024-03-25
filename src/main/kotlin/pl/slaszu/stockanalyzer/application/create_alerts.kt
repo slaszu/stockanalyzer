@@ -3,10 +3,10 @@ package pl.slaszu.stockanalyzer.application
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
+import pl.slaszu.stockanalyzer.domain.alert.model.AlertModel
+import pl.slaszu.stockanalyzer.domain.alert.model.AlertRepository
 import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
 import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
-import pl.slaszu.stockanalyzer.domain.model.AlertModel
-import pl.slaszu.stockanalyzer.domain.model.AlertRepository
 import pl.slaszu.stockanalyzer.domain.publisher.Publisher
 import pl.slaszu.stockanalyzer.domain.stock.StockDto
 import pl.slaszu.stockanalyzer.domain.stock.StockPriceDto
@@ -56,8 +56,6 @@ class CreateAlerts(
 
                 // todo uncomment
                 val publishedId = this.publishAlertAndGetId(it, stockPriceList)
-                //val publishedId = "test"
-
 
                 val alertModel = AlertModel(
                     it.code,

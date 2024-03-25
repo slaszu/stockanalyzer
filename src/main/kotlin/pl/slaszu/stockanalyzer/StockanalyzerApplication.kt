@@ -10,8 +10,7 @@ import org.springframework.context.annotation.*
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import org.springframework.scheduling.annotation.EnableScheduling
 import pl.slaszu.stockanalyzer.application.CloseAlerts
-import pl.slaszu.stockanalyzer.application.CreateAlerts
-import pl.slaszu.stockanalyzer.domain.model.AlertRepository
+import pl.slaszu.stockanalyzer.domain.alert.model.AlertRepository
 import pl.slaszu.stockanalyzer.infrastructure.stock.StockApiParams
 import pl.slaszu.stockanalyzer.infrastructure.publisher.TwitterConfig
 

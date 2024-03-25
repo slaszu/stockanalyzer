@@ -1,6 +1,6 @@
 package pl.slaszu.stockanalyzer.application
 
-import pl.slaszu.stockanalyzer.domain.model.CloseAlertRepository
+import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertRepository
 
 class CreateReport(
     private val closeAlertRepository: CloseAlertRepository
