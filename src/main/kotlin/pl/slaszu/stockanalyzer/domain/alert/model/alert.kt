@@ -15,8 +15,8 @@ data class AlertModel(
     val signals: List<SignalEnum>,
     val tweetId: String,
     val date: LocalDateTime = LocalDateTime.now(),
-    var close: Boolean = false,
-    val checkedProfit: Float? = null,
+    val close: Boolean = false,
+    val closeDate: LocalDateTime? = null,
     val id: String? = null
 ) {
 }
@@ -26,5 +26,5 @@ interface AlertRepository : MongoRepository<AlertModel, String> {
 
     fun findByDateBeforeAndCloseIsFalse(date: LocalDateTime): List<AlertModel>
 
-
+    fun findByCloseDateAfterAndCloseIsTrue(date: LocalDateTime): List<AlertModel>
 }

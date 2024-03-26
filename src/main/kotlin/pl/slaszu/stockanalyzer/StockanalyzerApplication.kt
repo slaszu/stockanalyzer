@@ -56,7 +56,7 @@ class SomeBeans {
     @Bean
     fun testCreate(action: CloseAlerts): ApplicationRunner {
         return ApplicationRunner {
-            action.runForDaysAfter(2)
+            action.runForDaysAfter(2, true)
         }
     }
 

@@ -107,6 +107,10 @@ class CloseAlertServiceTests(
         val findByAlertId = closeAlertRepo.findByAlertId(this.alertSaved?.id!!)
         Assertions.assertEquals(4, findByAlertId.size)
 
+        val findByCloseDateAfterAndCloseIsFalse =
+            alertRepo.findByCloseDateAfterAndCloseIsTrue(LocalDateTime.now().minusDays(1))
+        Assertions.assertEquals(0, findByCloseDateAfterAndCloseIsFalse.size)
+
         this.closeAlertService.closeAlert(this.alertSaved!!)
 
         val findByAlertIdAfter = closeAlertRepo.findByAlertId(this.alertSaved?.id!!)
@@ -117,6 +121,14 @@ class CloseAlertServiceTests(
 
         val findById = alertRepo.findById(this.alertSaved?.id!!)
         Assertions.assertTrue(findById.get().close)
+
+        val findByCloseDateAfterAndCloseIsFalseAfter =
+            alertRepo.findByCloseDateAfterAndCloseIsTrue(LocalDateTime.now().minusDays(1))
+        Assertions.assertEquals(1, findByCloseDateAfterAndCloseIsFalseAfter.size)
+
+        val findByCloseDateAfterAndCloseIsFalseAfterNow =
+            alertRepo.findByCloseDateAfterAndCloseIsTrue(LocalDateTime.now())
+        Assertions.assertEquals(0, findByCloseDateAfterAndCloseIsFalseAfterNow.size)
     }
 
 }

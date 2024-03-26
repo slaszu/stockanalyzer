@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 @Document("close_alert")
 @TypeAlias("close_alert")
 data class CloseAlertModel(
-    var alert: AlertModel,
+    val alert: AlertModel,
     val tweetId: String,
     val resultPercent: Float,
     val daysAfter: Int,
