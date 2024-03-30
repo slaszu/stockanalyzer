@@ -16,6 +16,8 @@ spring:
     mongodb:
       uri: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27018}/"
       database: "stockanalyzer"
+  mustache:
+    suffix: .html
 
 logging:
   level.root: WARN

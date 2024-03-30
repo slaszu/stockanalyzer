@@ -10,6 +10,7 @@ import org.springframework.context.annotation.*
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import org.springframework.scheduling.annotation.EnableScheduling
 import pl.slaszu.stockanalyzer.application.CloseAlerts
+import pl.slaszu.stockanalyzer.application.CreateReport
 import pl.slaszu.stockanalyzer.domain.alert.model.AlertRepository
 import pl.slaszu.stockanalyzer.infrastructure.stock.StockApiParams
 import pl.slaszu.stockanalyzer.infrastructure.publisher.TwitterConfig
@@ -54,9 +55,9 @@ class ProdBeans {
 class SomeBeans {
 
     @Bean
-    fun testCreate(action: CloseAlerts): ApplicationRunner {
+    fun testCreate(action: CreateReport): ApplicationRunner {
         return ApplicationRunner {
-            action.runForDaysAfter(2, true)
+            action.runForDaysAfter(7)
         }
     }
 
