@@ -51,6 +51,8 @@ class CreateReport(
             val alerts = alertsMap.toList()
         })
 
+        // todo html to image https://github.com/danfickle/openhtmltopdf/wiki/Java2D-Image-Output
+
         println(html)
     }
 }
