@@ -1,6 +1,7 @@
 package pl.slaszu.stockanalyzer.application
 
 import com.samskivert.mustache.Mustache
+import gui.ava.html.image.generator.HtmlImageGenerator
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.boot.autoconfigure.mustache.MustacheResourceTemplateLoader
@@ -9,7 +10,10 @@ import pl.slaszu.stockanalyzer.domain.alert.model.AlertModel
 import pl.slaszu.stockanalyzer.domain.alert.model.AlertRepository
 import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertModel
 import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertRepository
+import java.awt.Dimension
+import java.io.File
 import java.time.LocalDateTime
+
 
 @Service
 class CreateReport(
@@ -54,5 +58,12 @@ class CreateReport(
         // todo html to image https://github.com/danfickle/openhtmltopdf/wiki/Java2D-Image-Output
 
         println(html)
+
+        File("testing.html").writeText(html)
+
+        val imageGenerator: HtmlImageGenerator = HtmlImageGenerator()
+
+        imageGenerator.loadHtml(html)
+        imageGenerator.saveAsImage("testing.png")
     }
 }

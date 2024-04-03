@@ -1,9 +1,84 @@
 <html>
-<head></head>
-<body>
-    <h1>Sygnały zakończone {{ alerts.size }}</h1>
-    <table>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            width:600;
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
-    </table>
+        table {
+            width:90%;
+        }
+        td {
+            padding:5px;
+            text-align: right;
+        }
+
+        .left {
+            text-align:left;
+            font-weight: bold;
+        }
+
+        .red {
+            color: red;
+            font-weight: bold;
+        }
+
+        .green {
+            color:green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<h1>Sygnały zakończone. Ilość: {{ alerts.size }}</h1>
+<table>
+
+    {{#alerts}}
+    <tr>
+        <td>{{first.stockName}} {{ first.stockCode }}</td>
+        {{#second}}
+        <td>
+            {{ resultPercent }} (after {{ daysAfter }} days)
+        </td>
+        {{/second}}
+    </tr>
+    {{/alerts}}
+
+    <tr>
+        <td class="left">NTCAPITAL [NTC]</td>
+        <td class="right">
+            <span class="red">-7.04 %</span> (after 2 days)
+        </td>
+        <td>
+            <span class="green">-1.41 %</span> (after 7 days)
+        </td>
+    </tr>
+    <tr>
+        <td class="left">MERCOR [MCR]</td>
+        <td>
+            -10.71 % (after 2 days)
+        </td>
+    </tr>
+    <tr>
+        <td class="left">ASSECOSEE [ASE]</td>
+        <td>
+            -5.56 (after 2 days)
+        </td>
+    </tr>
+    <tr>
+        <td class="left">GRUPRACUJ [GPP]</td>
+        <td>
+            -2.21 (after 2 days)
+        </td>
+    </tr>
+    <tr>
+        <td class="left">ABPL [ABE]</td>
+        <td>
+            0.96 (after 2 days)
+        </td>
+    </tr>
+</table>
 </body>
 </html>
