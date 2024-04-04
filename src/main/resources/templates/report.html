@@ -10,6 +10,7 @@
         table {
             width:90%;
         }
+
         td {
             padding:5px;
             text-align: right;
@@ -17,7 +18,6 @@
 
         .left {
             text-align:left;
-            font-weight: bold;
         }
 
         .red {
@@ -29,56 +29,52 @@
             color:green;
             font-weight: bold;
         }
+
+        h1 {
+            display: block;
+            text-align: center;
+        }
+
+        .footer {
+            display:block;
+            text-align:right;
+            font-size:80%;
+        }
+
+        .details {
+            font-size:80%;
+        }
     </style>
 </head>
 <body>
-<h1>Sygnały zakończone. Ilość: {{ alerts.size }}</h1>
+<h1>Sygnały zamknięte. Ilość: {{ alerts.size }}</h1>
 <table>
 
     {{#alerts}}
     <tr>
-        <td>{{first.stockName}} {{ first.stockCode }}</td>
+        <td class="left">
+            <b>{{first.stock}}</b>
+            <div class="details">
+                BUY: {{first.buy_price}} PLN<br/>
+                Data: {{first.buy_date}}
+            </div>
+        </td>
         {{#second}}
         <td>
-            {{ resultPercent }} (after {{ daysAfter }} days)
+            <span class="{{result_class}}">{{result}} %</span> (after {{days}} days)
+            <div class="details">
+                SELL: xxx PLN<br/>
+                Data: 2022-09-32
+            </div>
         </td>
         {{/second}}
     </tr>
     {{/alerts}}
 
-    <tr>
-        <td class="left">NTCAPITAL [NTC]</td>
-        <td class="right">
-            <span class="red">-7.04 %</span> (after 2 days)
-        </td>
-        <td>
-            <span class="green">-1.41 %</span> (after 7 days)
-        </td>
-    </tr>
-    <tr>
-        <td class="left">MERCOR [MCR]</td>
-        <td>
-            -10.71 % (after 2 days)
-        </td>
-    </tr>
-    <tr>
-        <td class="left">ASSECOSEE [ASE]</td>
-        <td>
-            -5.56 (after 2 days)
-        </td>
-    </tr>
-    <tr>
-        <td class="left">GRUPRACUJ [GPP]</td>
-        <td>
-            -2.21 (after 2 days)
-        </td>
-    </tr>
-    <tr>
-        <td class="left">ABPL [ABE]</td>
-        <td>
-            0.96 (after 2 days)
-        </td>
-    </tr>
 </table>
+<div class="footer">
+    #gpwApiSignals ver.{{build.version}}
+</div>
+
 </body>
 </html>

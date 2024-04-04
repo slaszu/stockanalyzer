@@ -1,26 +1,18 @@
 package pl.slaszu.stockanalyzer.application
 
-import com.samskivert.mustache.Mustache
-import gui.ava.html.image.generator.HtmlImageGenerator
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
-import org.springframework.boot.autoconfigure.mustache.MustacheResourceTemplateLoader
 import org.springframework.stereotype.Service
-import pl.slaszu.stockanalyzer.domain.alert.model.AlertModel
 import pl.slaszu.stockanalyzer.domain.alert.model.AlertRepository
-import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertModel
 import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertRepository
-import java.awt.Dimension
-import java.io.File
+import pl.slaszu.stockanalyzer.domain.report.ReportProvider
 import java.time.LocalDateTime
 
 
 @Service
 class CreateReport(
-    private val closeAlertRepository: CloseAlertRepository,
     private val alertRepository: AlertRepository,
-    private val templateLoader: MustacheResourceTemplateLoader,
-    private val compiler: Mustache.Compiler,
+    private val reportProvider: ReportProvider,
     private val logger: KLogger = KotlinLogging.logger { }
 ) {
 
@@ -34,36 +26,11 @@ class CreateReport(
 
         this.logger.debug { "Found ${alertClosedList.size} alert closed for date $date" }
 
-        val alertsMap = mutableMapOf<AlertModel,List<CloseAlertModel>>()
-
-        alertClosedList.forEach {
-            val closeAlertForIt = this.closeAlertRepository.findByAlertId(it.id!!)
-
-            alertsMap[it] = closeAlertForIt.sortedBy { closeAlert -> closeAlert.daysAfter }
-
-        }
-
-//        alertsMap.toList().forEach {
-//            println(it.first)
-//            println(it.second)
-//
-//        }
-
-        val reader = templateLoader.getTemplate("report")
-        val template = compiler.compile(reader)
-        val html = template.execute(object {
-            val alerts = alertsMap.toList()
-        })
-
-        // todo html to image https://github.com/danfickle/openhtmltopdf/wiki/Java2D-Image-Output
+        val html = this.reportProvider.getHtml(alertClosedList);
 
         println(html)
 
-        File("testing.html").writeText(html)
+        //this.reportProvider.getPngByteArray(alertClosedList)
 
-        val imageGenerator: HtmlImageGenerator = HtmlImageGenerator()
-
-        imageGenerator.loadHtml(html)
-        imageGenerator.saveAsImage("testing.png")
     }
 }
