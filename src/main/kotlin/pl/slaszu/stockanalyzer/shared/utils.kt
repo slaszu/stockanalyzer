@@ -23,6 +23,10 @@ fun calcPercent(price: Float, price2: Float): Float {
     return abs((price - price2) / price * 100)
 }
 
+fun calcSellPrice(buyPrice: Float, resultPercent: Float): Float {
+    return buyPrice + (buyPrice * resultPercent / 100)
+}
+
 fun Date.toLocalDate(): LocalDate {
     return this.toInstant()
         .atZone(ZoneId.systemDefault())

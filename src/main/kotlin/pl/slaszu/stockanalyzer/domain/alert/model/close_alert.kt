@@ -13,6 +13,7 @@ data class CloseAlertModel(
     val tweetId: String,
     val resultPercent: Float,
     val daysAfter: Int,
+    val price: Float? = null,
     val date: LocalDateTime = LocalDateTime.now(),
     val id: String? = null
 ) {
@@ -23,7 +24,7 @@ interface CloseAlertRepository : MongoRepository<CloseAlertModel, String> {
     fun findByStockCodeAndDaysAfter(stockCode: String, daysAfter: Int): List<CloseAlertModel>
 
     @Query("{\$and: [{'daysAfter': ?0}, {'alert.close': ?1}]}")
-    fun findByDaysAfterAndAlertClose(daysAfter: Int, alertClose:Boolean = false): List<CloseAlertModel>
+    fun findByDaysAfterAndAlertClose(daysAfter: Int, alertClose: Boolean = false): List<CloseAlertModel>
 
     @Query("{ 'alert._id': ObjectId(?0) }")
     fun findByAlertId(alertId: String): List<CloseAlertModel>

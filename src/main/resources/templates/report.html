@@ -5,6 +5,7 @@
         body {
             width:600;
             font-family: Arial, Helvetica, sans-serif;
+            font-size:14px;
         }
 
         table {
@@ -44,6 +45,9 @@
         .details {
             font-size:80%;
         }
+        .details2 {
+            font-size:60%
+        }
     </style>
 </head>
 <body>
@@ -55,16 +59,20 @@
         <td class="left">
             <b>{{first.stock}}</b>
             <div class="details">
-                BUY: {{first.buy_price}} PLN<br/>
-                Data: {{first.buy_date}}
+                BUY: {{first.buy_price}} PLN
+            </div>
+            <div class="details2">
+                {{first.buy_date}}
             </div>
         </td>
         {{#second}}
         <td>
             <span class="{{result_class}}">{{result}} %</span> (after {{days}} days)
             <div class="details">
-                SELL: xxx PLN<br/>
-                Data: 2022-09-32
+                SELL: {{sell_price}} PLN
+            </div>
+            <div class="details2">
+                {{sell_date}}
             </div>
         </td>
         {{/second}}

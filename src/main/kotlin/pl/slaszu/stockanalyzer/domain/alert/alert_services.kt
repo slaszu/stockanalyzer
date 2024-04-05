@@ -3,6 +3,7 @@ package pl.slaszu.stockanalyzer.domain.alert
 import org.springframework.stereotype.Service
 import pl.slaszu.stockanalyzer.domain.alert.model.AlertModel
 import pl.slaszu.stockanalyzer.domain.alert.model.AlertRepository
+import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertModel
 import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertRepository
 import java.time.LocalDateTime
 
@@ -25,5 +26,17 @@ class CloseAlertService(
         }
 
         this.alertRepo.save(alertRefreshed)
+    }
+}
+
+
+@Service
+class CloseAlertProvider(val closeAlertRepository: CloseAlertRepository) {
+    fun getAllForAlerts(alertList: List<AlertModel>): List<CloseAlertModel> {
+        val result = mutableListOf<CloseAlertModel>()
+        alertList.forEach {
+            result.addAll(this.closeAlertRepository.findByAlertId(it.id!!))
+        }
+        return result.toList()
     }
 }

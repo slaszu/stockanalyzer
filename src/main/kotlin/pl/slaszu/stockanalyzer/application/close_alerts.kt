@@ -67,7 +67,8 @@ class CloseAlerts(
                     alert,
                     tweetId,
                     priceChangeInPercent,
-                    daysAfter
+                    daysAfter,
+                    first.price
                 )
             )
 

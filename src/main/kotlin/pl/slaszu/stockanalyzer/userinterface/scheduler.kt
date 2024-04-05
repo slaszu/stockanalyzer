@@ -6,12 +6,17 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import pl.slaszu.stockanalyzer.application.CloseAlerts
 import pl.slaszu.stockanalyzer.application.CreateAlerts
+import pl.slaszu.stockanalyzer.application.CreateReport
 
 val logger = KotlinLogging.logger { }
 
 @Service
 @Profile("prod")
-class Scheduler(val createAlerts: CreateAlerts, val closeAlerts: CloseAlerts) {
+class Scheduler(
+    val createAlerts: CreateAlerts,
+    val closeAlerts: CloseAlerts,
+    val createReport: CreateReport
+) {
 
     @Scheduled(cron = "0 * * * * *")
     @Profile("default")
@@ -35,5 +40,11 @@ class Scheduler(val createAlerts: CreateAlerts, val closeAlerts: CloseAlerts) {
     fun runCheckAndCloseAlerts() {
         logger.info { "Scheduler:runCheckAndCloseAlerts 14 andClose=true" }
         this.closeAlerts.runForDaysAfter(14, true)
+    }
+
+    @Scheduled(cron = "0 0 21 * * SUN")
+    fun runCreateWeekReport() {
+        logger.info { "Scheduler:runCreateWeekReport 7" }
+        this.createReport.runForDaysAfter(7)
     }
 }
