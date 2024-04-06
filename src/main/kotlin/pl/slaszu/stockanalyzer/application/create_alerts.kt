@@ -30,7 +30,7 @@ class CreateAlerts(
             logger.debug { "StockCodeList has ${it.size} qty" }
         }
         val date = LocalDateTime.now()
-        val activeAlerts = this.alertRepo.findByDateBeforeAndCloseIsFalse(date)
+        val activeAlerts = this.alertRepo.findAlertsActiveBeforeThatDate(date)
 
 
         stockCodeList.filter {

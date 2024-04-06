@@ -51,6 +51,14 @@ class AlertRepositoryTests(@Autowired val alertRepo: AlertRepository) {
         this.alertRepo.save(
             AlertModel(
                 "XYZ", "Some Name", 5.1f, emptyList(), "",
+                LocalDateTime.parse("2023-01-03T12:00:00").toJavaLocalDateTime(),
+                true
+            )
+        )
+
+        this.alertRepo.save(
+            AlertModel(
+                "XYZ", "Some Name", 5.1f, emptyList(), "",
                 LocalDateTime.parse("2023-01-03T12:00:00").toJavaLocalDateTime()
             )
         )
@@ -87,7 +95,7 @@ class AlertRepositoryTests(@Autowired val alertRepo: AlertRepository) {
     @Test
     fun testGetAll() {
         val findAll = alertRepo.findAll()
-        Assertions.assertEquals(7, findAll.size)
+        Assertions.assertEquals(8, findAll.size)
     }
 
 
@@ -105,7 +113,7 @@ class AlertRepositoryTests(@Autowired val alertRepo: AlertRepository) {
     fun testDatesBefore(date: LocalDateTimeJava, expect: Int) {
 
         // check all
-        var alertModels = alertRepo.findByDateBeforeAndCloseIsFalse(date)
+        var alertModels = alertRepo.findAlertsActiveBeforeThatDate(date)
         Assertions.assertEquals(expect, alertModels.size)
     }
 

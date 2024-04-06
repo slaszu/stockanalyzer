@@ -26,7 +26,7 @@ class CreateReport(
          * 1. get alert closed and
          */
         val date = LocalDateTime.now().minusDays(daysAfter.toLong())
-        val alertClosedList = this.alertRepository.findByCloseDateAfterAndCloseIsTrue(date)
+        val alertClosedList = this.alertRepository.findAlertsClosedAfterThatDate(date)
 
         this.logger.debug { "Found ${alertClosedList.size} alert closed for date $date" }
 

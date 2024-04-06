@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Assumptions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
@@ -108,7 +107,7 @@ class CloseAlertServiceTests(
         Assertions.assertEquals(4, findByAlertId.size)
 
         val findByCloseDateAfterAndCloseIsFalse =
-            alertRepo.findByCloseDateAfterAndCloseIsTrue(LocalDateTime.now().minusDays(1))
+            alertRepo.findAlertsClosedAfterThatDate(LocalDateTime.now().minusDays(1))
         Assertions.assertEquals(0, findByCloseDateAfterAndCloseIsFalse.size)
 
         this.closeAlertService.closeAlert(this.alertSaved!!)
@@ -123,11 +122,11 @@ class CloseAlertServiceTests(
         Assertions.assertTrue(findById.get().close)
 
         val findByCloseDateAfterAndCloseIsFalseAfter =
-            alertRepo.findByCloseDateAfterAndCloseIsTrue(LocalDateTime.now().minusDays(1))
+            alertRepo.findAlertsClosedAfterThatDate(LocalDateTime.now().minusDays(1))
         Assertions.assertEquals(1, findByCloseDateAfterAndCloseIsFalseAfter.size)
 
         val findByCloseDateAfterAndCloseIsFalseAfterNow =
-            alertRepo.findByCloseDateAfterAndCloseIsTrue(LocalDateTime.now())
+            alertRepo.findAlertsClosedAfterThatDate(LocalDateTime.now())
         Assertions.assertEquals(0, findByCloseDateAfterAndCloseIsFalseAfterNow.size)
     }
 

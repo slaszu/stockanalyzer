@@ -30,7 +30,7 @@ class CloseAlerts(
 
         val date = LocalDateTime.now().minusDays(daysAfter.toLong())
 
-        val alerts = this.alertRepo.findByDateBeforeAndCloseIsFalse(date)
+        val alerts = this.alertRepo.findAlertsActiveBeforeThatDate(date)
 
         this.logger.info { "Get alert before $daysAfter days [date : ${date.toString()}]" }
         this.logger.info { "Alerts found qty : ${alerts.size}" }
