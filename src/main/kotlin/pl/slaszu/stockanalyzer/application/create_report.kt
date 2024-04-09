@@ -22,16 +22,14 @@ class CreateReport(
 
     fun runForDaysAfter(daysAfter: Int) {
 
-        /**
-         * 1. get alert closed and
-         */
         val date = LocalDateTime.now().minusDays(daysAfter.toLong())
         val alertClosedList = this.alertRepository.findAlertsClosedAfterThatDate(date)
 
         this.logger.debug { "Found ${alertClosedList.size} alert closed for date $date" }
 
-//        val html = this.reportProvider.getHtml(alertClosedList);
-//        println(html)
+        if (alertClosedList.isEmpty()) {
+            return
+        }
 
         val pngByteArray = this.reportProvider.getPngByteArray(alertClosedList)
 

@@ -72,7 +72,7 @@ class SomeBeans {
     @Bean
     fun testCreateReport(action: CreateReport): ApplicationRunner {
         return ApplicationRunner {
-            action.runForDaysAfter(2)
+            action.runForDaysAfter(7)
         }
     }
 

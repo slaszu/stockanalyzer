@@ -48,7 +48,6 @@ class MustacheReportProvider(
         val imageGenerator = HtmlImageGenerator()
 
         imageGenerator.loadHtml(this.getHtml(alertList))
-        imageGenerator.saveAsImage("testing.png")
 
         return ChartUtils.encodeAsPNG(imageGenerator.bufferedImage)
     }
