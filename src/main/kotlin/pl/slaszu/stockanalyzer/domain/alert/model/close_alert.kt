@@ -28,4 +28,7 @@ interface CloseAlertRepository : MongoRepository<CloseAlertModel, String> {
 
     @Query("{ 'alert._id': ObjectId(?0) }")
     fun findByAlertId(alertId: String): List<CloseAlertModel>
+
+    @Query("{'date' : { \$gt: ?0 }}")
+    fun findCloseAlertsAfterDate(date: LocalDateTime): List<CloseAlertModel>
 }

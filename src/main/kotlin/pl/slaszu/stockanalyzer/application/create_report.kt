@@ -38,12 +38,19 @@ class CreateReport(
         this.publisher.publish(
             pngByteArray,
             "Podsumowanie (last $daysAfter days)",
-            "${this.getTopDesc(closeAlertsList)}\n${this.getLastDesc(closeAlertsList)}"
+            "${this.getTopDesc(closeAlertsList)}\n${this.getLastDesc(closeAlertsList)}\n${this.getHashTags(closeAlertsList)}"
         )
     }
 
-    private fun getTopDesc(closeAlertsList: List<CloseAlertModel>): String
-    {
+    private fun getHashTags(closeAlertsList: List<CloseAlertModel>): String {
+        var hashTags = "";
+        closeAlertsList.forEach {
+            hashTags += "#${it.alert.stockCode} #${it.alert.stockName} "
+        }
+        return hashTags
+    }
+
+    private fun getTopDesc(closeAlertsList: List<CloseAlertModel>): String {
         // sortuj malejaco
         // tylko dodatnie zwoty
         // max 3
@@ -52,13 +59,12 @@ class CreateReport(
             return "";
         }
 
-        return "Best:\n" + res.joinToString("\n") {
+        return "Najlepsze:\n" + res.joinToString("\n") {
             "${it.alert.stockName} [${it.alert.stockCode}] +${it.resultPercent} % (after ${it.daysAfter} days)"
         }
     }
 
-    private fun getLastDesc(closeAlertsList: List<CloseAlertModel>): String
-    {
+    private fun getLastDesc(closeAlertsList: List<CloseAlertModel>): String {
         // sortuj malejaco
         // tylko ujemne zwroty
         // max 3
@@ -67,7 +73,7 @@ class CreateReport(
             return "";
         }
 
-        return "Worst:\n" + res.joinToString("\n") {
+        return "Najgorsze:\n" + res.joinToString("\n") {
             "${it.alert.stockName} [${it.alert.stockCode}] ${it.resultPercent} % (after ${it.daysAfter} days)"
         }
     }
