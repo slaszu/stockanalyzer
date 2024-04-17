@@ -51,21 +51,21 @@
     </style>
 </head>
 <body>
-<h1>Podsumowanie</h1>
+<h1>Podsumowanie (last {{data.days}} days)</h1>
+<h1>Wynik <span class="{{data.summary_class}}">{{data.summary}} %</span></h1>
 <table>
 
-    {{#alerts}}
+    {{#rows}}
     <tr>
         <td class="left">
-            <b>{{first.stock}}</b>
+            <b>{{stock}}</b>
             <div class="details">
-                BUY: {{first.buy_price}} PLN
+                BUY: {{buy_price}} PLN
             </div>
             <div class="details2">
-                {{first.buy_date}}
+                {{buy_date}}
             </div>
         </td>
-        {{#second}}
         <td>
             <span class="{{result_class}}">{{result}} %</span> (after {{days}} days)
             <div class="details">
@@ -75,9 +75,8 @@
                 {{sell_date}}
             </div>
         </td>
-        {{/second}}
     </tr>
-    {{/alerts}}
+    {{/rows}}
 
 </table>
 <div class="footer">

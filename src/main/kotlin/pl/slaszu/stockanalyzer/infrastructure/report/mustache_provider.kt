@@ -24,30 +24,22 @@ class MustacheReportProvider(
     private val compiler: Mustache.Compiler,
     private val buildProperties: BuildProperties
 ) : ReportProvider {
-    override fun getHtml(alertList: List<AlertModel>): String {
-        val alertsMap = mutableMapOf<AlertModel, List<CloseAlertModel>>()
-
-        alertList.forEach {
-            val closeAlertForIt = this.closeAlertRepository.findByAlertId(it.id!!)
-
-            alertsMap[it] = closeAlertForIt.sortedBy { closeAlert -> closeAlert.daysAfter }
-
-        }
+    override fun getHtml(closeAlertModelList: List<CloseAlertModel>, data: Map<String, String>?): String {
 
         val reader = templateLoader.getTemplate("report")
         val template = compiler.compile(reader)
-        val html = template.execute(ReportContext(alertsMap, buildProperties))
+        val html = template.execute(ReportContext(closeAlertModelList, buildProperties, data ?: mapOf()))
 
         File("testing.html").writeText(html)
 
         return html
     }
 
-    override fun getPngByteArray(alertList: List<AlertModel>): ByteArray {
+    override fun getPngByteArray(html: String): ByteArray {
 
         val imageGenerator = HtmlImageGenerator()
 
-        imageGenerator.loadHtml(this.getHtml(alertList))
+        imageGenerator.loadHtml(html)
 
         return ChartUtils.encodeAsPNG(imageGenerator.bufferedImage)
     }
@@ -55,38 +47,36 @@ class MustacheReportProvider(
 
 
 class ReportContext(
-    private val alertMap: Map<AlertModel, List<CloseAlertModel>>,
-    private val build: BuildProperties
+    private val closeAlertModelList: List<CloseAlertModel>,
+    private val build: BuildProperties,
+    private var data: Map<String, String>
 ) {
-    var alerts: List<Pair<Map<String, String>, List<Map<String, String>>>> = emptyList()
+    var rows: MutableList<Map<String, String>> = mutableListOf()
 
     init {
         val formatter = DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm:ss")
-        val alertMap = mutableMapOf<Map<String, String>, List<Map<String, String>>>()
-        val closeList = mutableListOf<Map<String, String>>()
-        this.alertMap.forEach { (a, c) ->
-            c.forEach {
-                closeList.add(
-                    mapOf(
-                        "result" to "${it.resultPercent}",
-                        "result_class" to if (it.resultPercent > 0) "green" else "red",
-                        "days" to "${it.daysAfter}",
-                        "sell_price" to "${it.price ?: calcSellPrice(a.price, it.resultPercent).roundTo(2)}",
-                        "sell_date" to it.date.format(formatter)
-                    )
-                )
-            }
-            alertMap.put(
-                mapOf(
-                    "stock" to "${a.stockName} [${a.stockCode}]",
-                    "buy_price" to "${a.price}",
-                    "buy_date" to a.date.format(formatter)
-                ),
-                closeList.toList()
-            )
-            closeList.clear()
-        }
 
-        this.alerts = alertMap.toList()
+        val data = this.data.toMutableMap()
+        data.putIfAbsent("summary", "0")
+        data.putIfAbsent("days", "0")
+        data["summary_class"] = if (this.data.getOrDefault("summary", "0").toFloat() > 0) "green" else "red"
+        this.data = data.toMap()
+
+        this.closeAlertModelList.sortedByDescending {
+            it.resultPercent
+        }.forEach {
+            this.rows.add(
+                mapOf(
+                    "stock" to "${it.alert.stockName} [${it.alert.stockCode}]",
+                    "buy_price" to "${it.alert.price}",
+                    "buy_date" to it.alert.date.format(formatter),
+                    "result" to "${it.resultPercent}",
+                    "result_class" to if (it.resultPercent > 0) "green" else "red",
+                    "days" to "${it.daysAfter}",
+                    "sell_price" to "${it.price ?: calcSellPrice(it.alert.price, it.resultPercent).roundTo(2)}",
+                    "sell_date" to it.date.format(formatter)
+                )
+            )
+        }
     }
 }

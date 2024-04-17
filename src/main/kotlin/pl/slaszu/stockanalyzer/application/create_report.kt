@@ -3,51 +3,53 @@ package pl.slaszu.stockanalyzer.application
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
-import pl.slaszu.stockanalyzer.domain.alert.CloseAlertProvider
-import pl.slaszu.stockanalyzer.domain.alert.model.AlertRepository
 import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertModel
+import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertRepository
 import pl.slaszu.stockanalyzer.domain.publisher.Publisher
 import pl.slaszu.stockanalyzer.domain.report.ReportProvider
+import pl.slaszu.stockanalyzer.shared.roundTo
 import java.time.LocalDateTime
 
 
 @Service
 class CreateReport(
-    private val alertRepository: AlertRepository,
+    private val closeAlertModelRepo: CloseAlertRepository,
     private val reportProvider: ReportProvider,
     private val publisher: Publisher,
-    private val closeAlertProvider: CloseAlertProvider,
     private val logger: KLogger = KotlinLogging.logger { }
 ) {
 
     fun runForDaysAfter(daysAfter: Int) {
 
         val date = LocalDateTime.now().minusDays(daysAfter.toLong())
-        val alertClosedList = this.alertRepository.findAlertsClosedAfterThatDate(date)
+        val closedAlertModelList = this.closeAlertModelRepo.findCloseAlertsAfterDate(date)
 
-        this.logger.debug { "Found ${alertClosedList.size} alert closed for date $date" }
+        this.logger.debug { "Found ${closedAlertModelList.size} alert closed for date $date" }
 
-        if (alertClosedList.isEmpty()) {
+        if (closedAlertModelList.isEmpty()) {
             return
         }
 
-        val pngByteArray = this.reportProvider.getPngByteArray(alertClosedList)
+        val summaryPercent = this.getSummaryPercent(closedAlertModelList)
 
-        val closeAlertsList = this.closeAlertProvider.getAllForAlerts(alertClosedList)
+        val html = this.reportProvider.getHtml(closedAlertModelList, mapOf(
+            "days" to daysAfter.toString(),
+            "summary" to summaryPercent.toString()
+        ))
+        val pngByteArray = this.reportProvider.getPngByteArray(html)
 
         this.publisher.publish(
             pngByteArray,
-            "Podsumowanie (last $daysAfter days)",
-            "${this.getTopDesc(closeAlertsList)}\n${this.getLastDesc(closeAlertsList)}\n${this.getHashTags(closeAlertsList)}"
+            "Podsumowanie (last $daysAfter days)\n" +
+                    "Wynik $summaryPercent %",
+            "${this.getTopDesc(closedAlertModelList)}\n" +
+                    "${this.getLastDesc(closedAlertModelList)}\n" +
+                    "#gpwApiSignals"
         )
     }
 
-    private fun getHashTags(closeAlertsList: List<CloseAlertModel>): String {
-        var hashTags = "";
-        closeAlertsList.forEach {
-            hashTags += "#${it.alert.stockCode} #${it.alert.stockName} "
-        }
-        return hashTags
+    private fun getSummaryPercent(closeAlertsList: List<CloseAlertModel>): Float {
+        return closeAlertsList.sumOf { it.resultPercent.toDouble() }.toFloat().roundTo(2)
     }
 
     private fun getTopDesc(closeAlertsList: List<CloseAlertModel>): String {
@@ -60,7 +62,7 @@ class CreateReport(
         }
 
         return "Najlepsze:\n" + res.joinToString("\n") {
-            "${it.alert.stockName} [${it.alert.stockCode}] +${it.resultPercent} % (after ${it.daysAfter} days)"
+            "${it.alert.stockName} [#${it.alert.stockCode}] +${it.resultPercent} % (after ${it.daysAfter} days)"
         }
     }
 
@@ -74,7 +76,7 @@ class CreateReport(
         }
 
         return "Najgorsze:\n" + res.joinToString("\n") {
-            "${it.alert.stockName} [${it.alert.stockCode}] ${it.resultPercent} % (after ${it.daysAfter} days)"
+            "${it.alert.stockName} [#${it.alert.stockCode}] ${it.resultPercent} % (after ${it.daysAfter} days)"
         }
     }
 }
