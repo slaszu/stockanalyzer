@@ -22,6 +22,7 @@ class TwitterPublisher(
         desc: String,
         quotedPublishedId: String?
     ): String {
+        val text = this.checkText("$title\n$desc")
 
         val uploadMediaResponse = twitterClient.uploadMedia(
             "stock_alert",
@@ -30,7 +31,7 @@ class TwitterPublisher(
         );
 
         val tweetParametersBuilder = TweetParameters.builder()
-            .text("$title\n$desc")
+            .text(text)
             .media(
                 TweetParameters.Media.builder().mediaIds(listOf(uploadMediaResponse.mediaId)).build()
             )

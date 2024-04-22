@@ -41,7 +41,7 @@ class CreateReport(
         this.publisher.publish(
             pngByteArray,
             "Podsumowanie (last $daysAfter days)\n" +
-                    "Wynik $summaryPercent %",
+                "Wynik $summaryPercent %",
             "${this.getTopDesc(closedAlertModelList)}\n" +
                     "${this.getLastDesc(closedAlertModelList)}\n" +
                     "#gpwApiSignals"
@@ -61,8 +61,8 @@ class CreateReport(
             return "";
         }
 
-        return "Najlepsze:\n" + res.joinToString("\n") {
-            "${it.alert.stockName} [#${it.alert.stockCode}] +${it.resultPercent} % (after ${it.daysAfter} days)"
+        return "\uD83D\uDFE9Najlepsze:\n" + res.joinToString("\n") {
+            "${it.alert.stockName} [#${it.alert.stockCode}] +${it.resultPercent} %"
         }
     }
 
@@ -75,8 +75,8 @@ class CreateReport(
             return "";
         }
 
-        return "Najgorsze:\n" + res.joinToString("\n") {
-            "${it.alert.stockName} [#${it.alert.stockCode}] ${it.resultPercent} % (after ${it.daysAfter} days)"
+        return "\uD83D\uDFE5Najgorsze:\n" + res.joinToString("\n") {
+            "${it.alert.stockName} [#${it.alert.stockCode}] ${it.resultPercent} %"
         }
     }
 }

@@ -30,9 +30,11 @@ class TestPublisher(
 
         val file = Path("chart_$publisherId.png")
 
+        val text = this.checkText("$title\n$desc")
+
         ChartUtils.writeBufferedImageAsPNG(file.outputStream(), ImageIO.read(ByteArrayInputStream(pngChartByteArray)))
 
-        this.logger.warn { "Fake publisher !!! \n$title\n$desc\nchart=>${file.toAbsolutePath()}" }
+        this.logger.warn { "Fake publisher !!! \n$text\nchart=>${file.toAbsolutePath()}" }
 
         return publisherId;
     }

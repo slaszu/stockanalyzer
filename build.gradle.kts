@@ -39,6 +39,7 @@ dependencies {
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
     implementation("io.github.redouane59.twitter:twittered:2.23")
     implementation("com.github.hkirk:java-html2image:0.9")
+    implementation("com.twitter.twittertext:twitter-text:3.1.0")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
