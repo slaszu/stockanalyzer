@@ -39,4 +39,34 @@ class TestPublisher(
         return publisherId;
     }
 
+    override fun publish(
+        pngList: List<ByteArray>,
+        title: String,
+        desc: String,
+        quotedPublishedId: String?
+    ): String {
+        val randomInt = Random.nextInt(10000, 99999)
+        val publisherId = "fake_publisher_$randomInt"
+
+        val text = this.checkText("$title\n$desc")
+
+        val files: MutableList<String> = mutableListOf()
+        pngList.forEachIndexed { index, bytes ->
+
+            val fileName = "chart_$publisherId-$index.png"
+            val file = Path(fileName)
+
+            ChartUtils.writeBufferedImageAsPNG(
+                file.outputStream(),
+                ImageIO.read(ByteArrayInputStream(bytes))
+            )
+
+            files.add(fileName)
+        }
+
+        this.logger.warn { "Fake publisher !!! \n$text\nchart=>${files.joinToString { "$it" }}" }
+
+        return publisherId;
+    }
+
 }

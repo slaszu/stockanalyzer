@@ -4,7 +4,19 @@ import com.twitter.twittertext.TwitterTextParser
 import java.io.File
 
 interface Publisher {
-    fun publish(pngChartByteArray: ByteArray, title: String, desc: String, quotedPublishedId: String? = null): String
+    fun publish(
+        pngChartByteArray: ByteArray,
+        title: String,
+        desc: String,
+        quotedPublishedId: String? = null
+    ): String
+
+    fun publish(
+        pngList: List<ByteArray>,
+        title: String,
+        desc: String,
+        quotedPublishedId: String? = null
+    ): String
 
     fun checkText(text: String): String {
         val parseTweet = TwitterTextParser.parseTweet(text)

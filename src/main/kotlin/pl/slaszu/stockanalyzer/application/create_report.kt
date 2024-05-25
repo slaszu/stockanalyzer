@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service
 import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertModel
 import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertRepository
 import pl.slaszu.stockanalyzer.domain.publisher.Publisher
-import pl.slaszu.stockanalyzer.domain.report.ReportProvider
 import pl.slaszu.stockanalyzer.shared.roundTo
 import java.time.LocalDateTime
 
@@ -14,7 +13,7 @@ import java.time.LocalDateTime
 @Service
 class CreateReport(
     private val closeAlertModelRepo: CloseAlertRepository,
-    private val reportProvider: ReportProvider,
+    private val chartForAlert: ChartForAlert,
     private val publisher: Publisher,
     private val logger: KLogger = KotlinLogging.logger { }
 ) {
@@ -32,19 +31,38 @@ class CreateReport(
 
         val summaryPercent = this.getSummaryPercent(closedAlertModelList)
 
-        val html = this.reportProvider.getHtml(closedAlertModelList, mapOf(
-            "days" to daysAfter.toString(),
-            "summary" to summaryPercent.toString()
-        ))
-        val pngByteArray = this.reportProvider.getPngByteArray(html)
+        val topList = this.getTopDesc(closedAlertModelList)
+        val worstList = this.getLastDesc(closedAlertModelList)
+
+        val topCharts: MutableList<ByteArray> = mutableListOf()
+        topList.forEach { closeAlertModel ->
+            val chart = this.chartForAlert.getChartPngForCloseAlert(closeAlertModel) ?: return@forEach
+            topCharts.add(chart)
+        }
+
+        val worstCharts: MutableList<ByteArray> = mutableListOf()
+        worstList.forEach { closeAlertModel ->
+            val chart = this.chartForAlert.getChartPngForCloseAlert(closeAlertModel) ?: return@forEach
+            worstCharts.add(chart)
+        }
+
+//        val html = this.reportProvider.getHtml(closedAlertModelList, mapOf(
+//            "days" to daysAfter.toString(),
+//            "summary" to summaryPercent.toString()
+//        ))
+//        val pngByteArray = this.reportProvider.getPngByteArray(html)
 
         this.publisher.publish(
-            pngByteArray,
+            topCharts.plus(worstCharts),
             "Podsumowanie (last $daysAfter days)\n" +
-                "Wynik $summaryPercent %",
-            "${this.getTopDesc(closedAlertModelList)}\n" +
-                    "${this.getLastDesc(closedAlertModelList)}\n" +
-                    "#gpwApiSignals"
+                    "‼\uFE0FWynik $summaryPercent %",
+
+            "\uD83D\uDFE9Najlepsze:\n" + topList.joinToString("\n") {
+                "${it.alert.stockName} [#${it.alert.stockCode}] +${it.resultPercent} %"
+            } + "\n" +
+                    "\uD83D\uDFE5Najgorsze:\n" + worstList.joinToString("\n") {
+                "${it.alert.stockName} [#${it.alert.stockCode}] ${it.resultPercent} %"
+            } + "\n#gpwApiSignals"
         )
     }
 
@@ -52,31 +70,17 @@ class CreateReport(
         return closeAlertsList.sumOf { it.resultPercent.toDouble() }.toFloat().roundTo(2)
     }
 
-    private fun getTopDesc(closeAlertsList: List<CloseAlertModel>): String {
+    private fun getTopDesc(closeAlertsList: List<CloseAlertModel>): List<CloseAlertModel> {
         // sortuj malejaco
         // tylko dodatnie zwoty
         // max 3
-        val res = closeAlertsList.filter { it.resultPercent > 0 }.sortedByDescending { it.resultPercent }.take(3)
-        if (res.isEmpty()) {
-            return "";
-        }
-
-        return "\uD83D\uDFE9Najlepsze:\n" + res.joinToString("\n") {
-            "${it.alert.stockName} [#${it.alert.stockCode}] +${it.resultPercent} %"
-        }
+        return closeAlertsList.filter { it.resultPercent > 0 }.sortedByDescending { it.resultPercent }.take(3)
     }
 
-    private fun getLastDesc(closeAlertsList: List<CloseAlertModel>): String {
-        // sortuj malejaco
+    private fun getLastDesc(closeAlertsList: List<CloseAlertModel>): List<CloseAlertModel> {
+        // sortuj rosnaco
         // tylko ujemne zwroty
         // max 3
-        val res = closeAlertsList.filter { it.resultPercent < 0 }.sortedByDescending { it.resultPercent }.takeLast(3)
-        if (res.isEmpty()) {
-            return "";
-        }
-
-        return "\uD83D\uDFE5Najgorsze:\n" + res.joinToString("\n") {
-            "${it.alert.stockName} [#${it.alert.stockCode}] ${it.resultPercent} %"
-        }
+        return closeAlertsList.filter { it.resultPercent < 0 }.sortedBy { it.resultPercent }.take(3)
     }
 }

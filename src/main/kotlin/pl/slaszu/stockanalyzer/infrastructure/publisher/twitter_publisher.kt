@@ -48,5 +48,42 @@ class TwitterPublisher(
         }
     }
 
+    override fun publish(
+        pngList: List<ByteArray>,
+        title: String,
+        desc: String,
+        quotedPublishedId: String?
+    ): String {
+        val text = this.checkText("$title\n$desc")
+
+        val uploadedMediaIdList: MutableList<String> = mutableListOf()
+        pngList.forEach { png ->
+            uploadedMediaIdList.add(
+                twitterClient.uploadMedia(
+                    "stock_alert",
+                    png,
+                    MediaCategory.TWEET_IMAGE
+                ).mediaId
+            )
+        }
+
+        val tweetParametersBuilder = TweetParameters.builder()
+            .text(text)
+            .media(
+                TweetParameters.Media.builder().mediaIds(uploadedMediaIdList.toList()).build()
+            )
+
+        if (quotedPublishedId != null)
+            tweetParametersBuilder.quoteTweetId(quotedPublishedId)
+
+        try {
+            val postTweet = twitterClient.postTweet(tweetParametersBuilder.build())
+            return postTweet.id
+        } catch (e: Throwable) {
+            this.logger.error(e) { "Twitter problem for tweet : $tweetParametersBuilder" }
+            throw e
+        }
+    }
+
 
 }

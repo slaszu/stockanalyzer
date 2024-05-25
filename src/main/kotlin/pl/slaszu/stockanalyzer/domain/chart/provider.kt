@@ -1,7 +1,6 @@
 package pl.slaszu.stockanalyzer.domain.chart
 
 import pl.slaszu.stockanalyzer.domain.stock.StockPriceDto
-import java.util.Date
 
 interface ChartProvider {
 
