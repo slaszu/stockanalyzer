@@ -5,6 +5,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.redouane59.twitter.TwitterClient
 import io.github.redouane59.twitter.dto.tweet.MediaCategory
 import io.github.redouane59.twitter.dto.tweet.TweetParameters
+import io.sentry.Sentry
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 import pl.slaszu.stockanalyzer.domain.publisher.Publisher
@@ -57,7 +58,7 @@ class TwitterPublisher(
         val text = this.checkText("$title\n$desc")
 
         val uploadedMediaIdList: MutableList<String> = mutableListOf()
-        pngList.forEach { png ->
+        pngList.take(4).forEach { png ->
             uploadedMediaIdList.add(
                 twitterClient.uploadMedia(
                     "stock_alert",
@@ -81,9 +82,8 @@ class TwitterPublisher(
             return postTweet.id
         } catch (e: Throwable) {
             this.logger.error(e) { "Twitter problem for tweet : $tweetParametersBuilder" }
+            Sentry.captureException(e);
             throw e
         }
     }
-
-
 }

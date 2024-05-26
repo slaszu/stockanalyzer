@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service
 import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertModel
 import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertRepository
 import pl.slaszu.stockanalyzer.domain.publisher.Publisher
+import pl.slaszu.stockanalyzer.domain.report.ReportProvider
 import pl.slaszu.stockanalyzer.shared.roundTo
 import java.time.LocalDateTime
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime
 class CreateReport(
     private val closeAlertModelRepo: CloseAlertRepository,
     private val chartForAlert: ChartForAlert,
+    private val reportProvider: ReportProvider,
     private val publisher: Publisher,
     private val logger: KLogger = KotlinLogging.logger { }
 ) {
@@ -34,26 +36,21 @@ class CreateReport(
         val topList = this.getTopDesc(closedAlertModelList)
         val worstList = this.getLastDesc(closedAlertModelList)
 
-        val topCharts: MutableList<ByteArray> = mutableListOf()
+        val charts: MutableList<ByteArray> = mutableListOf()
         topList.forEach { closeAlertModel ->
             val chart = this.chartForAlert.getChartPngForCloseAlert(closeAlertModel) ?: return@forEach
-            topCharts.add(chart)
+            charts.add(chart)
         }
 
-        val worstCharts: MutableList<ByteArray> = mutableListOf()
-        worstList.forEach { closeAlertModel ->
-            val chart = this.chartForAlert.getChartPngForCloseAlert(closeAlertModel) ?: return@forEach
-            worstCharts.add(chart)
-        }
-
-//        val html = this.reportProvider.getHtml(closedAlertModelList, mapOf(
-//            "days" to daysAfter.toString(),
-//            "summary" to summaryPercent.toString()
-//        ))
-//        val pngByteArray = this.reportProvider.getPngByteArray(html)
+        val html = this.reportProvider.getHtml(closedAlertModelList, mapOf(
+            "days" to daysAfter.toString(),
+            "summary" to summaryPercent.toString()
+        ))
+        val reportPng = this.reportProvider.getPngByteArray(html)
+        charts.add(reportPng)
 
         this.publisher.publish(
-            topCharts.plus(worstCharts),
+            charts,
             "Podsumowanie (last $daysAfter days)\n" +
                     "‼\uFE0FWynik $summaryPercent %",
 

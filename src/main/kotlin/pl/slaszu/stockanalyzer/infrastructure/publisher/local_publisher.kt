@@ -51,7 +51,7 @@ class TestPublisher(
         val text = this.checkText("$title\n$desc")
 
         val files: MutableList<String> = mutableListOf()
-        pngList.forEachIndexed { index, bytes ->
+        pngList.take(4).forEachIndexed { index, bytes ->
 
             val fileName = "chart_$publisherId-$index.png"
             val file = Path(fileName)
