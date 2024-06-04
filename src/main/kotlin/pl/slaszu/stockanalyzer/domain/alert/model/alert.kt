@@ -19,8 +19,7 @@ data class AlertModel(
     val close: Boolean = false,
     val closeDate: LocalDateTime? = null,
     val id: String? = null
-) {
-}
+)
 
 interface AlertRepository : MongoRepository<AlertModel, String> {
     /**

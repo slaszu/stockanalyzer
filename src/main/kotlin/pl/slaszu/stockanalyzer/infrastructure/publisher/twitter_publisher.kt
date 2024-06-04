@@ -5,7 +5,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.redouane59.twitter.TwitterClient
 import io.github.redouane59.twitter.dto.tweet.MediaCategory
 import io.github.redouane59.twitter.dto.tweet.TweetParameters
-import io.sentry.Sentry
+//import io.sentry.Sentry
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 import pl.slaszu.stockanalyzer.domain.publisher.Publisher
@@ -82,7 +82,7 @@ class TwitterPublisher(
             return postTweet.id
         } catch (e: Throwable) {
             this.logger.error(e) { "Twitter problem for tweet : $tweetParametersBuilder" }
-            Sentry.captureException(e);
+//            Sentry.captureException(e);
             throw e
         }
     }

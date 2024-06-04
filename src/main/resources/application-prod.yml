@@ -1,0 +1,2 @@
+qdrant:
+  collectionName: gpw_api_signals_prod

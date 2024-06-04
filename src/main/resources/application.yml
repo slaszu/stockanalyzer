@@ -11,6 +11,10 @@ twitter-config:
   accessToken: ${TWITTER_accessToken}
   accessTokenSecret: ${TWITTER_accessTokenSecret}
 
+qdrant:
+  apiKey: ${QDRANT_KEY}
+  collectionName: gpw_api_signals_test
+
 spring:
   data:
     mongodb:

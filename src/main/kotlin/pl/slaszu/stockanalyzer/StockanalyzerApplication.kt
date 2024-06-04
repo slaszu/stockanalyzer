@@ -1,6 +1,6 @@
 package pl.slaszu.stockanalyzer
 
-import io.sentry.Sentry
+//import io.sentry.Sentry
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -15,12 +15,13 @@ import org.springframework.scheduling.annotation.EnableScheduling
 import pl.slaszu.stockanalyzer.application.CreateReport
 import pl.slaszu.stockanalyzer.domain.alert.model.AlertRepository
 import pl.slaszu.stockanalyzer.infrastructure.publisher.TwitterConfig
+import pl.slaszu.stockanalyzer.infrastructure.recommendation.QdrantConfig
 import pl.slaszu.stockanalyzer.infrastructure.stock.StockApiParams
 
 @SpringBootApplication
 @EnableMongoRepositories
 @EnableConfigurationProperties(
-    StockApiParams::class, TwitterConfig::class
+    StockApiParams::class, TwitterConfig::class, QdrantConfig::class
 )
 @EnableScheduling
 class StockanalyzerApplication
@@ -34,22 +35,22 @@ fun main(args: Array<String>) {
 @Configuration
 class ProdBeans {
 
-    @Bean
-    fun sentryInit(): ApplicationRunner {
-        return ApplicationRunner {
-            Sentry.init { options ->
-                options.dsn = "https://91448fb4cf34aae51004514cd4526af3@o74341.ingest.us.sentry.io/4507126154657792"
-                // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-                // We recommend adjusting this value in production.
-                //options.tracesSampleRate = 1.0
-
-                // When first trying Sentry it's good to see what the SDK is doing:
-                options.isDebug = true
-            }
-
-            println("sentry init done")
-        }
-    }
+//    @Bean
+//    fun sentryInit(): ApplicationRunner {
+//        return ApplicationRunner {
+//            Sentry.init { options ->
+//                options.dsn = "https://91448fb4cf34aae51004514cd4526af3@o74341.ingest.us.sentry.io/4507126154657792"
+//                // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+//                // We recommend adjusting this value in production.
+//                //options.tracesSampleRate = 1.0
+//
+//                // When first trying Sentry it's good to see what the SDK is doing:
+//                options.isDebug = true
+//            }
+//
+//            println("sentry init done")
+//        }
+//    }
 
     @Bean
     fun testMongoConnection(

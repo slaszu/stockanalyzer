@@ -16,8 +16,7 @@ data class CloseAlertModel(
     val price: Float? = null,
     val date: LocalDateTime = LocalDateTime.now(),
     val id: String? = null
-) {
-}
+)
 
 interface CloseAlertRepository : MongoRepository<CloseAlertModel, String> {
     @Query("{\$and: [{'alert.stockCode': ?0}, {'daysAfter': ?1}, {'alert.close': false}]}")
