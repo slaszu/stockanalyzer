@@ -1,6 +1,7 @@
 package pl.slaszu.stockanalyzer.domain.alert.model
 
 import org.springframework.data.annotation.TypeAlias
+import org.springframework.data.domain.Limit
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.data.mongodb.repository.Query
@@ -30,4 +31,7 @@ interface CloseAlertRepository : MongoRepository<CloseAlertModel, String> {
 
     @Query("{'date' : { \$gt: ?0 }}")
     fun findCloseAlertsAfterDate(date: LocalDateTime): List<CloseAlertModel>
+
+//    @Query( sort = "{ 'date': -1 }" )
+//    fun findAll(limit: Limit): List<CloseAlertModel>
 }

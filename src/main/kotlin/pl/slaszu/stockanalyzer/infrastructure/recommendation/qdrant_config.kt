@@ -3,12 +3,21 @@ package pl.slaszu.stockanalyzer.infrastructure.recommendation
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.qdrant.client.QdrantClient
 import io.qdrant.client.QdrantGrpcClient
+import io.qdrant.client.ValueFactory.value
 import io.qdrant.client.grpc.Collections
 import io.qdrant.client.grpc.Collections.VectorParams
+import io.qdrant.client.grpc.JsonWithInt.Value
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.domain.Limit
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertRepository
+import pl.slaszu.stockanalyzer.domain.recommendation.RecommendationPayload
+import pl.slaszu.stockanalyzer.domain.recommendation.SaveRepository
 import kotlin.math.log
 
 @ConfigurationProperties(prefix = "qdrant")
@@ -34,7 +43,12 @@ class QdrantBeans {
     }
 
     @Bean
-    fun initCollection(config: QdrantConfig, client: QdrantClient): ApplicationRunner {
+    fun initCollection(
+        config: QdrantConfig,
+        client: QdrantClient,
+        repo: SaveRepository,
+        closeAlertRepository: CloseAlertRepository
+    ): ApplicationRunner {
         val logger = KotlinLogging.logger { }
         logger.debug { config.toString() }
 
@@ -55,6 +69,14 @@ class QdrantBeans {
                         }
                     }
                 }
+
+            closeAlertRepository.findAll(
+                PageRequest.of(0, 5, Sort.by("date").descending())
+            ).forEach {
+                logger.debug { "$it" }
+                repo.save(it)
+            }
+
         }
     }
 }

@@ -8,5 +8,5 @@ interface Search {
 
 data class SearchResult(
     val score: Double,
-    val payload: PersistPayload
+    val payload: RecommendationPayload
 )
