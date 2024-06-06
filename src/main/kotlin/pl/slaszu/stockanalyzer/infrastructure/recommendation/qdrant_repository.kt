@@ -17,7 +17,7 @@ class QdrantSaveRepository(
 ) : SaveRepository {
     override fun save(closeAlert: CloseAlertModel) {
 
-        val vector = this.vectorConvert.createVector(closeAlert.alert)
+        val vector = this.vectorConvert.create1DTensor(closeAlert.alert)
 
         val payload = RecommendationPayload.fromCloseAlert(closeAlert)
 
