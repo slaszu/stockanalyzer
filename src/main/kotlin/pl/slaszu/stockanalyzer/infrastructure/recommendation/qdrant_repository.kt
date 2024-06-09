@@ -22,8 +22,8 @@ class QdrantSaveRepository(
         val payload = RecommendationPayload.fromCloseAlert(closeAlert)
 
         val point = PointStruct.newBuilder()
-            .setId(id(1))
-            .setVectors(vectors(0.32f, 0.52f, 0.21f, 0.52f))
+            .setId(id(closeAlert.alert.tweetId.toLong()))
+            .setVectors(vectors(vector.toList()))
             .putAllPayload(payload.toQdrantPayload())
             .build()
 

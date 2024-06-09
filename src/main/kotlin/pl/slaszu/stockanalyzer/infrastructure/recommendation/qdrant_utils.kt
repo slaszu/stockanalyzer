@@ -11,6 +11,10 @@ import pl.slaszu.stockanalyzer.domain.recommendation.RecommendationPayload
 import pl.slaszu.stockanalyzer.domain.stock.StockPriceDto
 import pl.slaszu.stockanalyzer.domain.stock.StockProvider
 
+enum class TensorDimensions(val size: Int) {
+    SAMPLE_DIM(5),
+    TENSOR_SIZE(60)
+ }
 
 @Service
 class VectorConvert(private val stockProvider: StockProvider) {
@@ -18,42 +22,39 @@ class VectorConvert(private val stockProvider: StockProvider) {
     fun create1DTensor(alert: AlertModel): Array<Float> {
         val stockPriceList = this.stockProvider.getStockPriceList(alert.stockCode)
         val create2DTensor = this.create2DTensor(stockPriceList)
+        return create2DTensor.flatten().data.map { it.toFloat() }.toTypedArray()
 
-        val toF64Array = F64Array(30, 5) { i, j ->
-            create2DTensor[i][j].toDouble()
-        }
-
-        val copyLogInPLace = toF64Array.copy()
-        copyLogInPLace.logInPlace()
-
-
-        val copyRescale = copyLogInPLace.copy()
-        copyRescale.rescale()
-
-
-
-        val flatten = toF64Array.flatten()
-
-        return emptyArray()
     }
 
-    fun create2DTensor(stockPriceList: Array<StockPriceDto>, size: Int = 30): Array<Array<Float>> {
-        val vector = mutableListOf<Array<Float>>()
-        stockPriceList.take(size).forEach {
-            vector.add(it.toArray())
+    fun create2DTensor(stockPriceList: Array<StockPriceDto>): F64Array {
+
+        val vectors = mutableListOf<F64Array>()
+        stockPriceList.take(TensorDimensions.TENSOR_SIZE.size).forEach {
+            vectors.add(it.toF64Array())
         }
-        return vector.toTypedArray()
+
+        return F64Array(60, 5) { i, j ->
+            vectors[i][j]
+        }
     }
 }
 
-fun StockPriceDto.toArray(): Array<Float> {
-    return arrayOf(
+fun StockPriceDto.toF64Array(): F64Array {
+    val array = arrayOf(
         this.price,
         this.priceLow,
         this.priceHigh,
         this.priceOpen,
         this.amount.toFloat()
     )
+
+    val vector = F64Array(TensorDimensions.SAMPLE_DIM.size) { i ->
+        array[i].toDouble()
+    }
+
+    vector.rescale()
+
+    return vector
 }
 
 fun RecommendationPayload.toQdrantPayload(): Map<String, Value> {
