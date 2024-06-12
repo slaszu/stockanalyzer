@@ -65,7 +65,7 @@ class QdrantBeans {
                 }
 
             closeAlertRepository.findAll(
-                PageRequest.of(0, 5, Sort.by("date").descending())
+                PageRequest.of(0, 100, Sort.by("date").descending())
             ).forEach {
                 logger.debug { "$it" }
                 repo.save(it)
