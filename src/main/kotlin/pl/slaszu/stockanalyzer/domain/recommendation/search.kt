@@ -7,6 +7,11 @@ interface Search {
 }
 
 data class SearchResult(
-    val score: Double,
-    val payload: RecommendationPayload
-)
+    val score: Float,
+    val payload: RecommendationPayload,
+
+) {
+    override fun toString(): String {
+        return "SearchResult(score=$score, payload=${payload.toMap()})"
+    }
+}

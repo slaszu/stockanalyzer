@@ -19,6 +19,10 @@ class QdrantSaveRepository(
 
         val vector = this.vectorConvert.create1DTensor(closeAlert.alert)
 
+        if (vector.size < TensorDimensions.TENSOR_SIZE.size) {
+            return;
+        }
+
         val payload = RecommendationPayload.fromCloseAlert(closeAlert)
 
         val point = PointStruct.newBuilder()

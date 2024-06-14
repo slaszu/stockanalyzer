@@ -11,8 +11,12 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import pl.slaszu.stockanalyzer.domain.alert.model.AlertRepository
 import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertRepository
 import pl.slaszu.stockanalyzer.domain.recommendation.SaveRepository
+import pl.slaszu.stockanalyzer.domain.recommendation.Search
+
+val logger = KotlinLogging.logger { }
 
 @ConfigurationProperties(prefix = "qdrant")
 data class QdrantConfig(
@@ -36,18 +40,19 @@ class QdrantBeans {
         )
     }
 
-    @Bean
+    //@Bean
     fun initCollection(
         config: QdrantConfig,
         client: QdrantClient,
         repo: SaveRepository,
         closeAlertRepository: CloseAlertRepository
     ): ApplicationRunner {
-        val logger = KotlinLogging.logger { }
         logger.debug { config.toString() }
 
 
         return ApplicationRunner {
+            //client.deleteCollectionAsync(config.collectionName).get();
+
             client.collectionExistsAsync(config.collectionName)
                 .get().also {
                     logger.debug { "${config.collectionName} exists = $it" }
@@ -69,6 +74,28 @@ class QdrantBeans {
             ).forEach {
                 logger.debug { "$it" }
                 repo.save(it)
+            }
+
+        }
+    }
+
+    @Bean
+    fun searchForAlert(
+        client: QdrantClient,
+        config: QdrantClient,
+        alertRepository: AlertRepository,
+        search: Search
+    ) : ApplicationRunner {
+
+        return ApplicationRunner {
+            val alertModel = alertRepository.findById("65ef077ac864193a40a3d011")
+
+            logger.debug { "Alert model to check : $alertModel" }
+
+            val results = search.search(alertModel.orElseThrow())
+
+            results.forEach {
+                println("$it")
             }
 
         }

@@ -36,7 +36,7 @@ class VectorConvert(private val stockProvider: StockProvider) {
             vectors.add(it.toF64Array())
         }
 
-        return F64Array(TensorDimensions.TENSOR_SIZE.size, 5) { i, j ->
+        return F64Array(vectors.size, 5) { i, j ->
             vectors[i][j]
         }
     }
