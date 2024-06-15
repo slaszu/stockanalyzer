@@ -2,32 +2,35 @@ package pl.slaszu.stockanalyzer.infrastructure.recommendation
 
 import io.qdrant.client.PointIdFactory.id
 import io.qdrant.client.QdrantClient
+import io.qdrant.client.VectorsFactory.namedVectors
 import io.qdrant.client.VectorsFactory.vectors
 import io.qdrant.client.grpc.Points.PointStruct
 import org.springframework.stereotype.Service
-import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertModel
 import pl.slaszu.stockanalyzer.domain.recommendation.RecommendationPayload
 import pl.slaszu.stockanalyzer.domain.recommendation.SaveRepository
+import pl.slaszu.stockanalyzer.domain.recommendation.StockVector
 
 @Service
 class QdrantSaveRepository(
     private val qdrantClient: QdrantClient,
     private val qdrantConfig: QdrantConfig,
-    private val vectorConvert: VectorConvert
 ) : SaveRepository {
-    override fun save(closeAlert: CloseAlertModel) {
+    override fun save(vector: StockVector, payload: RecommendationPayload) {
 
-        val vector = this.vectorConvert.create1DTensor(closeAlert.alert)
-
-        if (vector.size < TensorDimensions.TENSOR_SIZE.size) {
+        if (!vector.hasValidSize()) {
             return;
         }
 
-        val payload = RecommendationPayload.fromCloseAlert(closeAlert)
-
         val point = PointStruct.newBuilder()
-            .setId(id(closeAlert.alert.tweetId.toLong()))
-            .setVectors(vectors(vector.toList()))
+            .setId(id(payload.closeAlertTweetId.toLong()))
+            .setVectors(
+                namedVectors(
+                    mapOf(
+                        "price" to vectors(vector.priceVector.toList()).vector,
+                        "volume" to vectors(vector.volumeVector.toList()).vector
+                    )
+                )
+            )
             .putAllPayload(payload.toQdrantPayload())
             .build()
 

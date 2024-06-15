@@ -13,8 +13,10 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import pl.slaszu.stockanalyzer.domain.alert.model.AlertRepository
 import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertRepository
-import pl.slaszu.stockanalyzer.domain.recommendation.SaveRepository
+import pl.slaszu.stockanalyzer.domain.recommendation.RecommendationPersistService
+import pl.slaszu.stockanalyzer.domain.recommendation.RecommendationSearchService
 import pl.slaszu.stockanalyzer.domain.recommendation.Search
+import pl.slaszu.stockanalyzer.domain.recommendation.StockVector
 
 val logger = KotlinLogging.logger { }
 
@@ -44,14 +46,14 @@ class QdrantBeans {
     fun initCollection(
         config: QdrantConfig,
         client: QdrantClient,
-        repo: SaveRepository,
+        recommendationService: RecommendationPersistService,
         closeAlertRepository: CloseAlertRepository
     ): ApplicationRunner {
         logger.debug { config.toString() }
 
 
         return ApplicationRunner {
-            //client.deleteCollectionAsync(config.collectionName).get();
+            client.deleteCollectionAsync(config.collectionName).get();
 
             client.collectionExistsAsync(config.collectionName)
                 .get().also {
@@ -59,10 +61,16 @@ class QdrantBeans {
                     if (!it.equals(true)) {
                         client.createCollectionAsync(
                             config.collectionName,
-                            VectorParams.newBuilder()
-                                .setDistance(Collections.Distance.Cosine)
-                                .setSize((TensorDimensions.SAMPLE_DIM.size*TensorDimensions.TENSOR_SIZE.size).toLong())
-                                .build()
+                            mapOf(
+                                "price" to VectorParams.newBuilder()
+                                    .setDistance(Collections.Distance.Cosine)
+                                    .setSize(StockVector.VECTOR_SIZE.toLong())
+                                    .build(),
+                                "volume" to VectorParams.newBuilder()
+                                    .setDistance(Collections.Distance.Cosine)
+                                    .setSize(StockVector.VECTOR_SIZE.toLong())
+                                    .build()
+                            )
                         ).get().also {
                             logger.debug { "${config.collectionName} create result = $it" }
                         }
@@ -73,7 +81,7 @@ class QdrantBeans {
                 PageRequest.of(0, 100, Sort.by("date").descending())
             ).forEach {
                 logger.debug { "$it" }
-                repo.save(it)
+                recommendationService.save(it)
             }
 
         }
@@ -84,19 +92,15 @@ class QdrantBeans {
         client: QdrantClient,
         config: QdrantClient,
         alertRepository: AlertRepository,
-        search: Search
-    ) : ApplicationRunner {
+        recommendationSearchService: RecommendationSearchService
+    ): ApplicationRunner {
 
         return ApplicationRunner {
-            val alertModel = alertRepository.findById("65ef077ac864193a40a3d011")
+            val alertModel = alertRepository.findById("664766835580cc3231587129")
 
             logger.debug { "Alert model to check : $alertModel" }
 
-            val results = search.search(alertModel.orElseThrow())
-
-            results.forEach {
-                println("$it")
-            }
+            recommendationSearchService.searchBestFit(alertModel.orElseThrow())
 
         }
     }
