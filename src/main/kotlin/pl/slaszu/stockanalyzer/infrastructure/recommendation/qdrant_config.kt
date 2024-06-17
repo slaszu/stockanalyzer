@@ -5,6 +5,7 @@ import io.qdrant.client.QdrantClient
 import io.qdrant.client.QdrantGrpcClient
 import io.qdrant.client.grpc.Collections
 import io.qdrant.client.grpc.Collections.VectorParams
+import kotlinx.datetime.LocalDate
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -96,12 +97,17 @@ class QdrantBeans {
     ): ApplicationRunner {
 
         return ApplicationRunner {
-            val alertModel = alertRepository.findById("664766835580cc3231587129")
+            recommendationSearchService.searchBestFit("MLG", LocalDate(2024,6,3))
 
-            logger.debug { "Alert model to check : $alertModel" }
-
-            recommendationSearchService.searchBestFit(alertModel.orElseThrow())
-
+//            val alertModelList = alertRepository.findAll(
+//                PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "date"))
+//            )
+//
+//            alertModelList.forEach { alertModel ->
+//                logger.debug { "Alert model to check : $alertModel" }
+//
+//                recommendationSearchService.searchBestFit(alertModel)
+//            }
         }
     }
 }

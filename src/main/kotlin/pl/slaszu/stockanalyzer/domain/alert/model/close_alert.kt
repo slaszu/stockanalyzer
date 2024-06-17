@@ -32,6 +32,6 @@ interface CloseAlertRepository : MongoRepository<CloseAlertModel, String> {
     @Query("{'date' : { \$gt: ?0 }}")
     fun findCloseAlertsAfterDate(date: LocalDateTime): List<CloseAlertModel>
 
-//    @Query( sort = "{ 'date': -1 }" )
-//    fun findAll(limit: Limit): List<CloseAlertModel>
+    @Query("{ 'alert.tweetId': ?0 }")
+    fun findByAlertTweetId(alertTweetId: String): List<CloseAlertModel>
 }

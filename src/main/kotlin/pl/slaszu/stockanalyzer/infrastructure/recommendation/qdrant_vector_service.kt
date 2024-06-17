@@ -2,6 +2,7 @@ package pl.slaszu.stockanalyzer.infrastructure.recommendation
 
 import io.qdrant.client.ValueFactory.value
 import io.qdrant.client.grpc.JsonWithInt.Value
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toKotlinLocalDate
 import org.jetbrains.bio.viktor.F64Array
 import org.springframework.stereotype.Service
@@ -12,13 +13,11 @@ import pl.slaszu.stockanalyzer.domain.recommendation.StockVectorConverter
 import pl.slaszu.stockanalyzer.domain.stock.StockProvider
 
 @Service
-class ViktorVectorConvert(private val stockProvider: StockProvider): StockVectorConverter {
-
-    override fun createVector(alert: AlertModel): StockVector {
-
+class ViktorVectorConvert(private val stockProvider: StockProvider) : StockVectorConverter {
+    override fun createVector(stockCode: String, dateTo: LocalDate): StockVector {
         val stockPriceList = this.stockProvider.getLastStockPriceList(
-            alert.stockCode,
-            alert.date.toLocalDate().toKotlinLocalDate()
+            stockCode,
+            dateTo
         )
 
         val prices = mutableListOf<Float>()
@@ -43,6 +42,10 @@ class ViktorVectorConvert(private val stockProvider: StockProvider): StockVector
             pricesF64.data.map { it.toFloat() }.toTypedArray(),
             amountF64.data.map { it.toFloat() }.toTypedArray()
         )
+    }
+
+    override fun createVector(alert: AlertModel): StockVector {
+        return this.createVector(alert.stockCode, alert.date.toLocalDate().toKotlinLocalDate())
     }
 }
 

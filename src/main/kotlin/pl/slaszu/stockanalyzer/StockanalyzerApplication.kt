@@ -89,7 +89,7 @@ class SomeBeans {
 //        }
 //    }
 //
-    @Bean
+    //@Bean
     fun testCreateReport(action: CreateReport): ApplicationRunner {
         return ApplicationRunner {
             action.runForDaysAfter(7)
