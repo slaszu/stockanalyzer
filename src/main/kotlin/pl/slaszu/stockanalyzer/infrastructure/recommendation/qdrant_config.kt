@@ -13,10 +13,9 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import pl.slaszu.stockanalyzer.domain.alert.model.AlertRepository
-import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertRepository
 import pl.slaszu.stockanalyzer.domain.recommendation.RecommendationPersistService
-import pl.slaszu.stockanalyzer.domain.recommendation.RecommendationSearchService
-import pl.slaszu.stockanalyzer.domain.recommendation.Search
+import pl.slaszu.stockanalyzer.domain.recommendation.RecommendationService
+import pl.slaszu.stockanalyzer.domain.recommendation.SimilarAlertSearchService
 import pl.slaszu.stockanalyzer.domain.recommendation.StockVector
 
 val logger = KotlinLogging.logger { }
@@ -93,25 +92,23 @@ class QdrantBeans {
         client: QdrantClient,
         config: QdrantClient,
         alertRepository: AlertRepository,
-        recommendationSearchService: RecommendationSearchService
+        similarAlertSearchService: SimilarAlertSearchService,
+        recommendationService: RecommendationService
     ): ApplicationRunner {
 
         return ApplicationRunner {
-            val result = recommendationSearchService.searchBestFit("MLG", LocalDate(2024,6,3))
+            val result = similarAlertSearchService.searchBestFit(
+                "CLC",
+                LocalDate(2024, 5, 31)
+            )
 
             result.forEach {
-                logger.debug { "BestFit : $it" }
+                //logger.debug { "BestFit : $it" }
             }
 
-//            val alertModelList = alertRepository.findAll(
-//                PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "date"))
-//            )
-//
-//            alertModelList.forEach { alertModel ->
-//                logger.debug { "Alert model to check : $alertModel" }
-//
-//                recommendationSearchService.searchBestFit(alertModel)
-//            }
+            val reco = recommendationService.convertToRecommendation(result)
+            logger.debug { "${reco.getDaysAfterToResultAvg()}" }
+
         }
     }
 }

@@ -24,7 +24,7 @@ class QdrantSearch(
                     .setVectorName("price")
                     .addAllVector(stockVector.priceVector.toMutableList())
                     .setLimit(20)
-                    .setScoreThreshold(0.999f)
+                    .setScoreThreshold(0.99f)
                     .setWithPayload(WithPayloadSelector.newBuilder().setEnable(true).build())
                     .build()
             )
@@ -33,7 +33,7 @@ class QdrantSearch(
         return searchResults.toSearchResultList()
     }
 
-    override fun getVolumeScoreByAlert(stockVector: StockVector, alertTweetId: String): List<SearchResult> {
+    override fun getVolumeScoreForAlert(stockVector: StockVector, alertTweetId: String): List<SearchResult> {
 
         val searchResults = client
             .searchAsync(
@@ -41,8 +41,8 @@ class QdrantSearch(
                     .setCollectionName(config.collectionName)
                     .setVectorName("volume")
                     .addAllVector(stockVector.volumeVector.toMutableList())
-                    .setLimit(20)
-                    .setScoreThreshold(0.7f)
+                    .setLimit(1)
+                    //.setScoreThreshold(0.7f)
                     .setFilter(Filter.newBuilder().addMust(ConditionFactory.matchKeyword("alertTweetId", alertTweetId)))
                     .setWithPayload(WithPayloadSelector.newBuilder().setEnable(true).build())
                     .build()

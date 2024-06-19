@@ -4,6 +4,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.datetime.LocalDate
 import org.springframework.stereotype.Service
 import pl.slaszu.stockanalyzer.domain.alert.model.AlertModel
+import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertModel
 import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertRepository
 
 val logger = KotlinLogging.logger { }
@@ -26,11 +27,16 @@ class RecommendationPersistService(
     }
 }
 
+data class BestFitResult(
+    val alertTweetId: String,
+    val priceScore: Float,
+    val volumeScore: Float
+)
+
 @Service
-class RecommendationSearchService(
+class SimilarAlertSearchService(
     private val search: Search,
-    private val converter: StockVectorConverter,
-    private val closeAlertRepository: CloseAlertRepository
+    private val converter: StockVectorConverter
 ) {
     fun searchBestFit(stockCode: String, dateTo: LocalDate): List<BestFitResult> {
         val stockVector = this.converter.createVector(stockCode, dateTo)
@@ -55,7 +61,7 @@ class RecommendationSearchService(
                 BestFitResult(
                     k,
                     v.score,
-                    this.search.getVolumeScoreByAlert(stockVector, k).firstOrNull()?.score ?: 0f
+                    this.search.getVolumeScoreForAlert(stockVector, k).firstOrNull()?.score ?: 0f
                 )
             }
         }
@@ -64,8 +70,47 @@ class RecommendationSearchService(
     }
 }
 
-data class BestFitResult(
-    val alertTweetId: String,
-    val priceScore: Float,
-    val volumeScore: Float
-)
+class Recommendation() {
+    private val dayToCloseAlertList = mutableMapOf<BestFitResult, List<CloseAlertModel>>()
+
+    fun add(bestFit: BestFitResult, closeAlertList: List<CloseAlertModel>) {
+        this.dayToCloseAlertList[bestFit] = closeAlertList
+    }
+
+    fun getDaysAfterToResultAvg(): Map<Int, Float> {
+        val tmpRes = mutableMapOf<Int,MutableList<Float>>()
+        this.dayToCloseAlertList.forEach { (t, u) ->
+            u.forEach { closeAlert ->
+                if (tmpRes[closeAlert.daysAfter] == null) {
+                    tmpRes[closeAlert.daysAfter] = mutableListOf(closeAlert.resultPercent)
+                } else {
+                    tmpRes[closeAlert.daysAfter]!!.add(closeAlert.resultPercent)
+                }
+            }
+        }
+
+        val res = mutableMapOf<Int, Float>()
+        tmpRes.forEach { (t, u) ->
+            res[t] = u.average().toFloat()
+        }
+
+        return res
+    }
+}
+
+@Service
+class RecommendationService(
+    private val closeAlertRepository: CloseAlertRepository
+) {
+    fun convertToRecommendation(bestFitResults: List<BestFitResult>): Recommendation {
+        val reco = Recommendation()
+        bestFitResults.forEach {
+            reco.add(
+                it,
+                this.closeAlertRepository.findByAlertTweetId(it.alertTweetId)
+            )
+        }
+
+        return reco
+    }
+}
