@@ -54,7 +54,6 @@ class CreateAlerts(
                     "Code ${it.code} has all signals \n ${signals.contentToString()}}"
                 }
 
-                // todo uncomment
                 val publishedId = this.publishAlertAndGetId(it, stockPriceList)
 
                 val alertModel = AlertModel(
@@ -67,9 +66,12 @@ class CreateAlerts(
                     publishedId
                 )
 
+                // todo before create alert check recommendation for it, ad info to tweet
+
                 alertRepo.save(alertModel)
                 logger.info { "Saved alert: $alertModel" }
 
+                // todo  after save alert, send it to recommendation system, mayby some event system
             }
         }
     }

@@ -51,7 +51,7 @@ class QdrantBeans {
     ): ApplicationRunner {
         logger.debug { config.toString() }
 
-
+        // todo add some way to force recreate qdrant collection, matby api, or cli action ?!
         return ApplicationRunner {
             client.deleteCollectionAsync(config.collectionName).get();
 
@@ -98,8 +98,8 @@ class QdrantBeans {
 
         return ApplicationRunner {
             val result = similarAlertSearchService.searchBestFit(
-                "CLC",
-                LocalDate(2024, 5, 31)
+                "OPN",
+                LocalDate(2024, 5, 29)
             )
 
             result.forEach {
