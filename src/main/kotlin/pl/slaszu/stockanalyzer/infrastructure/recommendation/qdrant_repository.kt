@@ -15,6 +15,7 @@ class QdrantSaveRepository(
     private val qdrantClient: QdrantClient,
     private val qdrantConfig: QdrantConfig,
 ) : SaveRepository {
+
     override fun save(vector: StockVector, payload: RecommendationPayload) {
 
         if (!vector.hasValidSize()) {
@@ -22,7 +23,7 @@ class QdrantSaveRepository(
         }
 
         val point = PointStruct.newBuilder()
-            .setId(id(payload.closeAlertTweetId.toLong()))
+            .setId(id(payload.alertTweetId.toLong()))
             .setVectors(
                 namedVectors(
                     mapOf(

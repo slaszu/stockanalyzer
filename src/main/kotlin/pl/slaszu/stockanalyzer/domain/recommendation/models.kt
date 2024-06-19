@@ -1,6 +1,6 @@
 package pl.slaszu.stockanalyzer.domain.recommendation
 
-import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertModel
+import pl.slaszu.stockanalyzer.domain.alert.model.AlertModel
 
 
 class StockVector(
@@ -19,32 +19,20 @@ class StockVector(
 
 class RecommendationPayload(
     val stockCode: String,
-    val result: Float,
-    val days: Int,
-    val closeAlertId: String,
-    val closeAlertTweetId: String,
     val alertTweetId: String
 ) {
     fun toMap(): Map<String, String> {
         return mapOf(
             "stockCode" to this.stockCode,
-            "result" to this.result.toString(),
-            "days" to this.days.toString(),
-            "closeAlertId" to this.closeAlertId,
-            "closeAlertTweetId" to this.closeAlertTweetId,
             "alertTweetId" to this.alertTweetId
         )
     }
 
     companion object {
-        fun fromCloseAlert(closeAlert: CloseAlertModel): RecommendationPayload {
+        fun fromAlert(alert: AlertModel): RecommendationPayload {
             return RecommendationPayload(
-                closeAlert.alert.stockCode,
-                closeAlert.resultPercent,
-                closeAlert.daysAfter,
-                closeAlert.id!!,
-                closeAlert.tweetId,
-                closeAlert.alert.tweetId
+                alert.stockCode,
+                alert.tweetId
             )
         }
     }

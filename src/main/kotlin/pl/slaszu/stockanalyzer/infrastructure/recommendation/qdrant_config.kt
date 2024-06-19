@@ -48,7 +48,7 @@ class QdrantBeans {
         config: QdrantConfig,
         client: QdrantClient,
         recommendationService: RecommendationPersistService,
-        closeAlertRepository: CloseAlertRepository
+        alertRepository: AlertRepository
     ): ApplicationRunner {
         logger.debug { config.toString() }
 
@@ -78,7 +78,7 @@ class QdrantBeans {
                     }
                 }
 
-            closeAlertRepository.findAll(
+            alertRepository.findAll(
                 PageRequest.of(0, 100, Sort.by("date").descending())
             ).forEach {
                 logger.debug { "$it" }
@@ -97,7 +97,11 @@ class QdrantBeans {
     ): ApplicationRunner {
 
         return ApplicationRunner {
-            recommendationSearchService.searchBestFit("MLG", LocalDate(2024,6,3))
+            val result = recommendationSearchService.searchBestFit("MLG", LocalDate(2024,6,3))
+
+            result.forEach {
+                logger.debug { "BestFit : $it" }
+            }
 
 //            val alertModelList = alertRepository.findAll(
 //                PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "date"))

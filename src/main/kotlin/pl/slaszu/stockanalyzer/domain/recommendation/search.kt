@@ -4,7 +4,7 @@ import pl.slaszu.stockanalyzer.domain.alert.model.AlertModel
 
 interface Search {
     fun searchByPrice(stockVector: StockVector): List<SearchResult>
-    fun searchByVolume(stockVector: StockVector): List<SearchResult>
+    fun getVolumeScoreByAlert(stockVector: StockVector, alertTweetId: String): List<SearchResult>
 }
 
 data class SearchResult(
