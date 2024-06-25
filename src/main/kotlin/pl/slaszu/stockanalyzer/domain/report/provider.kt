@@ -1,6 +1,6 @@
 package pl.slaszu.stockanalyzer.domain.report
 
-import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertModel
+import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
 
 interface ReportProvider {
     fun getHtml(closeAlertModelList: List<CloseAlertModel>, data: Map<String, String>?): String

@@ -1,13 +1,13 @@
 package pl.slaszu.stockanalyzer.application
 
 import org.springframework.stereotype.Service
-import pl.slaszu.stockanalyzer.domain.alert.model.AlertModel
-import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertModel
+import pl.slaszu.shared_kernel.domain.alert.AlertModel
+import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
 import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
 import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
-import pl.slaszu.stockanalyzer.domain.stock.StockPriceDto
+import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
 import pl.slaszu.stockanalyzer.domain.stock.StockProvider
-import pl.slaszu.stockanalyzer.shared.roundTo
+import pl.slaszu.shared_kernel.domain.roundTo
 
 @Service
 class ChartForAlert(

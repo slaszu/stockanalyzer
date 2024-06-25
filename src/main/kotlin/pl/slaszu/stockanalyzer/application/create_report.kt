@@ -3,11 +3,11 @@ package pl.slaszu.stockanalyzer.application
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
-import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertModel
-import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertRepository
+import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
+import pl.slaszu.shared_kernel.domain.alert.CloseAlertRepository
 import pl.slaszu.stockanalyzer.domain.publisher.Publisher
 import pl.slaszu.stockanalyzer.domain.report.ReportProvider
-import pl.slaszu.stockanalyzer.shared.roundTo
+import pl.slaszu.shared_kernel.domain.roundTo
 import java.time.LocalDateTime
 
 

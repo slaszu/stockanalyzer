@@ -1,7 +1,7 @@
 package pl.slaszu.stockanalyzer.domain.stockanalyzer
 
 import org.springframework.stereotype.Service
-import pl.slaszu.stockanalyzer.domain.stock.StockPriceDto
+import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
 
 
 @Service

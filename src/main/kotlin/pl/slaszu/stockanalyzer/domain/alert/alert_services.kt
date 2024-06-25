@@ -1,17 +1,26 @@
 package pl.slaszu.stockanalyzer.domain.alert
 
 import org.springframework.stereotype.Service
-import pl.slaszu.stockanalyzer.domain.alert.model.AlertModel
-import pl.slaszu.stockanalyzer.domain.alert.model.AlertRepository
-import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertModel
-import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertRepository
+import pl.slaszu.stockanalyzer.domain.CreateAlertEvent
+import pl.slaszu.shared_kernel.domain.EventDispatcher
+import pl.slaszu.shared_kernel.domain.alert.AlertModel
+import pl.slaszu.shared_kernel.domain.alert.AlertRepository
+import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
+import pl.slaszu.shared_kernel.domain.alert.CloseAlertRepository
+import pl.slaszu.shared_kernel.domain.stock.StockDto
+import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalEnum
 import java.time.LocalDateTime
 
 @Service
 class CloseAlertService(
-    val alertRepo: AlertRepository,
-    val closeAlertRepo: CloseAlertRepository
+    private val alertRepo: AlertRepository,
+    private val closeAlertRepo: CloseAlertRepository
 ) {
+
+    fun persistCloseAlert(closeAlert: CloseAlertModel): CloseAlertModel {
+        return this.closeAlertRepo.save(closeAlert)
+    }
+
     fun closeAlert(alert: AlertModel) {
 
         // id must exists
@@ -29,14 +38,28 @@ class CloseAlertService(
     }
 }
 
-
 @Service
-class CloseAlertProvider(val closeAlertRepository: CloseAlertRepository) {
-    fun getAllForAlerts(alertList: List<AlertModel>): List<CloseAlertModel> {
-        val result = mutableListOf<CloseAlertModel>()
-        alertList.forEach {
-            result.addAll(this.closeAlertRepository.findByAlertId(it.id!!))
+class AlertService(
+    private val alertRepo: AlertRepository,
+    private val eventDispatcher: EventDispatcher
+) {
+    fun createAlert(stock: StockDto, price: Float, signals: List<String>): AlertModel {
+        val alert = AlertModel(
+            stock.code!!,
+            stock.name,
+            price,
+            signals
+        )
+
+        val event = CreateAlertEvent(alert)
+        this.eventDispatcher.dispatch(alert)
+
+        return event.changedAlert ?: alert
+    }
+
+    fun persistAlert(alert: AlertModel): AlertModel {
+        return this.alertRepo.save(alert).also {
+
         }
-        return result.toList()
     }
 }

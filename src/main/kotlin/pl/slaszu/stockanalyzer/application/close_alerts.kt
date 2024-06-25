@@ -6,14 +6,14 @@ import org.springframework.stereotype.Service
 import pl.slaszu.stockanalyzer.domain.alert.CloseAlertService
 import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
 import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
-import pl.slaszu.stockanalyzer.domain.alert.model.AlertModel
-import pl.slaszu.stockanalyzer.domain.alert.model.AlertRepository
-import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertModel
-import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertRepository
+import pl.slaszu.shared_kernel.domain.alert.AlertModel
+import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
 import pl.slaszu.stockanalyzer.domain.publisher.Publisher
-import pl.slaszu.stockanalyzer.domain.stock.StockPriceDto
+import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
+import pl.slaszu.shared_kernel.domain.alert.AlertRepository
+import pl.slaszu.shared_kernel.domain.alert.CloseAlertRepository
 import pl.slaszu.stockanalyzer.domain.stock.StockProvider
-import pl.slaszu.stockanalyzer.shared.roundTo
+import pl.slaszu.shared_kernel.domain.roundTo
 import java.time.LocalDateTime
 
 @Service
@@ -62,7 +62,7 @@ class CloseAlerts(
             val tweetId = this.publishCloseAndGetId(alert, stockPriceList, daysAfter)
 
             // add CloseAlertModel
-            this.closeAlertRepo.save(
+            this.closeAlertService.persistCloseAlert(
                 CloseAlertModel(
                     alert,
                     tweetId,

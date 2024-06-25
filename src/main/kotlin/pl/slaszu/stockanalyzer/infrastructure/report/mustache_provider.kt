@@ -2,18 +2,15 @@ package pl.slaszu.stockanalyzer.infrastructure.report
 
 import com.samskivert.mustache.Mustache
 import gui.ava.html.image.generator.HtmlImageGenerator
-import kotlinx.datetime.toKotlinLocalDateTime
 import org.jfree.chart.ChartUtils
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.mustache.MustacheResourceTemplateLoader
 import org.springframework.boot.info.BuildProperties
 import org.springframework.stereotype.Service
-import pl.slaszu.stockanalyzer.domain.alert.model.AlertModel
-import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertModel
-import pl.slaszu.stockanalyzer.domain.alert.model.CloseAlertRepository
+import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
+import pl.slaszu.shared_kernel.domain.alert.CloseAlertRepository
 import pl.slaszu.stockanalyzer.domain.report.ReportProvider
-import pl.slaszu.stockanalyzer.shared.calcSellPrice
-import pl.slaszu.stockanalyzer.shared.roundTo
+import pl.slaszu.shared_kernel.domain.calcSellPrice
+import pl.slaszu.shared_kernel.domain.roundTo
 import java.io.File
 import java.time.format.DateTimeFormatter
 

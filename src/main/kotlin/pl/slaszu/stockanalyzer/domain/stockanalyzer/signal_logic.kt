@@ -1,8 +1,8 @@
 package pl.slaszu.stockanalyzer.domain.stockanalyzer
 
-import pl.slaszu.stockanalyzer.domain.stock.StockPriceDto
-import pl.slaszu.stockanalyzer.shared.calcPercent
-import pl.slaszu.stockanalyzer.shared.roundTo
+import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
+import pl.slaszu.shared_kernel.domain.calcPercent
+import pl.slaszu.shared_kernel.domain.roundTo
 
 
 interface SignalLogic {

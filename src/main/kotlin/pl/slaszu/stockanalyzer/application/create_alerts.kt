@@ -3,17 +3,17 @@ package pl.slaszu.stockanalyzer.application
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
-import pl.slaszu.stockanalyzer.domain.alert.model.AlertModel
-import pl.slaszu.stockanalyzer.domain.alert.model.AlertRepository
+import pl.slaszu.stockanalyzer.domain.alert.AlertService
+import pl.slaszu.shared_kernel.domain.alert.AlertModel
 import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
 import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
 import pl.slaszu.stockanalyzer.domain.publisher.Publisher
-import pl.slaszu.stockanalyzer.domain.stock.StockDto
-import pl.slaszu.stockanalyzer.domain.stock.StockPriceDto
+import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
+import pl.slaszu.shared_kernel.domain.alert.AlertRepository
 import pl.slaszu.stockanalyzer.domain.stock.StockProvider
 import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalProvider
 import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalsChecker
-import pl.slaszu.stockanalyzer.shared.roundTo
+import pl.slaszu.shared_kernel.domain.roundTo
 import java.time.LocalDateTime
 
 @Service
@@ -21,6 +21,7 @@ class CreateAlerts(
     private val stockProvider: StockProvider,
     private val signalProvider: SignalProvider,
     private val alertRepo: AlertRepository,
+    private val alertService: AlertService,
     private val chartProvider: ChartProvider,
     private val publisher: Publisher,
     private val logger: KLogger = KotlinLogging.logger { }
@@ -54,21 +55,19 @@ class CreateAlerts(
                     "Code ${it.code} has all signals \n ${signals.contentToString()}}"
                 }
 
-                val publishedId = this.publishAlertAndGetId(it, stockPriceList)
-
-                val alertModel = AlertModel(
-                    it.code,
-                    it.name,
+                val alertModel = this.alertService.createAlert(
+                    it,
                     stockPriceList.first().price,
-                    signals.map {
-                        it.type
-                    },
-                    publishedId
+                    signals.map { signal ->
+                        signal.type.toString()
+                    }
                 )
+
+                val publishedId = this.publishAlertAndGetId(alertModel, stockPriceList)
 
                 // todo before create alert check recommendation for it, ad info to tweet
 
-                alertRepo.save(alertModel)
+                alertService.persistAlert(alertModel.copy( tweetId = publishedId ))
                 logger.info { "Saved alert: $alertModel" }
 
                 // todo  after save alert, send it to recommendation system, mayby some event system
@@ -76,25 +75,24 @@ class CreateAlerts(
         }
     }
 
-    private fun publishAlertAndGetId(stock: StockDto, priceList: Array<StockPriceDto>): String {
+    private fun publishAlertAndGetId(alert: AlertModel, priceList: Array<StockPriceDto>): String {
 
-        val buyPrice = priceList.first().price.roundTo(2)
+        val buyPrice = alert.price.roundTo(2)
 
-        val alertLabel = "BUY ${stock.code} $buyPrice PLN"
+        val alertLabel = "BUY ${alert.stockCode} $buyPrice PLN"
 
         // get chart png
         val pngByteArray = this.chartProvider.getPngByteArray(
-            "${stock.code}",
+            alert.stockCode,
             priceList,
             ChartPoint(priceList.first(), buyPrice, alertLabel)
         )
-
 
         // tweet alert
         return this.publisher.publish(
             pngByteArray,
             alertLabel,
-            "#${stock.code} #${stock.name} #gpwApiSignals\nhttps://pl.tradingview.com/symbols/GPW-${stock.code}/"
+            "#${alert.stockCode} #${alert.stockName} #gpwApiSignals\nhttps://pl.tradingview.com/symbols/GPW-${alert.stockCode}/"
         )
     }
 }

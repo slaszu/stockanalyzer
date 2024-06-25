@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "pl.slaszu"
-version = "1.2.1"
+version = "2.0.0"
 tasks.bootJar {
     this.archiveFileName.set("${project.name}.jar")
 }
@@ -61,6 +61,7 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers:1.18.1")
     testImplementation("org.testcontainers:junit-jupiter:1.18.1")
     testImplementation("org.testcontainers:mongodb:1.18.1")
+    testImplementation("com.tngtech.archunit:archunit:1.3.0")
 }
 
 tasks.withType<KotlinCompile> {

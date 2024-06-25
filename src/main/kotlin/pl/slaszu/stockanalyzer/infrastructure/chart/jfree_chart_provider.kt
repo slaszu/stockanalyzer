@@ -14,8 +14,8 @@ import org.springframework.boot.info.BuildProperties
 import org.springframework.stereotype.Service
 import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
 import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
-import pl.slaszu.stockanalyzer.domain.stock.StockPriceDto
-import pl.slaszu.stockanalyzer.shared.toDate
+import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
+import pl.slaszu.shared_kernel.domain.toDate
 import java.awt.Color
 import java.awt.Font
 import java.util.*
