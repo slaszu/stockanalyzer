@@ -22,10 +22,10 @@ import pl.slaszu.stockanalyzer.infrastructure.publisher.TwitterConfig
     StockApiParams::class, TwitterConfig::class, QdrantConfig::class
 )
 @EnableScheduling
-class StockanalyzerApplication
+class App
 
 fun main(args: Array<String>) {
-    runApplication<StockanalyzerApplication>(*args)
+    runApplication<App>(*args)
 
     println("Hello world")
 }

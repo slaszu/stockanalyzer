@@ -15,7 +15,7 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.testcontainers.junit.jupiter.Testcontainers
 import pl.slaszu.integration.config.MongoDBTestContainerConfig
-import pl.slaszu.StockanalyzerApplication
+import pl.slaszu.App
 import pl.slaszu.shared_kernel.domain.alert.AlertModel
 import pl.slaszu.shared_kernel.domain.alert.AlertRepository
 import java.util.stream.Stream
@@ -23,7 +23,7 @@ import java.time.LocalDateTime as LocalDateTimeJava
 
 @DataMongoTest
 @Testcontainers
-@ContextConfiguration(classes = [MongoDBTestContainerConfig::class, StockanalyzerApplication::class])
+@ContextConfiguration(classes = [MongoDBTestContainerConfig::class, App::class])
 @ActiveProfiles("test")
 class AlertRepositoryTests(@Autowired val alertRepo: AlertRepository) {
 

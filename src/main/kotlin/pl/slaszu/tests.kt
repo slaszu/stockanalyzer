@@ -17,6 +17,8 @@
 //import pl.slaszu.recommendation.infrastructure.QdrantConfig
 //import pl.slaszu.recommendation.infrastructure.logger
 //import pl.slaszu.shared_kernel.domain.alert.AlertRepository
+//import pl.slaszu.shared_kernel.domain.stock.StockDto
+//import pl.slaszu.stockanalyzer.domain.alert.AlertService
 //
 //
 //@Configuration
@@ -67,7 +69,7 @@
 //        }
 //    }
 //
-//    @Bean
+//    //@Bean
 //    fun searchForAlert(
 //        client: QdrantClient,
 //        config: QdrantClient,
@@ -91,4 +93,17 @@
 //
 //        }
 //    }
+//
+//    @Bean
+//    fun createAlert(alertService: AlertService): ApplicationRunner = ApplicationRunner {
+//        val stockDto = StockDto("Oponeo", "OPN")
+//        val alert = alertService.createAlert(
+//            stockDto,
+//            35f,
+//            emptyList()
+//        )
+//
+//        logger.debug { alert }
+//    }
+//
 //}

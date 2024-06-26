@@ -78,8 +78,9 @@ class Recommendation() {
     }
 
     fun getDaysAfterToResultAvg(): Map<Int, Float> {
+
         val tmpRes = mutableMapOf<Int,MutableList<Float>>()
-        this.dayToCloseAlertList.forEach { (t, u) ->
+        this.dayToCloseAlertList.forEach { (_, u) ->
             u.forEach { closeAlert ->
                 if (tmpRes[closeAlert.daysAfter] == null) {
                     tmpRes[closeAlert.daysAfter] = mutableListOf(closeAlert.resultPercent)

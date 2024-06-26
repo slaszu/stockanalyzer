@@ -11,7 +11,7 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.testcontainers.junit.jupiter.Testcontainers
 import pl.slaszu.integration.config.MongoDBTestContainerConfig
-import pl.slaszu.StockanalyzerApplication
+import pl.slaszu.App
 import pl.slaszu.stockanalyzer.domain.alert.CloseAlertService
 import pl.slaszu.shared_kernel.domain.alert.AlertModel
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 
 
 @Testcontainers
-@ContextConfiguration(classes = [MongoDBTestContainerConfig::class, StockanalyzerApplication::class])
+@ContextConfiguration(classes = [MongoDBTestContainerConfig::class, App::class])
 @SpringBootTest
 @ActiveProfiles("test")
 class CloseAlertServiceTests(

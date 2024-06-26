@@ -1,14 +1,13 @@
 package pl.slaszu.stockanalyzer.domain.alert
 
 import org.springframework.stereotype.Service
-import pl.slaszu.stockanalyzer.domain.CreateAlertEvent
+import pl.slaszu.stockanalyzer.domain.event.CreateAlertEvent
 import pl.slaszu.shared_kernel.domain.EventDispatcher
 import pl.slaszu.shared_kernel.domain.alert.AlertModel
 import pl.slaszu.shared_kernel.domain.alert.AlertRepository
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertRepository
 import pl.slaszu.shared_kernel.domain.stock.StockDto
-import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalEnum
 import java.time.LocalDateTime
 
 @Service
@@ -52,7 +51,7 @@ class AlertService(
         )
 
         val event = CreateAlertEvent(alert)
-        this.eventDispatcher.dispatch(alert)
+        this.eventDispatcher.dispatch(event)
 
         return event.changedAlert ?: alert
     }

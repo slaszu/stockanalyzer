@@ -55,6 +55,7 @@ class CreateAlerts(
                     "Code ${it.code} has all signals \n ${signals.contentToString()}}"
                 }
 
+                // todo before create alert check recommendation for it, ad info to tweet
                 val alertModel = this.alertService.createAlert(
                     it,
                     stockPriceList.first().price,
@@ -65,7 +66,6 @@ class CreateAlerts(
 
                 val publishedId = this.publishAlertAndGetId(alertModel, stockPriceList)
 
-                // todo before create alert check recommendation for it, ad info to tweet
 
                 alertService.persistAlert(alertModel.copy( tweetId = publishedId ))
                 logger.info { "Saved alert: $alertModel" }

@@ -1,9 +1,9 @@
-package pl.slaszu.stockanalyzer.domain
+package pl.slaszu.stockanalyzer.domain.event
 
 import pl.slaszu.shared_kernel.domain.alert.AlertModel
 
 class CreateAlertEvent(
     val createdAlert: AlertModel
 ) {
-    val changedAlert: AlertModel? = null
+    var changedAlert: AlertModel? = null
 }

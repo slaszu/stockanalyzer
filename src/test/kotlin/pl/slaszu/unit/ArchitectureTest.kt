@@ -15,7 +15,10 @@ class ArchitectureTest {
             .importPackages("pl.slaszu")
 
         val stockanalyzerRule = classes().that().resideInAPackage("..pl.slaszu.stockanalyzer..")
-            .should().onlyBeAccessed().byClassesThat().resideInAnyPackage("..pl.slaszu.stockanalyzer..")
+            .should().onlyBeAccessed().byClassesThat().resideInAnyPackage(
+                "..pl.slaszu.stockanalyzer..",
+                "..event.."
+            )
 
         stockanalyzerRule.check(allClasses);
     }
@@ -27,7 +30,11 @@ class ArchitectureTest {
             .importPackages("pl.slaszu")
 
         val recommendationRule = classes().that().resideInAPackage("..pl.slaszu.recommendation..")
-            .should().onlyBeAccessed().byClassesThat().resideInAnyPackage("..pl.slaszu.recommendation..")
+            .should().onlyBeAccessed().byClassesThat().resideInAnyPackage(
+                "..pl.slaszu.recommendation..",
+                "..event.."
+            )
+
 
         recommendationRule.check(allClasses);
     }
