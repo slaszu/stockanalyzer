@@ -12,7 +12,7 @@
         <list>
           <option value="test" />
           <option value="--tests" />
-          <option value="'pl.slaszu.test.unit*'" />
+          <option value="'pl.slaszu.unit*'" />
         </list>
       </option>
       <option name="vmOptions" />

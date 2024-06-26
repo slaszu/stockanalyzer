@@ -12,7 +12,7 @@
         <list>
           <option value="test" />
           <option value="--tests" />
-          <option value="'pl.slaszu.test.integration*'" />
+          <option value="'pl.slaszu.integration*'" />
         </list>
       </option>
       <option name="vmOptions" />

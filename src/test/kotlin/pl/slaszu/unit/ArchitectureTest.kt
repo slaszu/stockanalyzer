@@ -1,39 +1,40 @@
-package pl.slaszu.test.unit
+package pl.slaszu.unit
 
 import com.tngtech.archunit.core.importer.ClassFileImporter
 import com.tngtech.archunit.core.importer.ImportOption
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes
 import com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses
+import com.tngtech.archunit.library.Architectures.layeredArchitecture
 import org.junit.jupiter.api.Test
 
 class ArchitectureTest {
     @Test
     fun stockanalyzer_context_test() {
-        val stockanalyzerClasses = ClassFileImporter()
+        val allClasses = ClassFileImporter()
             .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
             .importPackages("pl.slaszu")
 
         val stockanalyzerRule = classes().that().resideInAPackage("..pl.slaszu.stockanalyzer..")
             .should().onlyBeAccessed().byClassesThat().resideInAnyPackage("..pl.slaszu.stockanalyzer..")
 
-        stockanalyzerRule.check(stockanalyzerClasses);
+        stockanalyzerRule.check(allClasses);
     }
 
     @Test
     fun recommendation_context_test() {
-        val recommendationClasses = ClassFileImporter()
+        val allClasses = ClassFileImporter()
             .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
             .importPackages("pl.slaszu")
 
         val recommendationRule = classes().that().resideInAPackage("..pl.slaszu.recommendation..")
             .should().onlyBeAccessed().byClassesThat().resideInAnyPackage("..pl.slaszu.recommendation..")
 
-        recommendationRule.check(recommendationClasses);
+        recommendationRule.check(allClasses);
     }
 
     @Test
     fun shared_kernel_context_test() {
-        val sharedKernelClasses = ClassFileImporter()
+        val allClasses = ClassFileImporter()
             .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
             .importPackages("pl.slaszu")
 
@@ -43,37 +44,35 @@ class ArchitectureTest {
                 "..pl.slaszu.recommendation.."
             )
 
-        sharedKernelRule.check(sharedKernelClasses);
+        sharedKernelRule.check(allClasses);
     }
 
     @Test
-    fun ddd_test() {
+    fun layer_test() {
         val allClasses = ClassFileImporter()
             .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
             .importPackages("pl.slaszu")
 
-        val ruleDomain = classes().that().resideInAPackage("..domain..")
-            .should().onlyBeAccessed().byClassesThat().resideInAnyPackage(
-                "..domain..",
-                "..infrastructure..",
-                "..application.."
-            )
+        val layeredArchitecture = layeredArchitecture()
+            .consideringOnlyDependenciesInLayers()
+            .layer("Domain").definedBy("..domain..")
+            .layer("Application").definedBy("..application..")
+            .layer("Infrastructure").definedBy("..infrastructure..")
+            .layer("Userinterface").definedBy("..userinterface..")
 
-        ruleDomain.check(allClasses);
+            .whereLayer("Domain").mayNotAccessAnyLayer()
 
-        val ruleApplication = classes().that().resideInAPackage("..application..")
-            .should().onlyBeAccessed().byClassesThat().resideInAnyPackage(
-                "..userinterface..",
-                "..application..",
-            )
+            .whereLayer("Application").mayOnlyBeAccessedByLayers("Userinterface")
+            .whereLayer("Application").mayOnlyAccessLayers("Domain")
 
-        ruleApplication.check(allClasses);
+            .whereLayer("Infrastructure").mayNotBeAccessedByAnyLayer()
+            .whereLayer("Infrastructure").mayOnlyAccessLayers("Domain")
 
-        val ruleInfrastructure = classes().that().resideInAPackage("..infrastructure..")
-            .should().onlyBeAccessed().byClassesThat().resideInAnyPackage(
-                "..infrastructure.."
-            )
+            .whereLayer("Userinterface").mayNotBeAccessedByAnyLayer()
+            .whereLayer("Userinterface").mayOnlyAccessLayers("Application", "Domain")
 
-        ruleInfrastructure.check(allClasses);
+
+
+        layeredArchitecture.check(allClasses)
     }
 }

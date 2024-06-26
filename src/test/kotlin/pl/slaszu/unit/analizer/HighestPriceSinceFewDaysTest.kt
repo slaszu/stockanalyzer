@@ -1,4 +1,4 @@
-package pl.slaszu.test.unit.analizer
+package pl.slaszu.unit.analizer
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.jupiter.api.Assertions.*

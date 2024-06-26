@@ -1,4 +1,4 @@
-package pl.slaszu.test.integration
+package pl.slaszu.integration
 
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.testcontainers.junit.jupiter.Testcontainers
-import pl.slaszu.test.integration.config.MongoDBTestContainerConfig
+import pl.slaszu.integration.config.MongoDBTestContainerConfig
 import pl.slaszu.StockanalyzerApplication
 import pl.slaszu.stockanalyzer.domain.alert.CloseAlertService
 import pl.slaszu.shared_kernel.domain.alert.AlertModel
