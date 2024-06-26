@@ -8,6 +8,7 @@ import pl.slaszu.shared_kernel.domain.alert.AlertRepository
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertRepository
 import pl.slaszu.shared_kernel.domain.stock.StockDto
+import pl.slaszu.stockanalyzer.domain.event.PersistAlertEvent
 import java.time.LocalDateTime
 
 @Service
@@ -58,7 +59,8 @@ class AlertService(
 
     fun persistAlert(alert: AlertModel): AlertModel {
         return this.alertRepo.save(alert).also {
-
+            val event = PersistAlertEvent(alert)
+            this.eventDispatcher.dispatch(event)
         }
     }
 }
