@@ -16,7 +16,7 @@ interface StockVectorConverter {
 
 @Service
 class RecommendationPersistService(
-    private val saveRepo: SaveRepository,
+    private val saveRepo: RecommendationRepository,
     private val converter: StockVectorConverter
 ) {
     fun save(alert: AlertModel) {

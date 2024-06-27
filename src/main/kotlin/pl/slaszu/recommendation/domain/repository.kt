@@ -1,5 +1,7 @@
 package pl.slaszu.recommendation.domain
 
-interface SaveRepository {
+interface RecommendationRepository {
     fun save(vector: StockVector, payload: RecommendationPayload)
+
+    fun createIfNotExists(): Boolean
 }

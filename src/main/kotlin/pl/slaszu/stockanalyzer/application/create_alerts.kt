@@ -3,17 +3,17 @@ package pl.slaszu.stockanalyzer.application
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
-import pl.slaszu.stockanalyzer.domain.alert.AlertService
 import pl.slaszu.shared_kernel.domain.alert.AlertModel
+import pl.slaszu.shared_kernel.domain.alert.AlertRepository
+import pl.slaszu.shared_kernel.domain.roundTo
+import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
+import pl.slaszu.stockanalyzer.domain.alert.AlertService
 import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
 import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
 import pl.slaszu.stockanalyzer.domain.publisher.Publisher
-import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
-import pl.slaszu.shared_kernel.domain.alert.AlertRepository
 import pl.slaszu.stockanalyzer.domain.stock.StockProvider
 import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalProvider
 import pl.slaszu.stockanalyzer.domain.stockanalyzer.SignalsChecker
-import pl.slaszu.shared_kernel.domain.roundTo
 import java.time.LocalDateTime
 
 @Service
@@ -64,7 +64,6 @@ class CreateAlerts(
                 )
 
                 val publishedId = this.publishAlertAndGetId(alertModel, stockPriceList)
-
 
                 alertService.persistAlert(alertModel.copy( tweetId = publishedId ))
                 logger.info { "Saved alert: $alertModel" }

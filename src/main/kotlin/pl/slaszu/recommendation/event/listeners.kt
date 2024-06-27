@@ -1,5 +1,6 @@
 package pl.slaszu.recommendation.event
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
@@ -11,9 +12,10 @@ import pl.slaszu.stockanalyzer.domain.event.PersistAlertEvent
 class StockanalyzerEventListener(
     private val recommendationService: RecommendationService,
     private val searchService: SimilarAlertSearchService,
-    private val recommendationRepository: SaveRepository,
+    private val recommendationRepository: RecommendationRepository,
     private val vectorConverter: StockVectorConverter
 ) {
+    private val logger = KotlinLogging.logger { }
 
     // todo test for listeners
     @EventListener
@@ -39,5 +41,6 @@ class StockanalyzerEventListener(
             this.vectorConverter.createVector(event.alert),
             RecommendationPayload.fromAlert(event.alert)
         )
+        this.logger.debug { "Alert added to recommendation db: ${event.alert}" }
     }
 }
