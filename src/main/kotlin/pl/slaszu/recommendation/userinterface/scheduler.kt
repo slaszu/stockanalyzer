@@ -9,7 +9,7 @@ import pl.slaszu.recommendation.domain.RecommendationRepository
 import pl.slaszu.shared_kernel.domain.alert.AlertRepository
 
 @Service
-//@Profile("prod")
+@Profile("prod")
 class SchedulerRecommendation(
     val recommendationRepository: RecommendationRepository,
     val recommendationPersistService: RecommendationPersistService,

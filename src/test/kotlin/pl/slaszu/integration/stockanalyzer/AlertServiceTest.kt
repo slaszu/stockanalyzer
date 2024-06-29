@@ -8,26 +8,39 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import pl.slaszu.recommendation.event.StockanalyzerEventListener
+import pl.slaszu.shared_kernel.domain.alert.AlertModel
+import pl.slaszu.shared_kernel.domain.alert.AlertRepository
 import pl.slaszu.shared_kernel.domain.stock.StockDto
 import pl.slaszu.stockanalyzer.domain.alert.AlertService
+import pl.slaszu.stockanalyzer.domain.event.CreateAlertEvent
+import pl.slaszu.stockanalyzer.domain.event.PersistAlertEvent
 
 
 @SpringBootTest
 @ActiveProfiles("test")
+class AlertServiceTests() {
 
-class AlertServiceTests(
-    @Autowired val alertService: AlertService
-) {
+    @Autowired
+    private lateinit var alertService: AlertService
 
     @MockkBean
     private lateinit var stockanalyzerEventListener: StockanalyzerEventListener
 
+    @MockkBean
+    private lateinit var alertRepository: AlertRepository
+
     @Test
-    fun testCreateAlert(
-    ) {
+    fun testCreateAlert() {
         val stockDto = StockDto("Test", "TST")
 
-        every { stockanalyzerEventListener.addRecommendationToAlert(any()) } returns Unit
+        fun matcher(event: CreateAlertEvent): Boolean {
+            return event.createdAlert.stockCode.equals("TST") &&
+                    event.createdAlert.price.equals(3.5f)
+        }
+
+        every {
+            stockanalyzerEventListener.addRecommendationToAlert(match { matcher(it) })
+        } returns Unit
 
         this.alertService.createAlert(
             stockDto,
@@ -36,5 +49,35 @@ class AlertServiceTests(
         )
 
         verify { stockanalyzerEventListener.addRecommendationToAlert(any()) }
+    }
+
+    @Test
+    fun testPersistAlert() {
+
+        val alert = AlertModel(
+            "TST",
+            "Test",
+            3.5f,
+            emptyList()
+        )
+
+        fun matcherRepo(alertToTest: AlertModel): Boolean {
+            return alertToTest == alert
+        }
+
+        fun matcherListener(event: PersistAlertEvent): Boolean {
+            return event.alert.id == "123"
+        }
+
+        every { alertRepository.save(match { matcherRepo(it) }) } returns alert.copy(id = "123")
+
+        every { stockanalyzerEventListener.sendAlertToRecommendationSystem(match { matcherListener(it) }) } returns Unit
+
+
+        this.alertService.persistAlert(alert)
+
+        verify { stockanalyzerEventListener.sendAlertToRecommendationSystem(any()) }
+        verify { alertRepository.save(any()) }
+
     }
 }

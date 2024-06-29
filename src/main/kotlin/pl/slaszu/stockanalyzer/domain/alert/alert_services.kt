@@ -1,13 +1,13 @@
 package pl.slaszu.stockanalyzer.domain.alert
 
 import org.springframework.stereotype.Service
-import pl.slaszu.stockanalyzer.domain.event.CreateAlertEvent
 import pl.slaszu.shared_kernel.domain.EventDispatcher
 import pl.slaszu.shared_kernel.domain.alert.AlertModel
 import pl.slaszu.shared_kernel.domain.alert.AlertRepository
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertRepository
 import pl.slaszu.shared_kernel.domain.stock.StockDto
+import pl.slaszu.stockanalyzer.domain.event.CreateAlertEvent
 import pl.slaszu.stockanalyzer.domain.event.PersistAlertEvent
 import java.time.LocalDateTime
 
@@ -59,7 +59,7 @@ class AlertService(
 
     fun persistAlert(alert: AlertModel): AlertModel {
         return this.alertRepo.save(alert).also {
-            val event = PersistAlertEvent(alert)
+            val event = PersistAlertEvent(it)
             this.eventDispatcher.dispatch(event)
         }
     }

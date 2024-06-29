@@ -2,7 +2,6 @@ package pl.slaszu.recommendation.event
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.context.event.EventListener
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import pl.slaszu.recommendation.domain.*
 import pl.slaszu.stockanalyzer.domain.event.CreateAlertEvent
@@ -35,7 +34,7 @@ open class StockanalyzerEventListener(
 
     // todo test for listeners
     @EventListener
-    @Async
+    //@Async
     fun sendAlertToRecommendationSystem(event: PersistAlertEvent) {
         this.recommendationRepository.save(
             this.vectorConverter.createVector(event.alert),

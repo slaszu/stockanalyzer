@@ -9,12 +9,13 @@ import org.springframework.boot.info.BuildProperties
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import org.springframework.scheduling.annotation.EnableAsync
 import org.springframework.scheduling.annotation.EnableScheduling
 import pl.slaszu.recommendation.infrastructure.QdrantConfig
-import pl.slaszu.shared_kernel.infrastructure.stock.StockApiParams
 import pl.slaszu.shared_kernel.domain.alert.AlertRepository
+import pl.slaszu.shared_kernel.infrastructure.stock.StockApiParams
 import pl.slaszu.stockanalyzer.infrastructure.publisher.TwitterConfig
 
 @SpringBootApplication
@@ -53,6 +54,7 @@ class ProdBeans {
 //    }
 
     @Bean
+    @Profile("!test")
     fun testMongoConnection(
         buildProperty: BuildProperties,
         alertRepo: AlertRepository,
