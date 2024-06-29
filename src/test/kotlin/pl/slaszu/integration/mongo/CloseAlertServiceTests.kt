@@ -1,22 +1,18 @@
-package pl.slaszu.integration
+package pl.slaszu.integration.mongo
 
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assumptions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.testcontainers.junit.jupiter.Testcontainers
-import pl.slaszu.integration.config.MongoDBTestContainerConfig
 import pl.slaszu.App
-import pl.slaszu.stockanalyzer.domain.alert.CloseAlertService
+import pl.slaszu.integration.mongo.config.MongoDBTestContainerConfig
 import pl.slaszu.shared_kernel.domain.alert.AlertModel
-import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
 import pl.slaszu.shared_kernel.domain.alert.AlertRepository
+import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertRepository
+import pl.slaszu.stockanalyzer.domain.alert.CloseAlertService
 import java.time.LocalDateTime
 
 

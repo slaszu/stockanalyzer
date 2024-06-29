@@ -1,4 +1,4 @@
-package pl.slaszu.integration.config
+package pl.slaszu.integration.mongo.config
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories

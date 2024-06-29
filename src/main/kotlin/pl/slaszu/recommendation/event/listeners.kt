@@ -9,7 +9,7 @@ import pl.slaszu.stockanalyzer.domain.event.CreateAlertEvent
 import pl.slaszu.stockanalyzer.domain.event.PersistAlertEvent
 
 @Service
-class StockanalyzerEventListener(
+open class StockanalyzerEventListener(
     private val recommendationService: RecommendationService,
     private val searchService: SimilarAlertSearchService,
     private val recommendationRepository: RecommendationRepository,
@@ -19,7 +19,7 @@ class StockanalyzerEventListener(
 
     // todo test for listeners
     @EventListener
-    fun addRecommendationToAlert(event: CreateAlertEvent) {
+    open fun addRecommendationToAlert(event: CreateAlertEvent) {
         val alert = event.createdAlert
 
         val searchBestFitList = this.searchService.searchBestFit(alert)

@@ -1,4 +1,4 @@
-package pl.slaszu.integration
+package pl.slaszu.integration.mongo
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toJavaLocalDateTime
@@ -14,8 +14,8 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.testcontainers.junit.jupiter.Testcontainers
-import pl.slaszu.integration.config.MongoDBTestContainerConfig
 import pl.slaszu.App
+import pl.slaszu.integration.mongo.config.MongoDBTestContainerConfig
 import pl.slaszu.shared_kernel.domain.alert.AlertModel
 import pl.slaszu.shared_kernel.domain.alert.AlertRepository
 import java.util.stream.Stream
