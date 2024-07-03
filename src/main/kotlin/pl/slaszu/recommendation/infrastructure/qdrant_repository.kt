@@ -27,8 +27,12 @@ class QdrantSaveRepository(
             return;
         }
 
+        if (payload.getId() == null) {
+            return;
+        }
+
         val point = PointStruct.newBuilder()
-            .setId(id(payload.alertTweetId.toLong()))
+            .setId(id(payload.getId()!!.toLong()))
             .setVectors(
                 namedVectors(
                     mapOf(

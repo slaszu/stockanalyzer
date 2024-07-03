@@ -28,7 +28,7 @@ class RecommendationPersistService(
 }
 
 data class BestFitResult(
-    val alertTweetId: String,
+    val alertIdentifier: String,
     val priceScore: Float,
     val volumeScore: Float
 )
@@ -50,7 +50,7 @@ class SimilarAlertSearchService(
 
     fun searchBestFit(stockVector: StockVector): List<BestFitResult> {
 
-        val priceResult = this.search.searchByPrice(stockVector).associateBy { it.payload.alertTweetId }
+        val priceResult = this.search.searchByPrice(stockVector).associateBy { it.payload.getId()!! }
 //        priceResult.forEach {
 //            logger.debug { "Price: $it" }
 //        }
@@ -67,6 +67,23 @@ class SimilarAlertSearchService(
         }
 
         return result.values.toList()
+    }
+}
+
+@Service
+class RecommendationService(
+    private val closeAlertRepository: CloseAlertRepository
+) {
+    fun convertToRecommendation(bestFitResults: List<BestFitResult>): Recommendation {
+        val reco = Recommendation()
+        bestFitResults.forEach {
+            reco.add(
+                it,
+                this.closeAlertRepository.findByAlertAppIdOrTweetId(it.alertIdentifier)
+            )
+        }
+
+        return reco
     }
 }
 
@@ -96,22 +113,5 @@ class Recommendation() {
         }
 
         return res
-    }
-}
-
-@Service
-class RecommendationService(
-    private val closeAlertRepository: CloseAlertRepository
-) {
-    fun convertToRecommendation(bestFitResults: List<BestFitResult>): Recommendation {
-        val reco = Recommendation()
-        bestFitResults.forEach {
-            reco.add(
-                it,
-                this.closeAlertRepository.findByAlertTweetId(it.alertTweetId)
-            )
-        }
-
-        return reco
     }
 }

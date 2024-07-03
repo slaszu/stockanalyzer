@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 @TypeAlias("close_alert")
 data class CloseAlertModel(
     val alert: AlertModel,
-    val tweetId: String,
+    val tweetId: String? = null,
     val resultPercent: Float,
     val daysAfter: Int,
     val price: Float? = null,

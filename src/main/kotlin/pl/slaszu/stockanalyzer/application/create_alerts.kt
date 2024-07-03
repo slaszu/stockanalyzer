@@ -55,7 +55,7 @@ class CreateAlerts(
                     "Code ${it.code} has all signals \n ${signals.contentToString()}}"
                 }
 
-                val alertModel = this.alertService.createAlert(
+                var alertModel = this.alertService.createAlert(
                     it,
                     stockPriceList.first().price,
                     signals.map { signal ->
@@ -63,9 +63,12 @@ class CreateAlerts(
                     }
                 )
 
-                val publishedId = this.publishAlertAndGetId(alertModel, stockPriceList)
+                if (alertModel.shouldBePublish()) {
+                    val publishedId = this.publishAlertAndGetId(alertModel, stockPriceList)
+                    alertModel = alertModel.copy(tweetId = publishedId)
+                }
 
-                alertService.persistAlert(alertModel.copy( tweetId = publishedId ))
+                alertService.persistAlert(alertModel)
                 logger.info { "Saved alert: $alertModel" }
             }
         }
@@ -84,11 +87,21 @@ class CreateAlerts(
             ChartPoint(priceList.first(), buyPrice, alertLabel)
         )
 
+        var predictionText = ""
+        alert.predictions.forEach { (dayAfter, result) ->
+            predictionText += "${result.roundTo(2)}% (after $dayAfter days)\n"
+        }
+        if (predictionText.isNotBlank()) {
+            predictionText = "Prognoza: \n$predictionText"
+        }
+
         // tweet alert
         return this.publisher.publish(
             pngByteArray,
             alertLabel,
-            "#${alert.stockCode} #${alert.stockName} #gpwApiSignals\nhttps://pl.tradingview.com/symbols/GPW-${alert.stockCode}/"
+            "$predictionText\n" +
+                    "#${alert.stockCode} #${alert.stockName} #gpwApiSignals\n" +
+                    "https://pl.tradingview.com/symbols/GPW-${alert.stockCode}/"
         )
     }
 }

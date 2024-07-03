@@ -3,17 +3,17 @@ package pl.slaszu.stockanalyzer.application
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
+import pl.slaszu.shared_kernel.domain.alert.AlertModel
+import pl.slaszu.shared_kernel.domain.alert.AlertRepository
+import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
+import pl.slaszu.shared_kernel.domain.alert.CloseAlertRepository
+import pl.slaszu.shared_kernel.domain.roundTo
+import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
 import pl.slaszu.stockanalyzer.domain.alert.CloseAlertService
 import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
 import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
-import pl.slaszu.shared_kernel.domain.alert.AlertModel
-import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
 import pl.slaszu.stockanalyzer.domain.publisher.Publisher
-import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
-import pl.slaszu.shared_kernel.domain.alert.AlertRepository
-import pl.slaszu.shared_kernel.domain.alert.CloseAlertRepository
 import pl.slaszu.stockanalyzer.domain.stock.StockProvider
-import pl.slaszu.shared_kernel.domain.roundTo
 import java.time.LocalDateTime
 
 @Service
@@ -59,13 +59,16 @@ class CloseAlerts(
 
             val priceChangeInPercent = this.getPriceChangePercent(alert.price, first.price)
 
-            val tweetId = this.publishCloseAndGetId(alert, stockPriceList, daysAfter)
+            var publishedId:String? = null
+            if (alert.shouldBePublish()) {
+                publishedId = this.publishCloseAndGetId(alert, stockPriceList, daysAfter)
+            }
 
             // add CloseAlertModel
             this.closeAlertService.persistCloseAlert(
                 CloseAlertModel(
                     alert,
-                    tweetId,
+                    publishedId,
                     priceChangeInPercent,
                     daysAfter,
                     first.price

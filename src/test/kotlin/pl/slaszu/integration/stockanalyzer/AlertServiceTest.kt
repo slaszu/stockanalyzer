@@ -13,7 +13,7 @@ import pl.slaszu.shared_kernel.domain.alert.AlertRepository
 import pl.slaszu.shared_kernel.domain.stock.StockDto
 import pl.slaszu.stockanalyzer.domain.alert.AlertService
 import pl.slaszu.stockanalyzer.domain.event.CreateAlertEvent
-import pl.slaszu.stockanalyzer.domain.event.PersistAlertEvent
+import pl.slaszu.stockanalyzer.domain.event.PersistAlertAfterEvent
 
 
 @SpringBootTest
@@ -65,7 +65,7 @@ class AlertServiceTests() {
             return alertToTest == alert
         }
 
-        fun matcherListener(event: PersistAlertEvent): Boolean {
+        fun matcherListener(event: PersistAlertAfterEvent): Boolean {
             return event.alert.id == "123"
         }
 

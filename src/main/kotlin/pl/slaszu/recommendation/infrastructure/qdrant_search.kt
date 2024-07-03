@@ -63,8 +63,9 @@ fun List<ScoredPoint>.toSearchResultList(): List<SearchResult> {
                 id = it.id.num,
                 score = it.score,
                 payload = RecommendationPayload(
-                    payload["stockCode"]?.stringValue ?: "_payload_missing_",
-                    payload["alertTweetId"]?.stringValue ?: "_payload_missing_"
+                    payload["stockCode"]?.stringValue,
+                    payload["alertAppId"]?.stringValue,
+                    payload["alertTweetId"]?.stringValue
                 )
             )
         )

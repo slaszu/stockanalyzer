@@ -34,6 +34,6 @@ interface CloseAlertRepository : MongoRepository<CloseAlertModel, String> {
     fun findCloseAlertsAfterDate(date: LocalDateTime): List<CloseAlertModel>
 
     // todo add tests
-    @Query("{ 'alert.tweetId': ?0 }")
-    fun findByAlertTweetId(alertTweetId: String): List<CloseAlertModel>
+    @Query("{\$or: [{'alert.appId': ?0 }, {'alert.tweetId': ?0}] }")
+    fun findByAlertAppIdOrTweetId(id: String): List<CloseAlertModel>
 }

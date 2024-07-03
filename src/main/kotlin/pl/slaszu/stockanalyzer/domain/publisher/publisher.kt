@@ -1,7 +1,6 @@
 package pl.slaszu.stockanalyzer.domain.publisher
 
 import com.twitter.twittertext.TwitterTextParser
-import java.io.File
 
 interface Publisher {
     fun publish(

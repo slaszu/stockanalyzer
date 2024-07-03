@@ -8,6 +8,12 @@ data class CreateAlertEvent(
     var changedAlert: AlertModel? = null
 }
 
-data class PersistAlertEvent(
+data class PersistAlertBeforeEvent(
+    val alert: AlertModel
+) {
+    val changedAlert: AlertModel? = null
+}
+
+data class PersistAlertAfterEvent(
     val alert: AlertModel
 )

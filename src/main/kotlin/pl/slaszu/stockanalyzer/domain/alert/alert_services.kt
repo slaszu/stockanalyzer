@@ -8,8 +8,10 @@ import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertRepository
 import pl.slaszu.shared_kernel.domain.stock.StockDto
 import pl.slaszu.stockanalyzer.domain.event.CreateAlertEvent
-import pl.slaszu.stockanalyzer.domain.event.PersistAlertEvent
+import pl.slaszu.stockanalyzer.domain.event.PersistAlertAfterEvent
+import pl.slaszu.stockanalyzer.domain.event.PersistAlertBeforeEvent
 import java.time.LocalDateTime
+import kotlin.random.Random
 
 @Service
 class CloseAlertService(
@@ -48,7 +50,8 @@ class AlertService(
             stock.code!!,
             stock.name,
             price,
-            signals
+            signals,
+            appId = Random.nextInt(10000000,99999999).toString()
         )
 
         val event = CreateAlertEvent(alert)
@@ -58,9 +61,17 @@ class AlertService(
     }
 
     fun persistAlert(alert: AlertModel): AlertModel {
-        return this.alertRepo.save(alert).also {
-            val event = PersistAlertEvent(it)
-            this.eventDispatcher.dispatch(event)
-        }
+
+        val eventBefore = PersistAlertBeforeEvent(alert)
+        this.eventDispatcher.dispatch(eventBefore)
+
+        val alertToPersist = eventBefore.changedAlert ?: alert
+
+        val persistedAlert = this.alertRepo.save(alertToPersist)
+
+        val eventAfter = PersistAlertAfterEvent(persistedAlert)
+        this.eventDispatcher.dispatch(eventAfter)
+
+        return persistedAlert
     }
 }
