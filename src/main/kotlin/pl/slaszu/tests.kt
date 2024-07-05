@@ -7,6 +7,6 @@ package pl.slaszu
 //) {
 //    private val logger = KotlinLogging.logger { }
 //
-//    @Bean
+//    //@Bean
 //    fun createAlert(): ApplicationRunner = ApplicationRunner { createAlert.run() }
 //}

@@ -52,7 +52,9 @@ class ViktorVectorConvert(private val stockProvider: StockProvider) : StockVecto
 fun RecommendationPayload.toQdrantPayload(): Map<String, Value> {
     val result = mutableMapOf<String, Value>()
     this.toMap().forEach { (t, u) ->
-        result[t] = value(u)
+        if (!u.isNullOrBlank()) {
+            result[t] = value(u)
+        }
     }
     return result
 }

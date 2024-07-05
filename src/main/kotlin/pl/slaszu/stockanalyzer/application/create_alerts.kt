@@ -52,7 +52,7 @@ class CreateAlerts(
             if (signalsChecker.hasAll()) {
 
                 logger.info {
-                    "Code ${it.code} has all signals \n ${signals.contentToString()}}"
+                    "Code ${it.code} has all signals"
                 }
 
                 var alertModel = this.alertService.createAlert(
@@ -92,14 +92,14 @@ class CreateAlerts(
             predictionText += "${result.roundTo(2)}% (after $dayAfter days)\n"
         }
         if (predictionText.isNotBlank()) {
-            predictionText = "Prognoza: \n$predictionText"
+            predictionText = "similar signals (average): \n$predictionText"
         }
 
         // tweet alert
         return this.publisher.publish(
             pngByteArray,
             alertLabel,
-            "$predictionText\n" +
+            "$predictionText" +
                     "#${alert.stockCode} #${alert.stockName} #gpwApiSignals\n" +
                     "https://pl.tradingview.com/symbols/GPW-${alert.stockCode}/"
         )

@@ -10,7 +10,7 @@ data class AlertModel(
     val stockCode: String,
     val stockName: String,
     val price: Float,
-    val signals: List<String>,
+    val signals: List<String> = emptyList(),
     val tweetId: String? = null,
     val appId: String? = null,
     // dayAfter to predication result, eg. 14 to -3.456f

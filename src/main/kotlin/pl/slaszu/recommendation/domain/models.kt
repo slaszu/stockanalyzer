@@ -16,17 +16,17 @@ class StockVector(
     }
 }
 
-
+// todo add test for payload, toMap(), fromAlert(), getId()
 class RecommendationPayload(
-    val stockCode: String?,
-    private val alertAppId: String?,
-    private val alertTweetId: String?
+    val stockCode: String,
+    val alertAppId: String?,
+    val alertTweetId: String?
 ) {
-    fun toMap(): Map<String, String> {
+    fun toMap(): Map<String, String?> {
         return mapOf(
-            "stockCode" to (this.stockCode ?: "stock_code_is_null"),
-            "alertAppId" to (this.alertAppId ?: "alert_app_id_is_null"),
-            "alertTweetId" to (this.alertTweetId ?: "alert_tweet_id_is_null")
+            "stockCode" to this.stockCode,
+            "alertAppId" to this.alertAppId,
+            "alertTweetId" to this.alertTweetId
         )
     }
 

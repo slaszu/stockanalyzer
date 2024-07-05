@@ -23,7 +23,7 @@ class QdrantSearch(
                     .setCollectionName(config.collectionName)
                     .setVectorName("price")
                     .addAllVector(stockVector.priceVector.toMutableList())
-                    .setLimit(20)
+                    .setLimit(5)
                     .setScoreThreshold(0.99f)
                     .setWithPayload(WithPayloadSelector.newBuilder().setEnable(true).build())
                     .build()
@@ -63,7 +63,7 @@ fun List<ScoredPoint>.toSearchResultList(): List<SearchResult> {
                 id = it.id.num,
                 score = it.score,
                 payload = RecommendationPayload(
-                    payload["stockCode"]?.stringValue,
+                    payload["stockCode"]!!.stringValue,
                     payload["alertAppId"]?.stringValue,
                     payload["alertTweetId"]?.stringValue
                 )
