@@ -45,7 +45,7 @@ class CloseAlertRepositoryTests(
         this.closeAlertRepo.save(
             CloseAlertModel(
                 AlertModel(
-                    "X", "name", 5f, emptyList(), "tweetId", null,
+                    "X", "name", 5f, emptyList(), "tweetId", null, emptyMap(),
                     LocalDateTime.now(), true, null, getAlertId()
                 ),
                 "tweetIdx33",
@@ -57,7 +57,7 @@ class CloseAlertRepositoryTests(
         this.closeAlertRepo.save(
             CloseAlertModel(
                 AlertModel(
-                    "Y", "name y", 3.5f, emptyList(), "tweetId", null,
+                    "Y", "name y", 3.5f, emptyList(), "tweetId", null, emptyMap(),
                     LocalDateTime.now(), true, null, getAlertId()
                 ),
                 "tweetIdx22",
@@ -69,7 +69,7 @@ class CloseAlertRepositoryTests(
         this.closeAlertRepo.save(
             CloseAlertModel(
                 AlertModel(
-                    "Y", "name y", 3.5f, emptyList(), "tweetId", null,
+                    "Y", "name y", 3.5f, emptyList(), "tweetId", null, emptyMap(),
                     LocalDateTime.now(), true, null, getAlertId()
                 ),
                 "tweetIdx11",
@@ -81,7 +81,7 @@ class CloseAlertRepositoryTests(
         this.closeAlertRepo.save(
             CloseAlertModel(
                 AlertModel(
-                    "X", "name", 5f, emptyList(), "tweetId", null,
+                    "X", "name", 5f, emptyList(), "tweetId", null, emptyMap(),
                     LocalDateTime.now(), true
                 ),
                 "tweetIdx",
@@ -93,7 +93,7 @@ class CloseAlertRepositoryTests(
         this.closeAlertRepo.save(
             CloseAlertModel(
                 AlertModel(
-                    "Y", "name y", 3.5f, emptyList(), "tweetId", null,
+                    "Y", "name y", 3.5f, emptyList(), "tweetId", null, emptyMap(),
                     LocalDateTime.now(), true
                 ),
                 "tweetIdx",

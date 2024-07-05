@@ -37,57 +37,57 @@ class AlertRepositoryTests(@Autowired val alertRepo: AlertRepository) {
         this.alertRepo.save(
             AlertModel(
                 "XYZ", "Some Name", 5.3f, emptyList(), "", null,
-                LocalDateTime.parse("2023-01-01T12:00:00").toJavaLocalDateTime()
+                date = LocalDateTime.parse("2023-01-01T12:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
                 "XYZ", "Some Name", 5.0f, emptyList(), "", null,
-                LocalDateTime.parse("2023-01-02T12:00:00").toJavaLocalDateTime()
+                date = LocalDateTime.parse("2023-01-02T12:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
                 "XYZ", "Some Name", 5.1f, emptyList(), "", null,
-                LocalDateTime.parse("2023-01-03T12:00:00").toJavaLocalDateTime(),
-                true
+                date = LocalDateTime.parse("2023-01-03T12:00:00").toJavaLocalDateTime(),
+                close = true
             )
         )
 
         this.alertRepo.save(
             AlertModel(
                 "XYZ", "Some Name", 5.1f, emptyList(), "", null,
-                LocalDateTime.parse("2023-01-03T12:00:00").toJavaLocalDateTime()
+                date = LocalDateTime.parse("2023-01-03T12:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
                 "XYZ", "Some Name", 5.2f, emptyList(), "", null,
-                LocalDateTime.parse("2023-01-03T13:00:00").toJavaLocalDateTime()
+                date = LocalDateTime.parse("2023-01-03T13:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
                 "XYZ", "Some Name", 5.3f, emptyList(), "", null,
-                LocalDateTime.parse("2023-01-03T14:00:00").toJavaLocalDateTime()
+                date = LocalDateTime.parse("2023-01-03T14:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
                 "XYZ", "Some Name", 5.3f, emptyList(), "", null,
-                LocalDateTime.parse("2023-01-06T12:00:00").toJavaLocalDateTime()
+                date = LocalDateTime.parse("2023-01-06T12:00:00").toJavaLocalDateTime()
             )
         )
 
         this.alertRepo.save(
             AlertModel(
                 "XYZ", "Some Name", 5.3f, emptyList(), "", null,
-                LocalDateTime.parse("2023-01-07T12:00:00").toJavaLocalDateTime()
+                date = LocalDateTime.parse("2023-01-07T12:00:00").toJavaLocalDateTime()
             )
         )
     }

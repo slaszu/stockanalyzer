@@ -81,7 +81,7 @@ class CloseAlertServiceTests(
         this.closeAlertRepo.save(
             CloseAlertModel(
                 AlertModel(
-                    "Y", "name y", 3.5f, emptyList(), "tweetId", null,
+                    "Y", "name y", 3.5f, emptyList(), "tweetId", null, emptyMap(),
                     LocalDateTime.now(), true
                 ),
                 "tweetIdx11",

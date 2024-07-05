@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import pl.slaszu.recommendation.event.StockanalyzerEventListener
+import pl.slaszu.recommendation.event.RecommendationEventListener
 import pl.slaszu.shared_kernel.domain.alert.AlertModel
 import pl.slaszu.shared_kernel.domain.alert.AlertRepository
 import pl.slaszu.shared_kernel.domain.stock.StockDto
@@ -24,7 +24,7 @@ class AlertServiceTests() {
     private lateinit var alertService: AlertService
 
     @MockkBean
-    private lateinit var stockanalyzerEventListener: StockanalyzerEventListener
+    private lateinit var recoEventListener: RecommendationEventListener
 
     @MockkBean
     private lateinit var alertRepository: AlertRepository
@@ -39,7 +39,7 @@ class AlertServiceTests() {
         }
 
         every {
-            stockanalyzerEventListener.addRecommendationToAlert(match { matcher(it) })
+            recoEventListener.addRecommendationToAlert(match { matcher(it) })
         } returns Unit
 
         this.alertService.createAlert(
@@ -48,7 +48,7 @@ class AlertServiceTests() {
             emptyList()
         )
 
-        verify { stockanalyzerEventListener.addRecommendationToAlert(any()) }
+        verify { recoEventListener.addRecommendationToAlert(any()) }
     }
 
     @Test
@@ -71,12 +71,12 @@ class AlertServiceTests() {
 
         every { alertRepository.save(match { matcherRepo(it) }) } returns alert.copy(id = "123")
 
-        every { stockanalyzerEventListener.sendAlertToRecommendationSystem(match { matcherListener(it) }) } returns Unit
+        every { recoEventListener.sendAlertToRecommendationSystem(match { matcherListener(it) }) } returns Unit
 
 
         this.alertService.persistAlert(alert)
 
-        verify { stockanalyzerEventListener.sendAlertToRecommendationSystem(any()) }
+        verify { recoEventListener.sendAlertToRecommendationSystem(any()) }
         verify { alertRepository.save(any()) }
 
     }
