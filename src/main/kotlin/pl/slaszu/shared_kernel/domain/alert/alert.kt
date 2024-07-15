@@ -2,6 +2,7 @@ package pl.slaszu.shared_kernel.domain.alert
 
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.mapping.Document
+import pl.slaszu.shared_kernel.domain.roundTo
 import java.time.LocalDateTime
 
 @Document("alert")
@@ -23,4 +24,8 @@ data class AlertModel(
     fun shouldBePublish(): Boolean {
         return !this.predictions.isNullOrEmpty()
     }
+
+    fun getBuyPrice(): Float = this.price.roundTo(2)
+
+    fun getTitle(): String = "BUY ${this.stockCode} ${this.getBuyPrice()} PLN"
 }

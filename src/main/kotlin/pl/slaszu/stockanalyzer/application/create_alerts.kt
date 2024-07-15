@@ -76,15 +76,11 @@ class CreateAlerts(
 
     private fun publishAlertAndGetId(alert: AlertModel, priceList: Array<StockPriceDto>): String {
 
-        val buyPrice = alert.price.roundTo(2)
-
-        val alertLabel = "BUY ${alert.stockCode} $buyPrice PLN"
-
         // get chart png
         val pngByteArray = this.chartProvider.getPngByteArray(
             alert.stockCode,
             priceList,
-            ChartPoint(priceList.first(), buyPrice, alertLabel)
+            ChartPoint(priceList.first(), alert.getBuyPrice(), alert.getTitle())
         )
 
         var predictionText = ""
@@ -98,7 +94,7 @@ class CreateAlerts(
         // tweet alert
         return this.publisher.publish(
             pngByteArray,
-            alertLabel,
+            alert.getTitle(),
             "$predictionText" +
                     "#${alert.stockCode} #${alert.stockName} #gpwApiSignals\n" +
                     "https://pl.tradingview.com/symbols/GPW-${alert.stockCode}/"

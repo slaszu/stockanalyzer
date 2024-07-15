@@ -55,6 +55,11 @@ dependencies {
     implementation("io.qdrant:client:1.9.1")
     implementation("com.google.protobuf:protobuf-java:3.24.0")
     implementation("org.jetbrains.bio:viktor:1.2.0")
+
+    implementation("com.google.apis:google-api-services-blogger:v3-rev20221220-2.0.0")
+    implementation("com.google.api-client:google-api-client:2.0.0")
+    implementation("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
+
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -63,6 +68,7 @@ dependencies {
     testImplementation("org.testcontainers:mongodb:1.18.1")
     testImplementation("com.tngtech.archunit:archunit:1.3.0")
     testImplementation("com.ninja-squad:springmockk:4.0.2")
+
 }
 
 tasks.withType<KotlinCompile> {
