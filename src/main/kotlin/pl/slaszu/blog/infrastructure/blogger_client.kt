@@ -24,9 +24,9 @@ class BloggerClient(
 
         val post = Post()
         post.title = alertModel.getTitle()
-//        post.content = "Content = ${alertModel.getTitle()}\n" +
-//                "Chart\n" +
-//                "<img src=\"data:image/png;base64, $base64\" alt=\"Red dot\" />"
+        post.content = "Content = ${alertModel.getTitle()}\n" +
+                "Chart\n" +
+                "<img src=\"data:image/png;base64, $base64\" alt=\"Red dot\" />"
         post.labels = listOf(alertModel.stockCode)
 
         val res = this.blogger.Posts().insert("2989806055464746341", post).execute()

@@ -17,6 +17,6 @@ class RecommendationBoot(
     @Bean
     fun createCollectionIfNotExists(): ApplicationRunner =
         ApplicationRunner {
-            this.recommendationRepositoryFillService.createAndFillRepositoryIfNotExists()
+            //this.recommendationRepositoryFillService.createAndFillRepositoryIfNotExists()
         }
 }
