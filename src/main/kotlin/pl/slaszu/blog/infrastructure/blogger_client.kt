@@ -13,6 +13,7 @@ import java.util.*
 @Service
 class BloggerClient(
     val blogger: Blogger,
+    val bloggerConfig: BloggerConfig,
     val chart: ChartForAlert
 ): BlogClient {
 
@@ -29,7 +30,7 @@ class BloggerClient(
                 "<img src=\"data:image/png;base64, $base64\" alt=\"Red dot\" />"
         post.labels = listOf(alertModel.stockCode)
 
-        val res = this.blogger.Posts().insert("2989806055464746341", post).execute()
+        val res = this.blogger.Posts().insert(bloggerConfig.blogId, post).execute()
 
         logger.debug { res.url }
 

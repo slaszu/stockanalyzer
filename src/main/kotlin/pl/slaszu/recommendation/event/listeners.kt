@@ -4,14 +4,16 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
-import pl.slaszu.recommendation.domain.*
+import pl.slaszu.recommendation.application.RecommendationForAlert
+import pl.slaszu.recommendation.domain.RecommendationPayload
+import pl.slaszu.recommendation.domain.RecommendationRepository
+import pl.slaszu.recommendation.domain.StockVectorConverter
 import pl.slaszu.stockanalyzer.domain.event.CreateAlertEvent
 import pl.slaszu.stockanalyzer.domain.event.PersistAlertAfterEvent
 
 @Service
 class RecommendationEventListener(
-    private val recommendationService: RecommendationService,
-    private val searchService: SimilarAlertSearchService,
+    private val recommendationForAlert: RecommendationForAlert,
     private val recommendationRepository: RecommendationRepository,
     private val vectorConverter: StockVectorConverter
 ) {
@@ -21,13 +23,10 @@ class RecommendationEventListener(
     fun addRecommendationToAlert(event: CreateAlertEvent) {
         val alert = event.createdAlert
 
-        val searchBestFitList = this.searchService.searchBestFit(alert)
-        if (searchBestFitList.isEmpty()) {
-            return;
-        }
+        val newAlert = this.recommendationForAlert.addRecommendationIfExists(alert)
 
-        val reco = this.recommendationService.convertToRecommendation(searchBestFitList)
-        val newAlert = alert.copy(predictions = reco.getDaysAfterToResultAvg())
+        if (alert == newAlert)
+            return;
 
         event.changedAlert = newAlert
     }

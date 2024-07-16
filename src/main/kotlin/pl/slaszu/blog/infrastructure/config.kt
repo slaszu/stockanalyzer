@@ -17,9 +17,10 @@ import java.io.File
 
 
 @ConfigurationProperties(prefix = "blogger-google-api-oauth")
-data class BloggerOauthConfig(
+data class BloggerConfig(
     val tokenStorageDir: String,
-    val credentialFileJson: String
+    val credentialFileJson: String,
+    val blogId: String
 )
 
 @Configuration
@@ -30,21 +31,21 @@ class BloggerConfiguration {
 
 
     @Bean
-    fun getPreparedBloggerObject(bloggerOauthConfig: BloggerOauthConfig): Blogger {
+    fun getPreparedBloggerObject(bloggerConfig: BloggerConfig): Blogger {
 
-        val credential = this.getCredentials(bloggerOauthConfig)
+        val credential = this.getCredentials(bloggerConfig)
 
         return Blogger.Builder(httpTransport, jsonFactory, credential)
             .setApplicationName("Blogger-PostsInsert-Snippet/1.0")
             .build()
     }
 
-    private fun getCredentials(bloggerOauthConfig: BloggerOauthConfig): Credential {
+    private fun getCredentials(bloggerConfig: BloggerConfig): Credential {
 
         // Load client secrets.
         val clientSecrets = GoogleClientSecrets.load(
             GsonFactory(),
-            File(bloggerOauthConfig.credentialFileJson).reader()
+            File(bloggerConfig.credentialFileJson).reader()
         )
 
         // Build flow and trigger user authorization request.
@@ -52,7 +53,7 @@ class BloggerConfiguration {
             httpTransport, jsonFactory, clientSecrets, listOf(BloggerScopes.BLOGGER)
         )
             .setDataStoreFactory(
-                FileDataStoreFactory(File(bloggerOauthConfig.tokenStorageDir))
+                FileDataStoreFactory(File(bloggerConfig.tokenStorageDir))
             )
             .setAccessType("offline")
             .build()

@@ -18,6 +18,7 @@ qdrant:
 blogger-google-api-oauth:
   tokenStorageDir: ${DOCKER_CONFIG_CREDENTIALS_DIR}/blogger-stored-token/
   credentialFileJson: ${DOCKER_CONFIG_CREDENTIALS_DIR}/blogger-credential.json
+  blogId: "2989806055464746341"
 
 
 spring:
