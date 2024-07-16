@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Profile
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import org.springframework.scheduling.annotation.EnableAsync
 import org.springframework.scheduling.annotation.EnableScheduling
+import pl.slaszu.blog.infrastructure.BloggerOauthConfig
 import pl.slaszu.recommendation.infrastructure.QdrantConfig
 import pl.slaszu.shared_kernel.domain.alert.AlertRepository
 import pl.slaszu.shared_kernel.infrastructure.stock.StockApiParams
@@ -21,7 +22,7 @@ import pl.slaszu.stockanalyzer.infrastructure.publisher.TwitterConfig
 @SpringBootApplication
 @EnableMongoRepositories
 @EnableConfigurationProperties(
-    StockApiParams::class, TwitterConfig::class, QdrantConfig::class
+    StockApiParams::class, TwitterConfig::class, QdrantConfig::class, BloggerOauthConfig::class
 )
 @EnableScheduling
 @EnableAsync

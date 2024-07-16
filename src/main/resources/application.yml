@@ -15,6 +15,11 @@ qdrant:
   apiKey: ${QDRANT_KEY}
   collectionName: gpw_api_signals_test
 
+blogger-google-api-oauth:
+  tokenStorageDir: ${DOCKER_CONFIG_CREDENTIALS_DIR}/blogger-stored-token/
+  credentialFileJson: ${DOCKER_CONFIG_CREDENTIALS_DIR}/blogger-credential.json
+
+
 spring:
   data:
     mongodb:

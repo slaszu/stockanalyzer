@@ -12,7 +12,9 @@ services:
       MONGODB_HOST: mongo
       MONGODB_PORT: 27017
       spring_profiles_active: prod
+      DOCKER_CONFIG_CREDENTIALS_DIR: /app-build/config_credentials/
     volumes:
+      - ./config_credentials/:/app-build/config_credentials/
       - ./stockanalyzer-github-release.jar:/app-build/stockanalyzer-prod.jar
     networks:
       - stockanalyzer-network
