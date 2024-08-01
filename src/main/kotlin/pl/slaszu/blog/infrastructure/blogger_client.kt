@@ -5,42 +5,26 @@ import com.google.api.services.blogger.model.Post
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
 import pl.slaszu.blog.domain.BlogClient
-import pl.slaszu.shared_kernel.domain.alert.AlertModel
-import pl.slaszu.stockanalyzer.application.ChartForAlert
-import java.util.*
+import pl.slaszu.blog.domain.BlogPostModel
 
 
 @Service
 class BloggerClient(
     val blogger: Blogger,
-    val bloggerConfig: BloggerConfig,
-    val chart: ChartForAlert
-): BlogClient {
+    val bloggerConfig: BloggerConfig
+) : BlogClient {
 
-    private val logger = KotlinLogging.logger {  }
-    override fun insertPost(alertModel: AlertModel) {
-
-        val byteArray = this.chart.getChartPngForAlert(alertModel)
-        val base64 = Base64.getEncoder().encodeToString(byteArray)
+    private val logger = KotlinLogging.logger { }
+    override fun insertPost(title: String, content: String, labels: List<String>): BlogPostModel {
 
         val post = Post()
-        post.title = alertModel.getTitle()
-        post.content = "Content = ${alertModel.getTitle()}\n" +
-                "Chart\n" +
-                "<img src=\"data:image/png;base64, $base64\" alt=\"Red dot\" />"
-        post.labels = listOf(alertModel.stockCode)
-
+        post.title = title
+        post.content = content
+        post.labels = labels
         val res = this.blogger.Posts().insert(bloggerConfig.blogId, post).execute()
 
-        logger.debug { res.url }
+        logger.debug { "Post id = ${res.id} => ${res.url}" }
 
-    }
-
-    override fun getPosts() {
-        val list = this.blogger.Posts().list("2989806055464746341")
-        val postList = list.execute()
-        postList.forEach {
-            logger.debug { "${it.key} => ${it.value}" }
-        }
+        return BlogPostModel(res.id, res.url)
     }
 }

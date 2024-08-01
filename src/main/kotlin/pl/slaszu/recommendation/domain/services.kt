@@ -31,7 +31,9 @@ data class BestFitResult(
     val alertIdentifier: String,
     val priceScore: Float,
     val volumeScore: Float
-)
+) {
+    fun getFinalScore() = this.priceScore + this.volumeScore
+}
 
 @Service
 class SimilarAlertSearchService(
@@ -51,9 +53,6 @@ class SimilarAlertSearchService(
     fun searchBestFit(stockVector: StockVector): List<BestFitResult> {
 
         val priceResult = this.search.searchByPrice(stockVector).associateBy { it.payload.getId()!! }
-//        priceResult.forEach {
-//            logger.debug { "Price: $it" }
-//        }
 
         val result = mutableMapOf<String, BestFitResult>()
         priceResult.forEach { (k, v) ->
@@ -113,5 +112,15 @@ class Recommendation() {
         }
 
         return res
+    }
+
+    fun getCloseAlertListOfList(): List<List<CloseAlertModel>> {
+        val result = mutableListOf<List<CloseAlertModel>>()
+
+        this.dayToCloseAlertList.forEach { (_, u) ->
+            result.add(u)
+        }
+
+        return result
     }
 }

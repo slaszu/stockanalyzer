@@ -7,7 +7,6 @@ import pl.slaszu.shared_kernel.domain.alert.AlertRepository
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertRepository
 import pl.slaszu.shared_kernel.domain.stock.StockDto
-import pl.slaszu.stockanalyzer.domain.event.CreateAlertEvent
 import pl.slaszu.stockanalyzer.domain.event.PersistAlertAfterEvent
 import pl.slaszu.stockanalyzer.domain.event.PersistAlertBeforeEvent
 import java.time.LocalDateTime
@@ -46,18 +45,13 @@ class AlertService(
     private val eventDispatcher: EventDispatcher
 ) {
     fun createAlert(stock: StockDto, price: Float, signals: List<String>): AlertModel {
-        val alert = AlertModel(
+        return AlertModel(
             stock.code!!,
             stock.name,
             price,
             signals,
-            appId = Random.nextInt(10000000,99999999).toString()
+            appId = Random.nextInt(10000000, 99999999).toString()
         )
-
-        val event = CreateAlertEvent(alert)
-        this.eventDispatcher.dispatch(event)
-
-        return event.changedAlert ?: alert
     }
 
     fun persistAlert(alert: AlertModel): AlertModel {

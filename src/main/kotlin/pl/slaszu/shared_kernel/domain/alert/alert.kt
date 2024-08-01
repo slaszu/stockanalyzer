@@ -19,6 +19,7 @@ data class AlertModel(
     val date: LocalDateTime = LocalDateTime.now(),
     val close: Boolean = false,
     val closeDate: LocalDateTime? = null,
+    val blogLink: String? = null,
     val id: String? = null,
 ) {
     fun shouldBePublish(): Boolean {
@@ -28,4 +29,16 @@ data class AlertModel(
     fun getBuyPrice(): Float = this.price.roundTo(2)
 
     fun getTitle(): String = "BUY ${this.stockCode} ${this.getBuyPrice()} PLN"
+
+    fun getPredicationText(): String {
+        var predictionText = ""
+        this.predictions.forEach { (dayAfter, result) ->
+            predictionText += "${result.roundTo(2)}% (after $dayAfter days)\n"
+        }
+        if (predictionText.isNotBlank()) {
+            predictionText = "similar signals (average): \n$predictionText"
+        }
+
+        return predictionText
+    }
 }

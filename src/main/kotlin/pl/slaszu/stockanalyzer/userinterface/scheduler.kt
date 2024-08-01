@@ -31,15 +31,21 @@ class Scheduler(
     }
 
     @Scheduled(cron = "45 5,20,35,50 9-17 * * MON-FRI")
-    fun runCheckAlerts() {
+    fun runCheckAlerts7() {
         logger.info { "Scheduler:runCheckAlerts 7 andClose=false" }
         this.closeAlerts.runForDaysAfter(7)
     }
 
     @Scheduled(cron = "55 10,25,40,55 9-17 * * MON-FRI")
-    fun runCheckAndCloseAlerts() {
-        logger.info { "Scheduler:runCheckAndCloseAlerts 14 andClose=true" }
-        this.closeAlerts.runForDaysAfter(14, true)
+    fun runCheckAlerts14() {
+        logger.info { "Scheduler:runCheckAndCloseAlerts 14 andClose=false" }
+        this.closeAlerts.runForDaysAfter(14)
+    }
+
+    @Scheduled(cron = "55 10,25,40,55 9-17 * * MON-FRI")
+    fun runCheckAlerts30AndClose() {
+        logger.info { "Scheduler:runCheckAndCloseAlerts 30 andClose=true" }
+        this.closeAlerts.runForDaysAfter(30, true)
     }
 
     @Scheduled(cron = "0 0 18 * * SUN")

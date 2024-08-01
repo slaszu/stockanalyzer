@@ -16,7 +16,6 @@ class StockVector(
     }
 }
 
-// todo add test for payload, toMap(), fromAlert(), getId()
 class RecommendationPayload(
     val stockCode: String,
     val alertAppId: String?,

@@ -6,7 +6,9 @@ import kotlinx.datetime.toJavaLocalDateTime
 import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import pl.slaszu.blog.application.BlogPostForAlert
 import pl.slaszu.blog.domain.BlogClient
+import pl.slaszu.recommendation.application.RecommendationForAlert
 import pl.slaszu.shared_kernel.domain.alert.AlertModel
 import pl.slaszu.stockanalyzer.application.CreateAlerts
 
@@ -22,10 +24,21 @@ class LocalTest(
     fun createAlert(): ApplicationRunner = ApplicationRunner { createAlert.run() }
 
     @Bean
-    fun getPosts(): ApplicationRunner = ApplicationRunner {
-        //this.blogClient.getPosts()
-        this.blogClient.insertPost(AlertModel("PLW", "Playway", 300f,
+    fun getPosts(
+        blogPostForAlert: BlogPostForAlert,
+        recommendationForAlert: RecommendationForAlert
+    ): ApplicationRunner = ApplicationRunner {
+
+        var alert = AlertModel(
+            "PLW", "Playway", 300f,
             date = LocalDateTime(2024, 7, 5, 12, 0, 0, 0).toJavaLocalDateTime()
-        ))
+        )
+
+        alert = alert.copy(
+            predictions = recommendationForAlert.getPredictionsMap(alert)
+        )
+
+
+        blogPostForAlert.createNewPost(alert)
     }
 }

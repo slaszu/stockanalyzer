@@ -1,13 +1,14 @@
 package pl.slaszu.stockanalyzer.application
 
+import kotlinx.datetime.toKotlinLocalDate
 import org.springframework.stereotype.Service
 import pl.slaszu.shared_kernel.domain.alert.AlertModel
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
+import pl.slaszu.shared_kernel.domain.roundTo
+import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
 import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
 import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
-import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
 import pl.slaszu.stockanalyzer.domain.stock.StockProvider
-import pl.slaszu.shared_kernel.domain.roundTo
 
 @Service
 class ChartForAlert(
@@ -53,7 +54,10 @@ class ChartForAlert(
     }
 
     fun getChartPngForAlert(alert: AlertModel): ByteArray? {
-        val stockPriceList = this.stockProvider.getStockPriceList(alert.stockCode)
+        val stockPriceList = this.stockProvider.getLastStockPriceList(
+            alert.stockCode,
+            alert.date.toLocalDate().toKotlinLocalDate()
+        )
 
         val buyPoint = this.getBuyPoint(alert, stockPriceList) ?: return null
 
@@ -66,7 +70,10 @@ class ChartForAlert(
 
     fun getChartPngForCloseAlert(closeAlert: CloseAlertModel): ByteArray? {
         val alert = closeAlert.alert
-        val stockPriceList = this.stockProvider.getStockPriceList(alert.stockCode)
+        val stockPriceList = this.stockProvider.getLastStockPriceList(
+            alert.stockCode,
+            closeAlert.date.toLocalDate().toKotlinLocalDate()
+        )
 
         val buyPoint = this.getBuyPoint(alert, stockPriceList) ?: return null
 

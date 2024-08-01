@@ -3,9 +3,10 @@ package pl.slaszu.stockanalyzer.application
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
+import pl.slaszu.blog.application.BlogPostForAlert
+import pl.slaszu.recommendation.application.RecommendationForAlert
 import pl.slaszu.shared_kernel.domain.alert.AlertModel
 import pl.slaszu.shared_kernel.domain.alert.AlertRepository
-import pl.slaszu.shared_kernel.domain.roundTo
 import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
 import pl.slaszu.stockanalyzer.domain.alert.AlertService
 import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
@@ -24,6 +25,8 @@ class CreateAlerts(
     private val alertService: AlertService,
     private val chartProvider: ChartProvider,
     private val publisher: Publisher,
+    private val recommendationForAlert: RecommendationForAlert,
+    private val blogPostForAlert: BlogPostForAlert,
     private val logger: KLogger = KotlinLogging.logger { }
 ) {
     fun run() {
@@ -63,9 +66,19 @@ class CreateAlerts(
                     }
                 )
 
+                alertModel = alertModel.copy(
+                    predictions = this.recommendationForAlert.getPredictionsMap(alertModel)
+                )
+
                 if (alertModel.shouldBePublish()) {
+
+                    alertModel = alertModel.copy(
+                        blogLink = this.blogPostForAlert.createNewPost(alertModel)
+                    )
+
                     val publishedId = this.publishAlertAndGetId(alertModel, stockPriceList)
                     alertModel = alertModel.copy(tweetId = publishedId)
+
                 }
 
                 alertService.persistAlert(alertModel)
@@ -83,12 +96,9 @@ class CreateAlerts(
             ChartPoint(priceList.first(), alert.getBuyPrice(), alert.getTitle())
         )
 
-        var predictionText = ""
-        alert.predictions.forEach { (dayAfter, result) ->
-            predictionText += "${result.roundTo(2)}% (after $dayAfter days)\n"
-        }
-        if (predictionText.isNotBlank()) {
-            predictionText = "similar signals (average): \n$predictionText"
+        var predictionText = alert.getPredicationText()
+        if (!alert.blogLink.isNullOrBlank()) {
+            predictionText = alert.blogLink + "\n"
         }
 
         // tweet alert
