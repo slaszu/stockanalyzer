@@ -1,0 +1,70 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            width:600;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size:14px;
+        }
+
+        table {
+            width:90%;
+        }
+
+        td {
+            padding:5px;
+            text-align: right;
+        }
+
+        .left {
+            text-align:left;
+        }
+
+        .red {
+            color: red;
+            font-weight: bold;
+        }
+
+        .green {
+            color:green;
+            font-weight: bold;
+        }
+
+        h1 {
+            display: block;
+            text-align: center;
+        }
+
+        .footer {
+            display:block;
+            text-align:right;
+            font-size:80%;
+        }
+
+        .details {
+            font-size:80%;
+        }
+        .details2 {
+            font-size:60%
+        }
+    </style>
+</head>
+<body>
+
+<div class="main_signal">
+    <img alt="{{mainSignal.title}}" src="data:image/png;base64, {{mainSignal.pngBase64}}" />
+</div>
+
+{{#signals}}
+<div class="other_signal">
+    {{title}}<br/>
+    {{desc}}<br/>
+    <img alt="{{title}}" src="data:image/png;base64, {{pngBase64}}" />
+
+</div>
+
+{{/signals}}
+
+</body>
+</html>
