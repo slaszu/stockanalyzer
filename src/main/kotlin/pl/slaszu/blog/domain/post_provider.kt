@@ -9,6 +9,12 @@ interface PostProvider {
 
 data class PostSignal(
     val title:String,
-    val pngBase64: String?,
+    val pngBase64List: List<String>,
     val desc: String?
-)
+) {
+    val firstPngBase64: String
+        get() = this.pngBase64List.first()
+
+    val descHtml: String
+        get() = this.desc?.replace("\n","<br/>") ?: ""
+}

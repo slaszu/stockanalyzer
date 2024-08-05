@@ -22,17 +22,14 @@ class BlogPostForAlert(
 ) {
     private val logger = KotlinLogging.logger { }
 
-    fun createNewPost(alert: AlertModel): String {
+    fun createNewPost(alert: AlertModel): String? {
 
-        val byteArray = this.chartForAlert.getChartPngForAlert(alert)
-
-        var base64: String? = null;
-        if (byteArray != null)
-            base64 = Base64.getEncoder().encodeToString(byteArray)
+        val byteArray = this.chartForAlert.getChartPngForAlert(alert) ?: return null
+        val base64 = Base64.getEncoder().encodeToString(byteArray)
 
         val mainSignal = PostSignal(
             alert.getTitle(),
-            base64,
+            listOf(base64),
             alert.getPredicationText()
         )
 
@@ -40,29 +37,27 @@ class BlogPostForAlert(
         val listOfList = this.recommendationForAlert.getCloseAlertModelListOfList(alert)
         val formatter = DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm:ss")
         listOfList.forEach { closeAlertList ->
-            val alert = closeAlertList.first().alert
+            val alertIn = closeAlertList.first().alert
+
+            val pngBase64List = mutableListOf<String>()
 
             closeAlertList.forEach { closeAlertModel ->
-
                 val byteArrayIn = this.chartForAlert.getChartPngForCloseAlert(closeAlertModel)
-
-                var base64In: String? = null;
-                if (byteArrayIn != null)
-                    base64In = Base64.getEncoder().encodeToString(byteArrayIn)
-
-                similarSignals.add(
-                    PostSignal(
-                        "${alert.stockName} [${alert.stockName}]",
-                        base64In,
-                        "signal date: ${alert.date.format(formatter)}"
-                    )
-                )
+                if (byteArrayIn != null) {
+                    pngBase64List.add(Base64.getEncoder().encodeToString(byteArrayIn))
+                }
             }
+
+            similarSignals.add(
+                PostSignal(
+                    "${alertIn.stockName} [${alertIn.stockName}]",
+                    pngBase64List,
+                    "signal date: ${alertIn.date.format(formatter)}"
+                )
+            )
         }
 
         val content = this.postProvider.getHtml(mainSignal, similarSignals)
-
-        return "url"
 
         var blogPostModel = this.blogClient.insertPost(
             "${alert.stockName} ${alert.getTitle()}",

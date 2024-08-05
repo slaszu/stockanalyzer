@@ -3,18 +3,7 @@
     <meta charset="UTF-8">
     <style>
         body {
-            width:600;
-            font-family: Arial, Helvetica, sans-serif;
-            font-size:14px;
-        }
 
-        table {
-            width:90%;
-        }
-
-        td {
-            padding:5px;
-            text-align: right;
         }
 
         .left {
@@ -32,38 +21,44 @@
         }
 
         h1 {
-            display: block;
-            text-align: center;
+
         }
 
-        .footer {
-            display:block;
-            text-align:right;
-            font-size:80%;
+        h3 {
+            margin-bottom: 2px;
         }
 
-        .details {
-            font-size:80%;
+        .main_signal {
+            font-weight: bold;
+            background-color: #f2f2f2;
+            padding:5px;
+            border-bottom: 4mm ridge rgba(211, 220, 50, .6);
         }
-        .details2 {
-            font-size:60%
+
+        .other_signal {
+            padding:5px;
+            border-bottom: 4mm ridge rgba(211, 220, 50, .6);
         }
     </style>
 </head>
 <body>
 
 <div class="main_signal">
-    <img alt="{{mainSignal.title}}" src="data:image/png;base64, {{mainSignal.pngBase64}}" />
+    <h1>{{mainSignal.title}}</h1>
+    <img alt="{{mainSignal.title}}" src="data:image/png;base64, {{mainSignal.firstPngBase64}}" />
+    <br/>
+    {{{mainSignal.descHtml}}}
 </div>
 
 {{#signals}}
 <div class="other_signal">
-    {{title}}<br/>
-    {{desc}}<br/>
-    <img alt="{{title}}" src="data:image/png;base64, {{pngBase64}}" />
-
+    <h3>Similar signal: {{title}}</h3>
+    {{{descHtml}}}
+    <br/>
+    {{#pngBase64List}}
+        <img alt="{{title}}" src="data:image/png;base64, {{.}}" />
+    {{/pngBase64List}}
 </div>
-
 {{/signals}}
 
 </body>
