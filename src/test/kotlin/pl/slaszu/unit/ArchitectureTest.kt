@@ -17,7 +17,8 @@ class ArchitectureTest {
         val stockanalyzerRule = classes().that().resideInAPackage("..pl.slaszu.stockanalyzer..")
             .should().onlyBeAccessed().byClassesThat().resideInAnyPackage(
                 "..pl.slaszu.stockanalyzer..",
-                "..event.."
+                "..event..",
+                "..application.."
             )
 
         stockanalyzerRule.check(allClasses);
@@ -32,7 +33,8 @@ class ArchitectureTest {
         val recommendationRule = classes().that().resideInAPackage("..pl.slaszu.recommendation..")
             .should().onlyBeAccessed().byClassesThat().resideInAnyPackage(
                 "..pl.slaszu.recommendation..",
-                "..event.."
+                "..event..",
+                "..application.."
             )
 
 
@@ -48,7 +50,8 @@ class ArchitectureTest {
         val sharedKernelRule = noClasses().that().resideInAPackage("..pl.slaszu.shared_kernel..")
             .should().dependOnClassesThat().resideInAnyPackage(
                 "..pl.slaszu.stockanalyzer..",
-                "..pl.slaszu.recommendation.."
+                "..pl.slaszu.recommendation..",
+                "..pl.slaszu.blog.."
             )
 
         sharedKernelRule.check(allClasses);

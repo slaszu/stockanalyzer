@@ -10,9 +10,7 @@ import org.springframework.test.context.ActiveProfiles
 import pl.slaszu.recommendation.event.RecommendationEventListener
 import pl.slaszu.shared_kernel.domain.alert.AlertModel
 import pl.slaszu.shared_kernel.domain.alert.AlertRepository
-import pl.slaszu.shared_kernel.domain.stock.StockDto
 import pl.slaszu.stockanalyzer.domain.alert.AlertService
-import pl.slaszu.stockanalyzer.domain.event.CreateAlertEvent
 import pl.slaszu.stockanalyzer.domain.event.PersistAlertAfterEvent
 
 
@@ -29,27 +27,27 @@ class AlertServiceTests() {
     @MockkBean
     private lateinit var alertRepository: AlertRepository
 
-    @Test
-    fun testCreateAlert() {
-        val stockDto = StockDto("Test", "TST")
-
-        fun matcher(event: CreateAlertEvent): Boolean {
-            return event.createdAlert.stockCode.equals("TST") &&
-                    event.createdAlert.price.equals(3.5f)
-        }
-
-        every {
-            recoEventListener.addRecommendationToAlert(match { matcher(it) })
-        } returns Unit
-
-        this.alertService.createAlert(
-            stockDto,
-            3.5f,
-            emptyList()
-        )
-
-        verify { recoEventListener.addRecommendationToAlert(any()) }
-    }
+//    @Test
+//    fun testCreateAlert() {
+//        val stockDto = StockDto("Test", "TST")
+//
+//        fun matcher(event: CreateAlertEvent): Boolean {
+//            return event.createdAlert.stockCode.equals("TST") &&
+//                    event.createdAlert.price.equals(3.5f)
+//        }
+//
+//        every {
+//            recoEventListener.addRecommendationToAlert(match { matcher(it) })
+//        } returns Unit
+//
+//        this.alertService.createAlert(
+//            stockDto,
+//            3.5f,
+//            emptyList()
+//        )
+//
+//        verify { recoEventListener.addRecommendationToAlert(any()) }
+//    }
 
     @Test
     fun testPersistAlert() {

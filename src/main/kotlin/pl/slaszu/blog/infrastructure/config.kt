@@ -13,6 +13,7 @@ import com.google.api.services.blogger.BloggerScopes
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import java.io.File
 
 
@@ -29,12 +30,19 @@ class BloggerConfiguration {
     val jsonFactory = GsonFactory()
     val httpTransport = NetHttpTransport()
 
+    @Bean
+    @Profile("test")
+    fun getPreparedBloggerObjectForTest(bloggerConfig: BloggerConfig): Blogger {
+        return Blogger.Builder(httpTransport, jsonFactory, null)
+            .setApplicationName("Blogger-PostsInsert-Snippet/1.0")
+            .build()
+    }
 
     @Bean
+    @Profile("!test")
     fun getPreparedBloggerObject(bloggerConfig: BloggerConfig): Blogger {
 
         val credential = this.getCredentials(bloggerConfig)
-
         return Blogger.Builder(httpTransport, jsonFactory, credential)
             .setApplicationName("Blogger-PostsInsert-Snippet/1.0")
             .build()

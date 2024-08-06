@@ -46,7 +46,7 @@ class CloseAlertRepositoryTests(
             CloseAlertModel(
                 AlertModel(
                     "X", "name", 5f, emptyList(), "tweetId", null, emptyMap(),
-                    LocalDateTime.now(), true, null, getAlertId()
+                    LocalDateTime.now(), true, null, id = getAlertId()
                 ),
                 "tweetIdx33",
                 5f,
@@ -58,7 +58,7 @@ class CloseAlertRepositoryTests(
             CloseAlertModel(
                 AlertModel(
                     "Y", "name y", 3.5f, emptyList(), "tweetId", null, emptyMap(),
-                    LocalDateTime.now(), true, null, getAlertId()
+                    LocalDateTime.now(), true, null, id = getAlertId()
                 ),
                 "tweetIdx22",
                 -3f,
@@ -70,7 +70,7 @@ class CloseAlertRepositoryTests(
             CloseAlertModel(
                 AlertModel(
                     "Y", "name y", 3.5f, emptyList(), "tweetId", null, emptyMap(),
-                    LocalDateTime.now(), true, null, getAlertId()
+                    LocalDateTime.now(), true, null, id = getAlertId()
                 ),
                 "tweetIdx11",
                 -3f,
