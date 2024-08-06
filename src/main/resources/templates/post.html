@@ -45,9 +45,12 @@
 
 <div class="main_signal">
     <h1>{{mainSignal.title}}</h1>
-    <img alt="{{mainSignal.title}}" src="data:image/png;base64, {{mainSignal.firstPngBase64}}" />
-    <br/>
     {{{mainSignal.descHtml}}}
+
+    <!-- more -->
+
+    <br/>
+    <img alt="{{mainSignal.title}}" src="data:image/png;base64, {{mainSignal.firstPngBase64}}" />
 </div>
 
 {{#signals}}

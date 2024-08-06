@@ -37,7 +37,9 @@ class BlogPostForAlert(
         val listOfList = this.recommendationForAlert.getCloseAlertModelListOfList(alert)
         val formatter = DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm:ss")
         listOfList.forEach { closeAlertList ->
-            val alertIn = closeAlertList.first().alert
+            val alertIn = closeAlertList.firstOrNull()?.alert
+
+            if (alertIn == null) return@forEach
 
             val pngBase64List = mutableListOf<String>()
 

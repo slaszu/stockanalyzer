@@ -13,7 +13,7 @@ data class PostSignal(
     val desc: String?
 ) {
     val firstPngBase64: String
-        get() = this.pngBase64List.first()
+        get() = this.pngBase64List.firstOrNull() ?: ""
 
     val descHtml: String
         get() = this.desc?.replace("\n","<br/>") ?: ""
