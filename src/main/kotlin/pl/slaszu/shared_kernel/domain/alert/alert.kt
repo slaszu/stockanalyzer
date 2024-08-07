@@ -36,7 +36,7 @@ data class AlertModel(
             predictionText += "${result.roundTo(2)}% (after $dayAfter days)\n"
         }
         if (predictionText.isNotBlank()) {
-            predictionText = "similar signals (average): \n$predictionText"
+            predictionText = "similar signals (avg): \n$predictionText"
         }
 
         return predictionText

@@ -83,6 +83,7 @@ class CreateAlerts(
 
                 alertService.persistAlert(alertModel)
                 logger.info { "Saved alert: $alertModel" }
+                return
             }
         }
     }
@@ -98,7 +99,7 @@ class CreateAlerts(
 
         var predictionText = alert.getPredicationText()
         if (!alert.blogLink.isNullOrBlank()) {
-            predictionText = alert.blogLink + "\n"
+            predictionText += "➡\uFE0F${alert.blogLink}\n"
         }
 
         // tweet alert
