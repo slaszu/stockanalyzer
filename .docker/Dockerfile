@@ -3,6 +3,13 @@ FROM amazoncorretto:17-alpine
 # https://stackoverflow.com/a/68515645
 RUN apk add --no-cache fontconfig ttf-dejavu
 
+RUN apk update \
+    && apk add --virtual build-dependencies \
+    build-base \
+    gcc \
+    wget \
+    git
+
 #RUN echo "Copy files..."
 
 #COPY settings.gradle.kts /app-build/
