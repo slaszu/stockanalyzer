@@ -23,7 +23,7 @@ data class AlertModel(
     val id: String? = null,
 ) {
     fun shouldBePublish(): Boolean {
-        return !this.predictions.isNullOrEmpty()
+        return !this.predictions.isNullOrEmpty() || !this.tweetId.isNullOrEmpty()
     }
 
     fun getBuyPrice(): Float = this.price.roundTo(2)
