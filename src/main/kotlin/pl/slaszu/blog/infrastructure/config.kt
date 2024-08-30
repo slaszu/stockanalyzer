@@ -30,16 +30,16 @@ class BloggerConfiguration {
     val jsonFactory = GsonFactory()
     val httpTransport = NetHttpTransport()
 
-    @Bean
-    @Profile("test")
-    fun getPreparedBloggerObjectForTest(bloggerConfig: BloggerConfig): Blogger {
-        return Blogger.Builder(httpTransport, jsonFactory, null)
-            .setApplicationName("Blogger-PostsInsert-Snippet/1.0")
-            .build()
-    }
+//    @Bean
+//    @Profile(value = ["test", "default"])
+//    fun getPreparedBloggerObjectForTest(bloggerConfig: BloggerConfig): Blogger {
+//        return Blogger.Builder(httpTransport, jsonFactory, null)
+//            .setApplicationName("Blogger-PostsInsert-Snippet/1.0")
+//            .build()
+//    }
 
     @Bean
-    @Profile("!test")
+    @Profile("prod") // no needed for other profiles
     fun getPreparedBloggerObject(bloggerConfig: BloggerConfig): Blogger {
 
         val credential = this.getCredentials(bloggerConfig)
