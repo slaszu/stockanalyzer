@@ -6,6 +6,7 @@
 //import org.springframework.boot.ApplicationRunner
 //import org.springframework.context.annotation.Bean
 //import org.springframework.context.annotation.Configuration
+//import org.springframework.context.annotation.Profile
 //import pl.slaszu.blog.application.BlogPostForAlert
 //import pl.slaszu.blog.domain.BlogClient
 //import pl.slaszu.recommendation.application.RecommendationForAlert
@@ -14,6 +15,7 @@
 //
 //
 //@Configuration
+//@Profile("default")
 //class LocalTest(
 //    private val createAlert: CreateAlerts,
 //    val blogClient: BlogClient
@@ -21,7 +23,7 @@
 //    private val logger = KotlinLogging.logger { }
 //
 //    @Bean
-//    fun createAlert(): ApplicationRunner = ApplicationRunner { createAlert.run() }
+//    //fun createAlert(): ApplicationRunner = ApplicationRunner { createAlert.run() }
 //
 //    //@Bean
 //    fun getPosts(
