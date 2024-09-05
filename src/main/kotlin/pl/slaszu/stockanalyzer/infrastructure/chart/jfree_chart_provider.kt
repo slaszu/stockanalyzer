@@ -11,19 +11,18 @@ import org.jfree.chart.renderer.xy.CandlestickRenderer
 import org.jfree.chart.ui.TextAnchor
 import org.jfree.data.xy.DefaultHighLowDataset
 import org.springframework.boot.info.BuildProperties
-import org.springframework.stereotype.Service
-import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
-import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
 import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
 import pl.slaszu.shared_kernel.domain.toDate
+import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
+import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
 import java.awt.Color
 import java.awt.Font
 import java.util.*
 import kotlin.math.absoluteValue
 
 
-@Service
-class JFreeChartProvider(val buildProperty: BuildProperties) : ChartProvider {
+//@Service
+class JFreeChartProvider(private val buildProperty: BuildProperties) : ChartProvider {
 
     override fun getPngByteArray(
         code: String,

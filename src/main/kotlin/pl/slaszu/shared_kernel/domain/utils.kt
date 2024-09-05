@@ -1,9 +1,15 @@
 package pl.slaszu.shared_kernel.domain
 
+import org.jfree.chart.ChartUtils
+import java.io.ByteArrayInputStream
 import java.net.URI
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
+import javax.imageio.ImageIO
+import kotlin.io.path.Path
+import kotlin.io.path.outputStream
+import kotlin.io.path.pathString
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -39,4 +45,10 @@ fun LocalDate.toDate(): Date {
 
 fun String.toUri(path: String): URI {
     return URI.create(this.plus(path))
+}
+
+fun ByteArray.toFile(fileName: String): String {
+    val file = Path(fileName)
+    ChartUtils.writeBufferedImageAsPNG(file.outputStream(), ImageIO.read(ByteArrayInputStream(this)))
+    return file.pathString
 }

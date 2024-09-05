@@ -38,6 +38,7 @@ springBoot {
 repositories {
     mavenCentral()
     maven("https://jitpack.io")
+    maven("https://packages.jetbrains.team/maven/p/kds/kotlin-ds-maven")
 }
 
 dependencies {
@@ -54,7 +55,10 @@ dependencies {
     implementation("com.twitter.twittertext:twitter-text:3.1.0")
     implementation("io.qdrant:client:1.9.1")
     implementation("com.google.protobuf:protobuf-java:3.24.0")
+
     implementation("org.jetbrains.bio:viktor:1.2.0")
+    implementation("org.jetbrains.kotlinx:kandy-lets-plot:0.7.0")
+    implementation("org.jetbrains.kotlinx:kotlin-statistics-jvm:0.3.0")
 
     implementation("com.google.apis:google-api-services-blogger:v3-rev20221220-2.0.0")
     implementation("com.google.api-client:google-api-client:2.0.0")
