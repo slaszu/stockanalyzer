@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.kandy.letsplot.scales.guide.LegendType
 import org.jetbrains.kotlinx.kandy.letsplot.settings.Symbol
 import org.jetbrains.kotlinx.kandy.letsplot.style.LegendPosition
 import org.jetbrains.kotlinx.kandy.util.color.Color
+import org.jetbrains.kotlinx.kandy.util.color.StandardColor
 import org.jetbrains.kotlinx.statistics.kandy.layers.candlestick
 import org.jfree.chart.ChartUtils
 import org.springframework.boot.info.BuildProperties
@@ -95,26 +96,25 @@ fun DataFramePlotBuilder<*>.addChartPoints(vararg pointsIn: ChartPoint?) {
     val pointX = mutableListOf<Long>()
     val pointY = mutableListOf<Double>()
     val pointType = mutableListOf<String>()
-    val pointLabels = mutableListOf<String>()
+    val pointLabels = mutableMapOf<String, String>()
+    val pointColour = mutableMapOf<String, StandardColor.Hex>()
     points.forEach { pointOne ->
         pointX.add(
-            pointOne!!.point.date.toKotlinLocalDate().atStartOfDayIn(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+            pointOne!!.point.date.toKotlinLocalDate().atStartOfDayIn(TimeZone.currentSystemDefault())
+                .toEpochMilliseconds()
         )
         pointY.add(
-            pointOne!!.pointValue.toDouble()
+            pointOne.pointValue.toDouble()
         )
-        pointLabels.add(
-            pointOne!!.label
-        )
-        pointType.add(
-            pointOne.let {
-                if (it.label.contains("BUY")) {
-                    "BUY"
-                } else {
-                    "SELL"
-                }
-            }
-        )
+
+        val pointOneUnique = pointType.addAsUnique(pointOne.getType())
+        pointLabels[pointOneUnique] = pointOne.label
+
+        when (pointOne.getType()) {
+            "BUY" -> pointColour.set(pointOneUnique, Color.BLACK)
+            "SELL" -> pointColour.set(pointOneUnique, Color.BLUE)
+            else -> pointColour.set(pointOneUnique, Color.GREY)
+        }
     }
 
 
@@ -127,14 +127,28 @@ fun DataFramePlotBuilder<*>.addChartPoints(vararg pointsIn: ChartPoint?) {
         stroke = 2
 
         color(pointType) {
-            scale = categorical(
-                "BUY" to Color.BLACK, "SELL" to Color.BLUE
-            )
+            scale = categorical(*pointColour.toList().toTypedArray())
             legend.name = ""
-            legend.breaksLabeled("BUY" to pointLabels[0], "SELL" to "Miss")
+            legend.breaksLabeled(*pointLabels.toList().toTypedArray())
             legend.type = LegendType.DiscreteLegend()
         }
-
     }
 
+}
+
+fun ChartPoint.getType(): String {
+    if (this.label.contains("BUY")) {
+        return "BUY"
+    }
+    return "SELL"
+}
+
+fun MutableList<String>.addAsUnique(e: String): String {
+    val count = this.count { element -> element.contains(e) }
+    var eToAdd = e;
+    if (count > 0) {
+        eToAdd.plus(" $count")
+    }
+    this.add(eToAdd)
+    return eToAdd
 }

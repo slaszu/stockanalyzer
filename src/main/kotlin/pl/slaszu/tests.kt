@@ -11,6 +11,7 @@ import pl.slaszu.blog.application.BlogPostForAlert
 import pl.slaszu.blog.domain.BlogClient
 import pl.slaszu.recommendation.application.RecommendationForAlert
 import pl.slaszu.shared_kernel.domain.alert.AlertModel
+import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
 import pl.slaszu.shared_kernel.domain.toFile
 import pl.slaszu.stockanalyzer.application.ChartForAlert
 import pl.slaszu.stockanalyzer.application.CreateAlerts
@@ -61,7 +62,17 @@ class LocalTest(
             date = LocalDateTime(2024, 4, 9, 12, 0, 0, 0).toJavaLocalDateTime()
         )
 
-        val pngByteArray = chartForAlert.getChartPngForAlert(alert)
+        //val pngByteArray = chartForAlert.getChartPngForAlert(alert)
+
+        val closeAlert = CloseAlertModel(
+            alert = alert,
+            resultPercent = 5f,
+            daysAfter = 7,
+            price = 124.54f,
+            date = LocalDateTime(2024, 4, 16, 12, 0, 0, 0).toJavaLocalDateTime()
+
+        )
+        val pngByteArray = chartForAlert.getChartPngForCloseAlert(closeAlert)
 
         val path = pngByteArray!!.toFile(
             "test_chart_%.png".replace("%", Random.nextInt(from = 100, until = 999).toString())
