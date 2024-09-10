@@ -25,7 +25,7 @@ import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
 @Service
 class KotlinKandyChartProvider(val buildProperty: BuildProperties) : ChartProvider {
     override fun getPngByteArray(
-        code: String,
+        chartTitle: String,
         priceList: Array<StockPriceDto>,
         buyPoint: ChartPoint?,
         closePoint: ChartPoint?
@@ -56,13 +56,14 @@ class KotlinKandyChartProvider(val buildProperty: BuildProperties) : ChartProvid
                 }
                 decrease.borderLine.color = Color.RED
                 increase.borderLine.color = Color.GREEN
-                alpha = 0.8
+                alpha = 0.6
             }
 
             addChartPoints(buyPoint, closePoint)
 
             layout {
-                title = code
+                title = chartTitle
+                subtitle = buildSubtitle(buyPoint, closePoint)?.first
                 caption = "#gpwApiSignals ver.${buildProperty.version}"
                 size = 800 to 600
                 style {
@@ -71,7 +72,10 @@ class KotlinKandyChartProvider(val buildProperty: BuildProperties) : ChartProvid
                     }
                     plotCanvas.title {
                         color = Color.BLACK
-                        margin(3.0, 350.0)
+                        fontSize = 20.0
+                    }
+                    plotCanvas.subtitle {
+                        color = buildSubtitle(buyPoint, closePoint)?.second
                     }
                     legend.position = LegendPosition.Bottom
                     xAxis.line {
@@ -111,8 +115,8 @@ fun DataFramePlotBuilder<*>.addChartPoints(vararg pointsIn: ChartPoint?) {
         pointLabels[pointOneUnique] = pointOne.label
 
         when (pointOne.getType()) {
-            "BUY" -> pointColour.set(pointOneUnique, Color.BLACK)
-            "SELL" -> pointColour.set(pointOneUnique, Color.BLUE)
+            "BUY" -> pointColour.set(pointOneUnique, MyColor.GREEN.color)
+            "SELL" -> pointColour.set(pointOneUnique, MyColor.RED.color)
             else -> pointColour.set(pointOneUnique, Color.GREY)
         }
     }
@@ -123,7 +127,7 @@ fun DataFramePlotBuilder<*>.addChartPoints(vararg pointsIn: ChartPoint?) {
         y(pointY)
 
         symbol = Symbol.CROSS
-        size = 6.0
+        size = 7.0
         stroke = 2
 
         color(pointType) {
@@ -134,6 +138,21 @@ fun DataFramePlotBuilder<*>.addChartPoints(vararg pointsIn: ChartPoint?) {
         }
     }
 
+}
+
+enum class MyColor(val color: StandardColor.Hex) {
+    RED(Color.hex("#910303")),
+    GREEN(Color.hex("#0b5718"))
+}
+
+fun buildSubtitle(buyPoint: ChartPoint?, closePoint: ChartPoint?): Pair<String, StandardColor.Hex>? {
+    if (buyPoint == null || closePoint == null) return null
+
+    if (buyPoint.pointValue < closePoint.pointValue) {
+        return closePoint.label to MyColor.GREEN.color
+    }
+
+    return closePoint.label to MyColor.RED.color
 }
 
 fun ChartPoint.getType(): String {
@@ -147,7 +166,7 @@ fun MutableList<String>.addAsUnique(e: String): String {
     val count = this.count { element -> element.contains(e) }
     var eToAdd = e;
     if (count > 0) {
-        eToAdd.plus(" $count")
+        eToAdd = eToAdd.plus(" $count")
     }
     this.add(eToAdd)
     return eToAdd

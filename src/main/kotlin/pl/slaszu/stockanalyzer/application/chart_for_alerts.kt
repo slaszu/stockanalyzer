@@ -62,7 +62,7 @@ class ChartForAlert(
         val buyPoint = this.getBuyPoint(alert, stockPriceList) ?: return null
 
         return this.chartProvider.getPngByteArray(
-            alert.stockCode,
+            alert.stockName,
             stockPriceList,
             buyPoint
         )
@@ -80,7 +80,7 @@ class ChartForAlert(
         val sellPoint = this.getSellPoint(closeAlert, stockPriceList) ?: return null
 
         return this.chartProvider.getPngByteArray(
-            alert.stockCode + " ${closeAlert.resultPercent} % (after ${closeAlert.daysAfter} days)",
+            alert.stockName + " ${closeAlert.resultPercent} % (after ${closeAlert.daysAfter} days)",
             stockPriceList,
             buyPoint,
             sellPoint

@@ -25,7 +25,7 @@ import kotlin.math.absoluteValue
 class JFreeChartProvider(private val buildProperty: BuildProperties) : ChartProvider {
 
     override fun getPngByteArray(
-        code: String,
+        chartTitle: String,
         priceList: Array<StockPriceDto>,
         buyPoint: ChartPoint?,
         closePoint: ChartPoint?
@@ -60,7 +60,7 @@ class JFreeChartProvider(private val buildProperty: BuildProperties) : ChartProv
         }
 
         val defaultHighLowDataset = DefaultHighLowDataset(
-            code,
+            chartTitle,
             dateArray,
             highArray,
             lowArray,
@@ -94,7 +94,7 @@ class JFreeChartProvider(private val buildProperty: BuildProperties) : ChartProv
         }
 
 
-        val chart = JFreeChart(code, JFreeChart.DEFAULT_TITLE_FONT, plot, false);
+        val chart = JFreeChart(chartTitle, JFreeChart.DEFAULT_TITLE_FONT, plot, false);
 
 
         val bufferedImage = chart.createBufferedImage(800, 600)

@@ -5,7 +5,7 @@ import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
 interface ChartProvider {
 
     fun getPngByteArray(
-        code: String,
+        chartTitle: String,
         priceList: Array<StockPriceDto>,
         buyPoint: ChartPoint? = null,
         closePoint: ChartPoint? = null

@@ -68,7 +68,7 @@ class LocalTest(
             alert = alert,
             resultPercent = 5f,
             daysAfter = 7,
-            price = 124.54f,
+            price = 110.54f,
             date = LocalDateTime(2024, 4, 16, 12, 0, 0, 0).toJavaLocalDateTime()
 
         )
