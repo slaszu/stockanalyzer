@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.kandy.dsl.internal.dataframe.DataFramePlotBuilder
 import org.jetbrains.kotlinx.kandy.dsl.plot
 import org.jetbrains.kotlinx.kandy.letsplot.export.toBufferedImage
 import org.jetbrains.kotlinx.kandy.letsplot.feature.layout
+import org.jetbrains.kotlinx.kandy.letsplot.layers.lineRanges
 import org.jetbrains.kotlinx.kandy.letsplot.layers.points
 import org.jetbrains.kotlinx.kandy.letsplot.scales.guide.LegendType
 import org.jetbrains.kotlinx.kandy.letsplot.settings.Symbol
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service
 import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
 import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
 import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
+import java.time.LocalDate
 
 @Service
 class KotlinKandyChartProvider(val buildProperty: BuildProperties) : ChartProvider {
@@ -36,6 +38,7 @@ class KotlinKandyChartProvider(val buildProperty: BuildProperties) : ChartProvid
         val highList = mutableListOf<Double>()
         val lowList = mutableListOf<Double>()
         val closeList = mutableListOf<Double>()
+        val volumeList = mutableListOf<Double>()
 
         val priceListReversed = priceList.reversed()
         priceListReversed.forEach { stockPriceDto ->
@@ -44,9 +47,31 @@ class KotlinKandyChartProvider(val buildProperty: BuildProperties) : ChartProvid
             highList.add(stockPriceDto.priceHigh.toDouble())
             lowList.add(stockPriceDto.priceLow.toDouble())
             closeList.add(stockPriceDto.price.toDouble())
+
+            volumeList.add(stockPriceDto.volume.toDouble())
+        }
+
+        val maxPrice = highList.max()
+        val minPrice = lowList.min()
+
+        val maxVolume = volumeList.max()
+
+        volumeList.replaceAll { v ->
+            ((v * 100 / maxVolume) / 100 * (maxPrice-minPrice)) + minPrice
         }
 
         val plot = plot {
+
+            // volumes
+            lineRanges {
+                x(xList)
+                yMin.constant(minPrice)
+                yMax(volumeList)
+                borderLine.color = Color.GREY
+                alpha = 0.6
+
+            }
+
             candlestick(xList, openList, highList, lowList, closeList) {
                 x {
                     axis.name = ""
@@ -104,8 +129,7 @@ fun DataFramePlotBuilder<*>.addChartPoints(vararg pointsIn: ChartPoint?) {
     val pointColour = mutableMapOf<String, StandardColor.Hex>()
     points.forEach { pointOne ->
         pointX.add(
-            pointOne!!.point.date.toKotlinLocalDate().atStartOfDayIn(TimeZone.currentSystemDefault())
-                .toEpochMilliseconds()
+            pointOne!!.point.date.toEpochMilliseconds()
         )
         pointY.add(
             pointOne.pointValue.toDouble()
@@ -143,6 +167,12 @@ fun DataFramePlotBuilder<*>.addChartPoints(vararg pointsIn: ChartPoint?) {
 enum class MyColor(val color: StandardColor.Hex) {
     RED(Color.hex("#910303")),
     GREEN(Color.hex("#0b5718"))
+}
+
+fun LocalDate.toEpochMilliseconds(): Long {
+    return this.toKotlinLocalDate()
+        .atStartOfDayIn(TimeZone.currentSystemDefault())
+        .toEpochMilliseconds()
 }
 
 fun buildSubtitle(buyPoint: ChartPoint?, closePoint: ChartPoint?): Pair<String, StandardColor.Hex>? {
