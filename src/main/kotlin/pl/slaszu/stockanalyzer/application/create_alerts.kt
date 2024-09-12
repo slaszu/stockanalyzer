@@ -83,7 +83,6 @@ class CreateAlerts(
 
                 alertService.persistAlert(alertModel)
                 logger.info { "Saved alert: $alertModel" }
-                return;
             }
         }
     }
