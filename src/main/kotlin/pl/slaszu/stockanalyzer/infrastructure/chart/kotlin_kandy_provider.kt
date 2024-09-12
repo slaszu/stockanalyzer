@@ -103,6 +103,9 @@ class KotlinKandyChartProvider(val buildProperty: BuildProperties) : ChartProvid
                         color = buildSubtitle(buyPoint, closePoint)?.second
                     }
                     legend.position = LegendPosition.Bottom
+                    xAxis.title {
+                        blank = true
+                    }
                     xAxis.line {
                         blank = true
                     }
@@ -166,7 +169,8 @@ fun DataFramePlotBuilder<*>.addChartPoints(vararg pointsIn: ChartPoint?) {
 
 enum class MyColor(val color: StandardColor.Hex) {
     RED(Color.hex("#910303")),
-    GREEN(Color.hex("#0b5718"))
+    GREEN(Color.hex("#0b5718")),
+    GREY(Color.hex("#686869"))
 }
 
 fun LocalDate.toEpochMilliseconds(): Long {
@@ -176,6 +180,10 @@ fun LocalDate.toEpochMilliseconds(): Long {
 }
 
 fun buildSubtitle(buyPoint: ChartPoint?, closePoint: ChartPoint?): Pair<String, StandardColor.Hex>? {
+    if (buyPoint != null && closePoint == null) {
+        return buyPoint.label to MyColor.GREY.color
+    }
+
     if (buyPoint == null || closePoint == null) return null
 
     if (buyPoint.pointValue < closePoint.pointValue) {
