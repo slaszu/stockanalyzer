@@ -3,14 +3,13 @@ package pl.slaszu.stockanalyzer.application
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
-import pl.slaszu.shared_kernel.domain.alert.AlertModel
 import pl.slaszu.shared_kernel.domain.alert.AlertRepository
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertRepository
 import pl.slaszu.shared_kernel.domain.roundTo
 import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
 import pl.slaszu.stockanalyzer.domain.alert.CloseAlertService
-import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
+import pl.slaszu.stockanalyzer.domain.chart.ChartBuilder
 import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
 import pl.slaszu.stockanalyzer.domain.publisher.Publisher
 import pl.slaszu.stockanalyzer.domain.stock.StockProvider
@@ -24,6 +23,7 @@ class CloseAlerts(
     private val chartProvider: ChartProvider,
     private val publisher: Publisher,
     private val closeAlertService: CloseAlertService,
+    private val chartForAlert: ChartForAlert,
     private val logger: KLogger = KotlinLogging.logger { }
 ) {
     fun runForDaysAfter(daysAfter: Int, andClose: Boolean = false) {
@@ -57,23 +57,21 @@ class CloseAlerts(
                 return@forEach // continue
             }
 
-            val priceChangeInPercent = this.getPriceChangePercent(alert.price, first.price)
+            var closeAlert = CloseAlertModel(
+                alert = alert,
+                resultPercent = this.getPriceChangePercent(alert.price, first.price),
+                daysAfter = daysAfter,
+                price = first.price
+            )
 
-            var publishedId:String? = null
             if (alert.shouldBePublish()) {
-                publishedId = this.publishCloseAndGetId(alert, stockPriceList, daysAfter)
+                closeAlert = closeAlert.copy(
+                    tweetId = this.publishCloseAndGetId(closeAlert, stockPriceList)
+                )
             }
 
             // add CloseAlertModel
-            this.closeAlertService.persistCloseAlert(
-                CloseAlertModel(
-                    alert,
-                    publishedId,
-                    priceChangeInPercent,
-                    daysAfter,
-                    first.price
-                )
-            )
+            this.closeAlertService.persistCloseAlert(closeAlert)
 
             if (andClose) {
                 this.closeAlertService.closeAlert(alert)
@@ -85,36 +83,32 @@ class CloseAlerts(
         return (((100 * sell) / buy) - 100).roundTo(2)
     }
 
-    private fun publishCloseAndGetId(alert: AlertModel, priceList: Array<StockPriceDto>, daysAfter: Int): String {
-        val first = priceList.first()
+    private fun publishCloseAndGetId(closeAlert: CloseAlertModel, priceList: Array<StockPriceDto>): String {
 
-        val closePrice = first.price
+        val alert = closeAlert.alert
+        val alertLabel = closeAlert.getTitle()
 
-        val priceChangeInPercent = this.getPriceChangePercent(alert.price, first.price)
-
-        val alertLabel = "SELL ${alert.stockCode} $closePrice PLN"
-
-        // find priceListElement for alert by date
-        val priceListForAlert = priceList.find {
-            it.date == alert.date.toLocalDate()
-        }
-        var buyPoint: ChartPoint? = null;
-        if (priceListForAlert != null) {
-            buyPoint = ChartPoint(priceListForAlert, alert.price, "BUY ${alert.stockCode} ${alert.price} PLN")
-        }
+        val buyPoint = this.chartForAlert.getBuyPoint(alert, priceList)
+        val closePoint = this.chartForAlert.getSellPoint(closeAlert, priceList)
 
         // get chart png
-        val pngByteArray = this.chartProvider.getPngByteArray(
-            alert.stockCode,
-            priceList,
-            buyPoint, // buy point
-            ChartPoint(priceList.first(), closePrice, alertLabel) // close point
-        )
+//        val pngByteArray = this.chartProvider.getPngByteArray(
+//            alert.stockCode,
+//            priceList,
+//            buyPoint, // buy point
+//            ChartPoint(priceList.first(), closePrice, alertLabel) // close point
+//        )
+        val pngByteArray = ChartBuilder.create(this.chartProvider) {
+            this.closeAlert = closeAlert
+            this.buyPoint = buyPoint
+            this.closePoint = closePoint
+            this.stockPriceList = priceList
+        }.getPng()
 
         // tweet alert
         return this.publisher.publish(
             pngByteArray,
-            "$alertLabel (after $daysAfter days) | result: $priceChangeInPercent %",
+            "$alertLabel (after ${closeAlert.daysAfter} days) | result: ${closeAlert.resultPercent} %",
             "#${alert.stockCode} #${alert.stockName} " +
                     "#gpwApiSignals\nhttps://pl.tradingview.com/symbols/GPW-${alert.stockCode}/",
             alert.tweetId

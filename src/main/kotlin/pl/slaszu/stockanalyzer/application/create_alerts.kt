@@ -9,6 +9,7 @@ import pl.slaszu.shared_kernel.domain.alert.AlertModel
 import pl.slaszu.shared_kernel.domain.alert.AlertRepository
 import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
 import pl.slaszu.stockanalyzer.domain.alert.AlertService
+import pl.slaszu.stockanalyzer.domain.chart.ChartBuilder
 import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
 import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
 import pl.slaszu.stockanalyzer.domain.publisher.Publisher
@@ -90,11 +91,17 @@ class CreateAlerts(
     private fun publishAlertAndGetId(alert: AlertModel, priceList: Array<StockPriceDto>): String {
 
         // get chart png
-        val pngByteArray = this.chartProvider.getPngByteArray(
-            alert.stockCode,
-            priceList,
-            ChartPoint(priceList.first(), alert.getBuyPrice(), alert.getTitle())
-        )
+//        val pngByteArray = this.chartProvider.getPngByteArray(
+//            alert.stockCode,
+//            priceList,
+//            ChartPoint(priceList.first(), alert.getBuyPrice(), alert.getTitle())
+//        )
+
+        val pngByteArray = ChartBuilder.create(this.chartProvider) {
+            this.alert = alert
+            this.buyPoint = ChartPoint(priceList.first(), alert.getBuyPrice(), alert.getTitle())
+            this.stockPriceList = stockPriceList
+        }.getPng()
 
         var predictionText = alert.getPredicationText()
         if (!alert.blogLink.isNullOrBlank()) {

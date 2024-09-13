@@ -4,8 +4,8 @@ import kotlinx.datetime.toKotlinLocalDate
 import org.springframework.stereotype.Service
 import pl.slaszu.shared_kernel.domain.alert.AlertModel
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
-import pl.slaszu.shared_kernel.domain.roundTo
 import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
+import pl.slaszu.stockanalyzer.domain.chart.ChartBuilder
 import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
 import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
 import pl.slaszu.stockanalyzer.domain.stock.StockProvider
@@ -15,7 +15,7 @@ class ChartForAlert(
     val stockProvider: StockProvider,
     val chartProvider: ChartProvider
 ) {
-    private fun getBuyPoint(alert: AlertModel, stockPriceList: Array<StockPriceDto>): ChartPoint? {
+    fun getBuyPoint(alert: AlertModel, stockPriceList: Array<StockPriceDto>): ChartPoint? {
         val buyPoint = stockPriceList.find {
             it.date == alert.date.toLocalDate()
         }
@@ -24,17 +24,14 @@ class ChartForAlert(
             return null;
         }
 
-        val stockCode = alert.stockCode
-        val buyPrice = alert.price.roundTo(2)
-
         return ChartPoint(
             buyPoint,
-            buyPrice,
-            "BUY ${stockCode} $buyPrice PLN"
+            alert.getBuyPrice(),
+            alert.getTitle()
         )
     }
 
-    private fun getSellPoint(closeAlert: CloseAlertModel, stockPriceList: Array<StockPriceDto>): ChartPoint? {
+    fun getSellPoint(closeAlert: CloseAlertModel, stockPriceList: Array<StockPriceDto>): ChartPoint? {
         val sellPoint = stockPriceList.find {
             it.date == closeAlert.date.toLocalDate()
         }
@@ -43,13 +40,12 @@ class ChartForAlert(
             return null;
         }
 
-        val stockCode = closeAlert.alert.stockCode
-        val sellPrice = closeAlert.price?.roundTo(2) ?: return null
+        val sellPrice = closeAlert.getClosePrice() ?: return null
 
         return ChartPoint(
             sellPoint,
             sellPrice,
-            "SELL ${stockCode} $sellPrice PLN"
+            closeAlert.getTitle()
         )
     }
 
@@ -61,11 +57,17 @@ class ChartForAlert(
 
         val buyPoint = this.getBuyPoint(alert, stockPriceList) ?: return null
 
-        return this.chartProvider.getPngByteArray(
-            alert.stockName,
-            stockPriceList,
-            buyPoint
-        )
+        return ChartBuilder.create(this.chartProvider) {
+            this.alert = alert
+            this.buyPoint = buyPoint
+            this.stockPriceList = stockPriceList
+        }.getPng()
+
+//        return this.chartProvider.getPngByteArray(
+//            alert.stockName,
+//            stockPriceList,
+//            buyPoint
+//        )
     }
 
     fun getChartPngForCloseAlert(closeAlert: CloseAlertModel): ByteArray? {
@@ -79,11 +81,18 @@ class ChartForAlert(
 
         val sellPoint = this.getSellPoint(closeAlert, stockPriceList) ?: return null
 
-        return this.chartProvider.getPngByteArray(
-            alert.stockName + " ${closeAlert.resultPercent} % (after ${closeAlert.daysAfter} days)",
-            stockPriceList,
-            buyPoint,
-            sellPoint
-        )
+        return ChartBuilder.create(this.chartProvider) {
+            this.closeAlert = closeAlert
+            this.buyPoint = buyPoint
+            this.closePoint = sellPoint
+            this.stockPriceList = stockPriceList
+        }.getPng()
+
+//        return this.chartProvider.getPngByteArray(
+//            alert.stockName + " ${closeAlert.resultPercent} % (after ${closeAlert.daysAfter} days)",
+//            stockPriceList,
+//            buyPoint,
+//            sellPoint
+//        )
     }
 }
