@@ -28,7 +28,7 @@ class ChartBuilder private constructor(
 
     fun getPng(): ByteArray {
 
-        check(!::stockPriceList.isInitialized) { "StockPriceList must by initialized !" }
+        check(::stockPriceList.isInitialized) { "StockPriceList must by initialized !" }
 
         return this.chartProvider.getPngByteArray(
             chartTitle = getChartTitle(),

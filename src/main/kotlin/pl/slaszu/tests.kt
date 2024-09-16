@@ -14,6 +14,7 @@
 //import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
 //import pl.slaszu.shared_kernel.domain.toFile
 //import pl.slaszu.stockanalyzer.application.ChartForAlert
+//import pl.slaszu.stockanalyzer.application.CloseAlerts
 //import pl.slaszu.stockanalyzer.application.CreateAlerts
 //import kotlin.random.Random
 //
@@ -22,12 +23,17 @@
 //@Profile("default")
 //class LocalTest(
 //    private val createAlert: CreateAlerts,
+//    private val closeAlerts: CloseAlerts,
 //    val blogClient: BlogClient
 //) {
 //    private val logger = KotlinLogging.logger { }
 //
 //    //@Bean
 //    fun createAlert(): ApplicationRunner = ApplicationRunner { createAlert.run() }
+//
+//    @Bean
+//    fun closeAlert(): ApplicationRunner = ApplicationRunner { closeAlerts.runForDaysAfter(7) }
+//
 //
 //    //@Bean
 //    fun getPosts(
@@ -54,7 +60,7 @@
 //        blogPostForAlert.createNewPost(alert)
 //    }
 //
-//    @Bean
+//    //@Bean
 //    fun kandy(chartForAlert: ChartForAlert): ApplicationRunner = ApplicationRunner {
 //
 //        var alert = AlertModel(
