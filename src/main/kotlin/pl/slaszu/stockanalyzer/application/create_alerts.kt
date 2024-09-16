@@ -100,7 +100,7 @@ class CreateAlerts(
         val pngByteArray = ChartBuilder.create(this.chartProvider) {
             this.alert = alert
             this.buyPoint = ChartPoint(priceList.first(), alert.getBuyPrice(), alert.getTitle())
-            this.stockPriceList = stockPriceList
+            this.stockPriceList = priceList
         }.getPng()
 
         var predictionText = alert.getPredicationText()
@@ -112,7 +112,7 @@ class CreateAlerts(
         return this.publisher.publish(
             pngByteArray,
             alert.getTitle(),
-            "$predictionText" +
+            predictionText +
                     "#${alert.stockCode} #${alert.stockName} #gpwApiSignals\n" +
                     "https://pl.tradingview.com/symbols/GPW-${alert.stockCode}/"
         )
