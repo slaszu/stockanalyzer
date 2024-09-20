@@ -26,6 +26,7 @@ import java.time.LocalDate
 
 @Service
 class KotlinKandyChartProvider(val buildProperty: BuildProperties) : ChartProvider {
+
     override fun getPngByteArray(
         chartTitle: String,
         priceList: Array<StockPriceDto>,
@@ -33,6 +34,20 @@ class KotlinKandyChartProvider(val buildProperty: BuildProperties) : ChartProvid
         closePoint: ChartPoint?
     ): ByteArray {
 
+        return this.getPngByteArray(
+            chartTitle = chartTitle,
+            priceList = priceList,
+            buyPoint = buyPoint,
+            closePointList = listOf(closePoint)
+        )
+    }
+
+    override fun getPngByteArray(
+        chartTitle: String,
+        priceList: Array<StockPriceDto>,
+        buyPoint: ChartPoint?,
+        closePointList: List<ChartPoint?>
+    ): ByteArray {
         val xList = mutableListOf<kotlinx.datetime.LocalDate>()
         val openList = mutableListOf<Double>()
         val highList = mutableListOf<Double>()
@@ -57,8 +72,10 @@ class KotlinKandyChartProvider(val buildProperty: BuildProperties) : ChartProvid
         val maxVolume = volumeList.max()
 
         volumeList.replaceAll { v ->
-            ((v * 100 / maxVolume) / 100 * (maxPrice-minPrice)) + minPrice
+            ((v * 100 / maxVolume) / 100 * (maxPrice - minPrice)) + minPrice
         }
+
+        val closePoint = closePointList.first()
 
         val plot = plot {
 
@@ -84,7 +101,7 @@ class KotlinKandyChartProvider(val buildProperty: BuildProperties) : ChartProvid
                 alpha = 0.6
             }
 
-            addChartPoints(buyPoint, closePoint)
+            addChartPoints(listOf(buyPoint, *closePointList.toTypedArray()))
 
             layout {
                 title = chartTitle
@@ -119,7 +136,7 @@ class KotlinKandyChartProvider(val buildProperty: BuildProperties) : ChartProvid
     }
 }
 
-fun DataFramePlotBuilder<*>.addChartPoints(vararg pointsIn: ChartPoint?) {
+fun DataFramePlotBuilder<*>.addChartPoints(pointsIn: List<ChartPoint?>) {
 
     val points = pointsIn.filter { pointOne -> pointOne != null }
 
@@ -130,6 +147,7 @@ fun DataFramePlotBuilder<*>.addChartPoints(vararg pointsIn: ChartPoint?) {
     val pointType = mutableListOf<String>()
     val pointLabels = mutableMapOf<String, String>()
     val pointColour = mutableMapOf<String, StandardColor.Hex>()
+
     points.forEach { pointOne ->
         pointX.add(
             pointOne!!.point.date.toEpochMilliseconds()

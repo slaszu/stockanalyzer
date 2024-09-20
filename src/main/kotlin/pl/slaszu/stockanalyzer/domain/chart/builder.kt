@@ -12,6 +12,7 @@ class ChartBuilder private constructor(
     lateinit var alert: AlertModel
     lateinit var closeAlert: CloseAlertModel
     lateinit var stockPriceList: Array<StockPriceDto>
+    lateinit var closePointList: List<ChartPoint?>
     var buyPoint: ChartPoint? = null
     var closePoint: ChartPoint? = null
 
@@ -30,11 +31,15 @@ class ChartBuilder private constructor(
 
         check(::stockPriceList.isInitialized) { "StockPriceList must by initialized !" }
 
+        if (!::closePointList.isInitialized) {
+            closePointList = listOf(closePoint)
+        }
+
         return this.chartProvider.getPngByteArray(
             chartTitle = getChartTitle(),
             priceList = stockPriceList,
             buyPoint = buyPoint,
-            closePoint = closePoint
+            closePointList = closePointList
         )
     }
 

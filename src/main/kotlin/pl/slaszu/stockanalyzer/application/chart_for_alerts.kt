@@ -27,7 +27,7 @@ class ChartForAlert(
         return ChartPoint(
             buyPoint,
             alert.getBuyPrice(),
-            alert.getTitle()
+            "BUY ${alert.getBuyPrice()} PLN"
         )
     }
 
@@ -45,7 +45,7 @@ class ChartForAlert(
         return ChartPoint(
             sellPoint,
             sellPrice,
-            closeAlert.getTitle()
+            "SELL ${closeAlert.getClosePrice()} PLN (${closeAlert.daysAfter} days)"
         )
     }
 
@@ -62,12 +62,6 @@ class ChartForAlert(
             this.buyPoint = buyPoint
             this.stockPriceList = stockPriceList
         }.getPng()
-
-//        return this.chartProvider.getPngByteArray(
-//            alert.stockName,
-//            stockPriceList,
-//            buyPoint
-//        )
     }
 
     fun getChartPngForCloseAlert(closeAlert: CloseAlertModel): ByteArray? {
@@ -87,12 +81,39 @@ class ChartForAlert(
             this.closePoint = sellPoint
             this.stockPriceList = stockPriceList
         }.getPng()
-
-//        return this.chartProvider.getPngByteArray(
-//            alert.stockName + " ${closeAlert.resultPercent} % (after ${closeAlert.daysAfter} days)",
-//            stockPriceList,
-//            buyPoint,
-//            sellPoint
-//        )
     }
+
+    fun getChartPngForCloseAlert(closeAlertList: List<CloseAlertModel>): ByteArray? {
+
+        require(closeAlertList.groupBy { closeAlert -> closeAlert.alert }.size == 1) {
+            "All closeAlerts must be associated with the same alert !"
+        }
+
+        val closeAlertBiggest = closeAlertList.maxBy { closeAlert -> closeAlert.daysAfter }
+
+        val alert = closeAlertBiggest.alert
+        val stockPriceList = this.stockProvider.getLastStockPriceList(
+            alert.stockCode,
+            closeAlertBiggest.date.toLocalDate().toKotlinLocalDate()
+        )
+
+        val buyPoint = this.getBuyPoint(alert, stockPriceList) ?: return null
+
+        val sellPointList = mutableListOf<ChartPoint>()
+        closeAlertList
+            .sortedBy { closeAlert -> closeAlert.daysAfter }
+            .forEach { closeAlert ->
+                val sellPoint = this.getSellPoint(closeAlert, stockPriceList)
+                if (sellPoint != null) {
+                    sellPointList.add(sellPoint)
+                }
+            }
+
+        return ChartBuilder.create(this.chartProvider) {
+            this.buyPoint = buyPoint
+            this.closePointList = sellPointList
+            this.stockPriceList = stockPriceList
+        }.getPng()
+    }
+
 }

@@ -8,6 +8,7 @@ import pl.slaszu.blog.domain.PostProvider
 import pl.slaszu.blog.domain.PostSignal
 import pl.slaszu.recommendation.application.RecommendationForAlert
 import pl.slaszu.shared_kernel.domain.alert.AlertModel
+import pl.slaszu.shared_kernel.domain.roundTo
 import pl.slaszu.stockanalyzer.application.ChartForAlert
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -28,33 +29,24 @@ class BlogPostForAlert(
         val base64 = Base64.getEncoder().encodeToString(byteArray)
 
         val mainSignal = PostSignal(
-            alert.getTitle(),
+            alert.getPostTitle(),
             listOf(base64),
-            alert.getPredicationText()
+            alert.getPostDescription()
         )
 
         val similarSignals = mutableListOf<PostSignal>()
         val listOfList = this.recommendationForAlert.getCloseAlertModelListOfList(alert)
-        val formatter = DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm:ss")
+        val formatter = DateTimeFormatter.ofPattern("d MMMM yyy")
         listOfList.forEach { closeAlertList ->
-            val alertIn = closeAlertList.firstOrNull()?.alert
+            val alertIn = closeAlertList.firstOrNull()?.alert ?: return@forEach
 
-            if (alertIn == null) return@forEach
-
-            val pngBase64List = mutableListOf<String>()
-
-            closeAlertList.forEach { closeAlertModel ->
-                val byteArrayIn = this.chartForAlert.getChartPngForCloseAlert(closeAlertModel)
-                if (byteArrayIn != null) {
-                    pngBase64List.add(Base64.getEncoder().encodeToString(byteArrayIn))
-                }
-            }
+            val pngByteArray = this.chartForAlert.getChartPngForCloseAlert(closeAlertList)
 
             similarSignals.add(
                 PostSignal(
-                    "${alertIn.stockName} [${alertIn.stockName}]",
-                    pngBase64List,
-                    "signal date: ${alertIn.date.format(formatter)}"
+                    alertIn.getTitle(),
+                    listOf(Base64.getEncoder().encodeToString(pngByteArray)),
+                    alertIn.date.format(formatter)
                 )
             )
         }
@@ -77,4 +69,22 @@ class BlogPostForAlert(
 
         return blogPostModel.postUrl
     }
+}
+
+fun AlertModel.getPostTitle(): String {
+    return "Sygnał kupna dla $stockName cena ${getBuyPrice()}&nbsp;PLN"
+}
+
+fun AlertModel.getPostDescription(): String {
+    var desc = ""
+    predictions.forEach { dayAfter, resultPercent ->
+        var sign = "\uD83D\uDD34"
+        if (resultPercent > 0) {
+            sign = "\uD83D\uDFE2"
+        }
+
+        desc += "$sign po $dayAfter dniach średni wynik to ${resultPercent.roundTo(2)}&nbsp;%\n"
+    }
+
+    return desc
 }

@@ -29,37 +29,57 @@
         }
 
         .main_signal {
-            font-weight: bold;
-            background-color: #f2f2f2;
             padding:5px;
-            border-bottom: 4mm ridge rgba(211, 220, 50, .6);
+            border-bottom: 4mm ridge rgba(19, 77, 171, .6);
         }
 
         .other_signal {
+            background-color: #f2f2f2;
             padding:5px;
-            border-bottom: 4mm ridge rgba(211, 220, 50, .6);
+            border-top: 2mm ridge rgba(166, 164, 164, .6);
         }
+
+        #blink {
+            margin-top:20px;
+            transition: 0.5s;
+            text-align: center;
+        }
+
     </style>
 </head>
 <body>
 
 <div class="main_signal">
-    <h1>{{mainSignal.title}}</h1>
+    <h1>{{{mainSignal.title}}}</h1>
+    <b>Prawdopodobne stopy zwrotu</b> dla takiego sygnału to:
+    <br />
     {{{mainSignal.descHtml}}}
-
     <!-- more -->
 
     <br/>
-    <img alt="{{mainSignal.title}}" src="data:image/png;base64, {{mainSignal.firstPngBase64}}" />
+    <img alt="{{mainSignal.title}}" src="data:image/png;base64, {{mainSignal.firstPngBase64}}"/>
 </div>
+
+<div id="blink">
+    <b>Podobne sygnały</b>, na podstawie których wyliczone zostały <b>prawdopodobne stopy zwrotu</b>.
+    <br >
+    ⬇️⬇️⬇️
+</div>
+
+<script type="text/javascript">
+    var blink = document.getElementById('blink');
+    setInterval(function() {
+        blink.style.opacity = (blink.style.opacity == 0 ? 1 : 0);
+    }, 1000);
+</script>
+
 
 {{#signals}}
 <div class="other_signal">
-    <h3>Similar signal: {{title}}</h3>
-    {{{descHtml}}}
+    <b>{{{title}}}</b>&nbsp;({{descHtml}})
     <br/>
     {{#pngBase64List}}
-        <img alt="{{title}}" src="data:image/png;base64, {{.}}" />
+    <img alt="{{title}}" src="data:image/png;base64, {{.}}"/>
     {{/pngBase64List}}
 </div>
 {{/signals}}
