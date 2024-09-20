@@ -91,13 +91,6 @@ class CloseAlerts(
         val buyPoint = this.chartForAlert.getBuyPoint(alert, priceList)
         val closePoint = this.chartForAlert.getSellPoint(closeAlert, priceList)
 
-        // get chart png
-//        val pngByteArray = this.chartProvider.getPngByteArray(
-//            alert.stockCode,
-//            priceList,
-//            buyPoint, // buy point
-//            ChartPoint(priceList.first(), closePrice, alertLabel) // close point
-//        )
         val pngByteArray = ChartBuilder.create(this.chartProvider) {
             this.closeAlert = closeAlert
             this.buyPoint = buyPoint

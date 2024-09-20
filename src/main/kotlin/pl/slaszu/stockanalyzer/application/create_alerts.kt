@@ -90,13 +90,6 @@ class CreateAlerts(
 
     private fun publishAlertAndGetId(alert: AlertModel, priceList: Array<StockPriceDto>): String {
 
-        // get chart png
-//        val pngByteArray = this.chartProvider.getPngByteArray(
-//            alert.stockCode,
-//            priceList,
-//            ChartPoint(priceList.first(), alert.getBuyPrice(), alert.getTitle())
-//        )
-
         val pngByteArray = ChartBuilder.create(this.chartProvider) {
             this.alert = alert
             this.buyPoint = ChartPoint(priceList.first(), alert.getBuyPrice(), alert.getTitle())
