@@ -1,14 +1,14 @@
 package pl.slaszu.shared_kernel.domain
 
-import org.jfree.chart.ChartUtils
+import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.net.URI
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
 import javax.imageio.ImageIO
 import kotlin.io.path.Path
-import kotlin.io.path.outputStream
 import kotlin.io.path.pathString
 import kotlin.math.abs
 import kotlin.math.pow
@@ -49,6 +49,12 @@ fun String.toUri(path: String): URI {
 
 fun ByteArray.toFile(fileName: String): String {
     val file = Path(fileName)
-    ChartUtils.writeBufferedImageAsPNG(file.outputStream(), ImageIO.read(ByteArrayInputStream(this)))
+    ImageIO.write(ImageIO.read(ByteArrayInputStream(this)), "png", file.toFile())
     return file.pathString
+}
+
+fun BufferedImage.toPngByteArray(): ByteArray {
+    val baos = ByteArrayOutputStream()
+    ImageIO.write(this, "png", baos)
+    return baos.toByteArray()
 }

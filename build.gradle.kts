@@ -36,7 +36,6 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
-    implementation("org.jfree:jfreechart:1.5.3")
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.0")
     implementation("io.github.redouane59.twitter:twittered:2.23")
     implementation("com.github.hkirk:java-html2image:0.9")

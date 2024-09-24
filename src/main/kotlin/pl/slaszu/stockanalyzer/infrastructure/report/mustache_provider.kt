@@ -2,15 +2,15 @@ package pl.slaszu.stockanalyzer.infrastructure.report
 
 import com.samskivert.mustache.Mustache
 import gui.ava.html.image.generator.HtmlImageGenerator
-import org.jfree.chart.ChartUtils
 import org.springframework.boot.autoconfigure.mustache.MustacheResourceTemplateLoader
 import org.springframework.boot.info.BuildProperties
 import org.springframework.stereotype.Service
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertRepository
-import pl.slaszu.stockanalyzer.domain.report.ReportProvider
 import pl.slaszu.shared_kernel.domain.calcSellPrice
 import pl.slaszu.shared_kernel.domain.roundTo
+import pl.slaszu.shared_kernel.domain.toPngByteArray
+import pl.slaszu.stockanalyzer.domain.report.ReportProvider
 import java.io.File
 import java.time.format.DateTimeFormatter
 
@@ -38,7 +38,7 @@ class MustacheReportProvider(
 
         imageGenerator.loadHtml(html)
 
-        return ChartUtils.encodeAsPNG(imageGenerator.bufferedImage)
+        return imageGenerator.bufferedImage.toPngByteArray()
     }
 }
 

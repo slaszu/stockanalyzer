@@ -16,10 +16,10 @@ import org.jetbrains.kotlinx.kandy.letsplot.style.LegendPosition
 import org.jetbrains.kotlinx.kandy.util.color.Color
 import org.jetbrains.kotlinx.kandy.util.color.StandardColor
 import org.jetbrains.kotlinx.statistics.kandy.layers.candlestick
-import org.jfree.chart.ChartUtils
 import org.springframework.boot.info.BuildProperties
 import org.springframework.stereotype.Service
 import pl.slaszu.shared_kernel.domain.stock.StockPriceDto
+import pl.slaszu.shared_kernel.domain.toPngByteArray
 import pl.slaszu.stockanalyzer.domain.chart.ChartPoint
 import pl.slaszu.stockanalyzer.domain.chart.ChartProvider
 import java.time.LocalDate
@@ -132,7 +132,7 @@ class KotlinKandyChartProvider(val buildProperty: BuildProperties) : ChartProvid
 
         val bufferedImage = plot.toBufferedImage()
 
-        return ChartUtils.encodeAsPNG(bufferedImage)
+        return bufferedImage.toPngByteArray()
     }
 }
 
