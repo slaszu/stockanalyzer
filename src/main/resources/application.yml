@@ -32,3 +32,7 @@ spring:
 logging:
   level.root: WARN
   level.pl.slaszu: DEBUG
+
+sentry:
+  dsn: https://91448fb4cf34aae51004514cd4526af3@o74341.ingest.us.sentry.io/4507126154657792
+  tracesSampleRate: 1.0

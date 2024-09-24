@@ -3,11 +3,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "3.2.0"
     id("io.spring.dependency-management") version "1.1.4"
-//    id("io.sentry.jvm.gradle") version "4.4.1"
+    id("io.sentry.jvm.gradle") version "4.11.0"
     kotlin("jvm") version "1.9.20"
     kotlin("plugin.spring") version "1.9.20"
     kotlin("plugin.jpa") version "1.9.20"
-//    id("com.google.protobuf") version "0.9.4"
 }
 
 group = "pl.slaszu"
@@ -15,17 +14,6 @@ version = "2.2.0"
 tasks.bootJar {
     this.archiveFileName.set("${project.name}.jar")
 }
-//
-//sentry {
-//    // Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
-//    // This enables source context, allowing you to see your source
-//    // code as part of your stack traces in Sentry.
-//    //includeSourceContext = true
-//
-//    org = "piotr-flasza"
-//    projectName = "stockanalyzer"
-//    authToken = System.getenv("SENTRY_AUTH_TOKEN")
-//}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -85,11 +73,3 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
-
-//tasks.register<Copy>("copyConfigCredentials") {
-//	from(layout.projectDirectory.dir("config_credentials"))
-//	into(layout.buildDirectory.dir("resources/main/config_credentials"))
-//}
-//tasks.named("processResources") {
-//	dependsOn(tasks.named("copyConfigCredentials"))
-//}

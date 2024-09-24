@@ -1,6 +1,7 @@
 //package pl.slaszu
 //
 //import io.github.oshai.kotlinlogging.KotlinLogging
+//import io.sentry.Sentry
 //import kotlinx.datetime.LocalDateTime
 //import kotlinx.datetime.toJavaLocalDateTime
 //import org.springframework.boot.ApplicationRunner
@@ -16,6 +17,7 @@
 //import pl.slaszu.stockanalyzer.application.ChartForAlert
 //import pl.slaszu.stockanalyzer.application.CloseAlerts
 //import pl.slaszu.stockanalyzer.application.CreateAlerts
+//import kotlin.math.log
 //import kotlin.random.Random
 //
 //
@@ -29,6 +31,16 @@
 //    val blogClient: BlogClient
 //) {
 //    private val logger = KotlinLogging.logger { }
+//
+//    //@Bean
+//    fun testSentry(): ApplicationRunner = ApplicationRunner {
+//        try {
+//            throw Exception("This is a test ${Math.random()}")
+//        } catch (e: Exception) {
+//            Sentry.captureException(e)
+//            logger.debug { "Sentry exception should by logged: ${e.message}" }
+//        }
+//    }
 //
 //    //@Bean
 //    fun createBlogPost(): ApplicationRunner = ApplicationRunner {
@@ -52,7 +64,7 @@
 //    //@Bean
 //    fun closeAlert(): ApplicationRunner = ApplicationRunner { closeAlerts.runForDaysAfter(7) }
 //
-//    @Bean
+//    //@Bean
 //    fun kandy(chartForAlert: ChartForAlert): ApplicationRunner = ApplicationRunner {
 //
 //        var alert = AlertModel(
