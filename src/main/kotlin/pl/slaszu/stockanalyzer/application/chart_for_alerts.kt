@@ -110,6 +110,7 @@ class ChartForAlert(
             }
 
         return ChartBuilder.create(this.chartProvider) {
+            this.alert = alert
             this.buyPoint = buyPoint
             this.closePointList = sellPointList
             this.stockPriceList = stockPriceList

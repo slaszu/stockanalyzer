@@ -64,7 +64,7 @@
 //    //@Bean
 //    fun closeAlert(): ApplicationRunner = ApplicationRunner { closeAlerts.runForDaysAfter(7) }
 //
-//    //@Bean
+//    @Bean
 //    fun kandy(chartForAlert: ChartForAlert): ApplicationRunner = ApplicationRunner {
 //
 //        var alert = AlertModel(
@@ -82,7 +82,13 @@
 //            date = LocalDateTime(2024, 4, 16, 12, 0, 0, 0).toJavaLocalDateTime()
 //
 //        )
-//        val pngByteArray = chartForAlert.getChartPngForCloseAlert(closeAlert)
+//        //val pngByteArray = chartForAlert.getChartPngForCloseAlert(closeAlert)
+//
+//
+//
+//        val pngByteArray = chartForAlert.getChartPngForCloseAlert(
+//            closeAlertList = listOf(closeAlert, closeAlert.copy(daysAfter = 14, price = 145f))
+//        )
 //
 //        val path = pngByteArray!!.toFile(
 //            "test_chart_%.png".replace("%", Random.nextInt(from = 100, until = 999).toString())
