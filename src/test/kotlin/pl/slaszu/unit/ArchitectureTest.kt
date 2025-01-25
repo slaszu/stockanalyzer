@@ -18,7 +18,8 @@ class ArchitectureTest {
             .should().onlyBeAccessed().byClassesThat().resideInAnyPackage(
                 "..pl.slaszu.stockanalyzer..",
                 "..event..",
-                "..application.."
+                "..application..",
+                "..local_test.."
             )
 
         stockanalyzerRule.check(allClasses);
@@ -34,7 +35,8 @@ class ArchitectureTest {
             .should().onlyBeAccessed().byClassesThat().resideInAnyPackage(
                 "..pl.slaszu.recommendation..",
                 "..event..",
-                "..application.."
+                "..application..",
+                "..local_test.."
             )
 
 

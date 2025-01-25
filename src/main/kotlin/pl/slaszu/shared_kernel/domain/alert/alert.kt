@@ -23,7 +23,17 @@ data class AlertModel(
     val id: String? = null,
 ) {
     fun shouldBePublish(): Boolean {
-        return !this.predictions.isNullOrEmpty() || !this.tweetId.isNullOrEmpty()
+        if (!this.tweetId.isNullOrEmpty()) {
+            return true
+        }
+        if (this.predictions.isNullOrEmpty()) {
+            return false
+        }
+
+        // if latest predication is positiv
+        // and bigger then x
+        val latestValue = this.predictions.toSortedMap().values.last()
+        return (latestValue >= 5)
     }
 
     fun getBuyPrice(): Float = this.price.roundTo(2)
