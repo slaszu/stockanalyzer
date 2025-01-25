@@ -5,9 +5,9 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertModel
 import pl.slaszu.shared_kernel.domain.alert.CloseAlertRepository
+import pl.slaszu.shared_kernel.domain.roundTo
 import pl.slaszu.stockanalyzer.domain.publisher.Publisher
 import pl.slaszu.stockanalyzer.domain.report.ReportProvider
-import pl.slaszu.shared_kernel.domain.roundTo
 import java.time.LocalDateTime
 
 
@@ -69,15 +69,15 @@ class CreateReport(
 
     private fun getTopDesc(closeAlertsList: List<CloseAlertModel>): List<CloseAlertModel> {
         // sortuj malejaco
-        // tylko dodatnie zwoty
+        // tylko dodatnie zwoty i opublikowane na tweeterze
         // max 3
-        return closeAlertsList.filter { it.resultPercent > 0 }.sortedByDescending { it.resultPercent }.take(3)
+        return closeAlertsList.filter { it.resultPercent > 0 && it.tweetId != null }.sortedByDescending { it.resultPercent }.take(3)
     }
 
     private fun getLastDesc(closeAlertsList: List<CloseAlertModel>): List<CloseAlertModel> {
         // sortuj rosnaco
-        // tylko ujemne zwroty
+        // tylko ujemne zwroty i opublikowane na tweeterze
         // max 3
-        return closeAlertsList.filter { it.resultPercent < 0 }.sortedBy { it.resultPercent }.take(3)
+        return closeAlertsList.filter { it.resultPercent < 0 && it.tweetId != null }.sortedBy { it.resultPercent }.take(3)
     }
 }
