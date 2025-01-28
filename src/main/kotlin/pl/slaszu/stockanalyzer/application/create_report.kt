@@ -24,6 +24,7 @@ class CreateReport(
 
         val date = LocalDateTime.now().minusDays(daysAfter.toLong())
         val closedAlertModelList = this.closeAlertModelRepo.findCloseAlertsAfterDate(date)
+            .filter { it.tweetId != null }
 
         this.logger.debug { "Found ${closedAlertModelList.size} alert closed for date $date" }
 
@@ -42,10 +43,12 @@ class CreateReport(
             charts.add(chart)
         }
 
-        val html = this.reportProvider.getHtml(closedAlertModelList, mapOf(
-            "days" to daysAfter.toString(),
-            "summary" to summaryPercent.toString()
-        ))
+        val html = this.reportProvider.getHtml(
+            closedAlertModelList, mapOf(
+                "days" to daysAfter.toString(),
+                "summary" to summaryPercent.toString()
+            )
+        )
         val reportPng = this.reportProvider.getPngByteArray(html)
         charts.add(reportPng)
 
@@ -69,15 +72,17 @@ class CreateReport(
 
     private fun getTopDesc(closeAlertsList: List<CloseAlertModel>): List<CloseAlertModel> {
         // sortuj malejaco
-        // tylko dodatnie zwoty i opublikowane na tweeterze
         // max 3
-        return closeAlertsList.filter { it.resultPercent > 0 && it.tweetId != null }.sortedByDescending { it.resultPercent }.take(3)
+        return closeAlertsList.filter { it.resultPercent > 0 }
+            .sortedByDescending { it.resultPercent }
+            .take(3)
     }
 
     private fun getLastDesc(closeAlertsList: List<CloseAlertModel>): List<CloseAlertModel> {
         // sortuj rosnaco
-        // tylko ujemne zwroty i opublikowane na tweeterze
         // max 3
-        return closeAlertsList.filter { it.resultPercent < 0 && it.tweetId != null }.sortedBy { it.resultPercent }.take(3)
+        return closeAlertsList.filter { it.resultPercent < 0 }
+            .sortedBy { it.resultPercent }
+            .take(3)
     }
 }
