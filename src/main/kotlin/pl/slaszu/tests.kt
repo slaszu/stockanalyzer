@@ -60,10 +60,10 @@ class LocalTest(
     //@Bean
     fun createAlert(): ApplicationRunner = ApplicationRunner { createAlert.run() }
 
-    @Bean
+    //@Bean
     fun closeAlert(): ApplicationRunner = ApplicationRunner { closeAlerts.runForDaysAfter(7) }
 
-    //@Bean
+    @Bean
     fun kandy(chartForAlert: ChartForAlert): ApplicationRunner = ApplicationRunner {
 
         var alert = AlertModel(
@@ -78,15 +78,14 @@ class LocalTest(
             resultPercent = 5f,
             daysAfter = 7,
             price = 140.54f,
-            date = LocalDateTime(2024, 4, 16, 12, 0, 0, 0).toJavaLocalDateTime()
-
+            date = alert.date.plusDays(7)
         )
         //val pngByteArray = chartForAlert.getChartPngForCloseAlert(closeAlert)
 
 
 
         val pngByteArray = chartForAlert.getChartPngForCloseAlert(
-            closeAlertList = listOf(closeAlert, closeAlert.copy(daysAfter = 14, price = 145f))
+            closeAlertList = listOf(closeAlert, closeAlert.copy(daysAfter = 14, price = 145f, date = closeAlert.date.plusDays(7)))
         )
 
         val path = pngByteArray!!.toFile(

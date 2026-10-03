@@ -22,7 +22,7 @@ class StockProviderRestTemplate(var restTmp: RestTemplate, var params: StockApiP
 
     override fun getStockPriceList(stockCode: String): Array<StockPriceDto> {
         val value = this.restTmp.getForEntity(
-            params.url.toUri("/stocks/prices/$stockCode"),
+            params.url.toUri("/stocks/prices/$stockCode?qty=400"),
             Array<StockPriceDto>::class.java
         );
         return value.body ?: emptyArray<StockPriceDto>();
@@ -30,7 +30,7 @@ class StockProviderRestTemplate(var restTmp: RestTemplate, var params: StockApiP
 
     override fun getLastStockPriceList(stockCode: String, dateTo: LocalDate): Array<StockPriceDto> {
         val value = this.restTmp.getForEntity(
-            params.url.toUri("/stocks/prices/last/$stockCode/$dateTo"),
+            params.url.toUri("/stocks/prices/$stockCode/to/$dateTo?qty=400"),
             Array<StockPriceDto>::class.java
         );
         return value.body ?: emptyArray<StockPriceDto>();

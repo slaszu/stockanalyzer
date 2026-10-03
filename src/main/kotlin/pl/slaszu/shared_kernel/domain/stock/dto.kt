@@ -16,7 +16,7 @@ data class StockPriceDto(
     val amount: Int,
     @JsonFormat(pattern = "yyyy-MM-dd")
     val date: LocalDate,
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss Z")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     val updatedAt: LocalDateTime
 ) {
 }

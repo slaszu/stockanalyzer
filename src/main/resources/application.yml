@@ -13,7 +13,7 @@ twitter-config:
 
 qdrant:
   apiKey: ${QDRANT_KEY}
-  collectionName: gpw_api_signals_test
+  collectionName: gpw_api_signals_test_v2
 
 blogger-google-api-oauth:
   tokenStorageDir: ${DOCKER_CONFIG_CREDENTIALS_DIR}/blogger-stored-token/
@@ -22,6 +22,8 @@ blogger-google-api-oauth:
 
 
 spring:
+  main:
+    web-application-type: none
   data:
     mongodb:
       uri: "mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@${MONGODB_HOST:localhost}:${MONGODB_PORT:27018}/"

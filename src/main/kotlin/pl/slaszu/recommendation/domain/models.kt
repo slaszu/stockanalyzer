@@ -8,7 +8,7 @@ class StockVector(
     val volumeVector: Array<Float>,
 ) {
     companion object {
-        const val VECTOR_SIZE = 90
+        const val VECTOR_SIZE = 400
     }
 
     fun hasValidSize(): Boolean {

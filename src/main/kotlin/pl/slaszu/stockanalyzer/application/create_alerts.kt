@@ -97,17 +97,17 @@ class CreateAlerts(
         }.getPng()
 
         var predictionText = alert.getPredicationText()
-        if (!alert.blogLink.isNullOrBlank()) {
-            predictionText += "➡\uFE0F${alert.blogLink}\n"
-        }
+        // turn off link for blogger
+//        if (!alert.blogLink.isNullOrBlank()) {
+//            predictionText += "➡\uFE0F${alert.blogLink}\n"
+//        }
 
         // tweet alert
         return this.publisher.publish(
             pngByteArray,
             alert.getTitle(),
             predictionText +
-                    "#${alert.stockCode} #${alert.stockName} #gpwApiSignals\n" +
-                    "https://pl.tradingview.com/symbols/GPW-${alert.stockCode}/"
+                    "#${alert.stockCode} #${alert.stockName} #gpwApiSignals"
         )
     }
 }

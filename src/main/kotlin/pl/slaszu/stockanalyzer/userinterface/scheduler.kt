@@ -48,9 +48,9 @@ class Scheduler(
         this.closeAlerts.runForDaysAfter(30, true)
     }
 
-    @Scheduled(cron = "0 0 18 * * SUN")
+    /*@Scheduled(cron = "0 0 18 * * SUN")
     fun runCreateWeekReport() {
         logger.info { "Scheduler:runCreateWeekReport 7" }
         this.createReport.runForDaysAfter(7)
-    }
+    }*/
 }

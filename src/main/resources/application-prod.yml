@@ -1,2 +1,2 @@
 qdrant:
-  collectionName: gpw_api_signals_prod
+  collectionName: gpw_api_signals_prod_v2
