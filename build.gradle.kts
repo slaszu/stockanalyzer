@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("org.springframework.boot") version "3.5.16"
-    id("io.spring.dependency-management") version "1.1.4"
+    id("io.spring.dependency-management") version "1.1.7"
     id("io.sentry.jvm.gradle") version "4.11.0"
     kotlin("jvm") version "2.4.0"
     kotlin("plugin.spring") version "2.4.0"
@@ -35,6 +35,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-mustache")
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
@@ -54,7 +55,8 @@ dependencies {
     implementation("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    runtimeOnly("com.mysql:mysql-connector-j")
+
+//    runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.testcontainers:testcontainers:1.18.1")
     testImplementation("org.testcontainers:junit-jupiter:1.18.1")
@@ -82,12 +84,14 @@ graalvmNative {
 
             buildArgs.add("--enable-native-access=ALL-UNNAMED")
 
-            buildArgs.add("-H:+InstallExitHandlers")
-            buildArgs.add("-H:+ReportUnsupportedElementsAtRuntime")
+//            buildArgs.add("-H:+InstallExitHandlers")
+//            buildArgs.add("-H:+ReportUnsupportedElementsAtRuntime")
             buildArgs.add("-H:+ReportExceptionStackTraces")
             buildArgs.add("-H:+AddAllCharsets")
             buildArgs.add("--enable-url-protocols=http,https")
-            buildArgs.add("-J-Xmx4g")
+            buildArgs.add("-J-Xmx6g")
+//            buildArgs.add("-H:NumberOfThreads=2")
+            buildArgs.add("-H:+AllowIncompleteClasspath")
 
             imageName.set("stockanalizer")
         }

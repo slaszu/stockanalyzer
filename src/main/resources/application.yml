@@ -32,6 +32,8 @@ spring:
     suffix: .html
   task:
     scheduling.pool.size: 10
+  liquibase:
+    enabled: false
 
 logging:
   level.root: WARN
