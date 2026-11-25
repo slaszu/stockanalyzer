@@ -1,12 +1,14 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.2.0"
+    id("org.springframework.boot") version "3.5.16"
     id("io.spring.dependency-management") version "1.1.4"
     id("io.sentry.jvm.gradle") version "4.11.0"
-    kotlin("jvm") version "1.9.20"
-    kotlin("plugin.spring") version "1.9.20"
-    kotlin("plugin.jpa") version "1.9.20"
+    kotlin("jvm") version "2.4.0"
+    kotlin("plugin.spring") version "2.4.0"
+    kotlin("plugin.jpa") version "2.4.0"
+    id("org.graalvm.buildtools.native") version "1.1.19"
 }
 
 group = "pl.slaszu"
@@ -15,8 +17,8 @@ tasks.bootJar {
     this.archiveFileName.set("${project.name}.jar")
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
+kotlin {
+    jvmToolchain(21)
 }
 
 springBoot {
@@ -63,12 +65,38 @@ dependencies {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs += "-Xjsr305=strict"
-        jvmTarget = "17"
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
+        freeCompilerArgs.add("-Xjsr305=strict")
     }
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+graalvmNative {
+    binaries {
+        named("main") {
+            verbose.set(true)
+
+            buildArgs.add("--enable-native-access=ALL-UNNAMED")
+
+            buildArgs.add("-H:+InstallExitHandlers")
+            buildArgs.add("-H:+ReportUnsupportedElementsAtRuntime")
+            buildArgs.add("-H:+ReportExceptionStackTraces")
+            buildArgs.add("-H:+AddAllCharsets")
+            buildArgs.add("--enable-url-protocols=http,https")
+            buildArgs.add("-J-Xmx4g")
+
+            imageName.set("stockanalizer")
+        }
+    }
+    binaries.all {
+        resources.autodetect()
+    }
+    toolchainDetection.set(true)
+    metadataRepository {
+        enabled = true
+    }
 }
